@@ -55,9 +55,9 @@ export default function ExportProducts() {
                 </div>
 
                 {/* View All Button */}
-                <div className="flex justify-center">
-                    <button className="inline-flex items-center gap-2 rounded-md border border-[#d4af37] bg-transparent px-8 py-2.5 text-[13px] font-semibold text-[#d4af37] transition hover:bg-[#d4af37] hover:text-[#080b14]">
-                        View All Products
+                <div className="text-center px-6 lg:px-0 mt-8 lg:mt-0">
+                    <button className="inline-flex w-full sm:w-auto justify-center items-center gap-2 rounded-md border border-[#d4af37]/50 px-8 py-3.5 sm:py-3 text-[14px] font-semibold text-[#d4af37] transition hover:bg-[#d4af37]/10">
+                        View Product Catalog
                         <ArrowRight size={16} />
                     </button>
                 </div>

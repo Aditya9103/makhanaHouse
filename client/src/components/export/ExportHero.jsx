@@ -29,29 +29,29 @@ export default function ExportHero() {
                     </p>
 
                     {/* 4 Feature Metrics */}
-                    <div className="mb-8 flex flex-wrap items-center gap-4 sm:gap-6">
-                        <div className="flex flex-col items-center gap-2">
+                    <div className="mb-8 grid grid-cols-2 gap-3 sm:flex sm:flex-wrap sm:items-center sm:gap-6">
+                        <div className="flex flex-col items-center gap-2 rounded-lg bg-white/5 p-3 sm:bg-transparent sm:p-0 border border-white/5 sm:border-transparent">
                             <div className="text-[#d4af37]">
                                 <ShieldCheck size={24} strokeWidth={1.5} />
                             </div>
                             <span className="text-center text-[11px] font-medium text-[#f8f9fa]">Premium<br />Quality</span>
                         </div>
                         <div className="h-8 w-[1px] bg-white/10 hidden sm:block"></div>
-                        <div className="flex flex-col items-center gap-2">
+                        <div className="flex flex-col items-center gap-2 rounded-lg bg-white/5 p-3 sm:bg-transparent sm:p-0 border border-white/5 sm:border-transparent">
                             <div className="text-[#d4af37]">
                                 <Leaf size={24} strokeWidth={1.5} />
                             </div>
                             <span className="text-center text-[11px] font-medium text-[#f8f9fa]">Sustainable<br />Sourcing</span>
                         </div>
                         <div className="h-8 w-[1px] bg-white/10 hidden sm:block"></div>
-                        <div className="flex flex-col items-center gap-2">
+                        <div className="flex flex-col items-center gap-2 rounded-lg bg-white/5 p-3 sm:bg-transparent sm:p-0 border border-white/5 sm:border-transparent">
                             <div className="text-[#d4af37]">
                                 <Clock size={24} strokeWidth={1.5} />
                             </div>
                             <span className="text-center text-[11px] font-medium text-[#f8f9fa]">Timely<br />Delivery</span>
                         </div>
                         <div className="h-8 w-[1px] bg-white/10 hidden sm:block"></div>
-                        <div className="flex flex-col items-center gap-2">
+                        <div className="flex flex-col items-center gap-2 rounded-lg bg-white/5 p-3 sm:bg-transparent sm:p-0 border border-white/5 sm:border-transparent">
                             <div className="text-[#d4af37]">
                                 <Globe2 size={24} strokeWidth={1.5} />
                             </div>
@@ -60,12 +60,12 @@ export default function ExportHero() {
                     </div>
 
                     {/* Buttons */}
-                    <div className="flex flex-wrap gap-4">
-                        <button className="inline-flex items-center gap-2 rounded-md bg-[#d4af37] px-8 py-3 text-[13px] font-semibold text-[#080b14] transition hover:bg-[#c39b2e]">
+                    <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 mt-6">
+                        <button className="inline-flex w-full sm:w-auto justify-center items-center gap-2 rounded-md bg-[#d4af37] px-8 py-3.5 sm:py-3 text-[14px] sm:text-[13px] font-semibold text-[#080b14] transition hover:bg-[#c39b2e]">
                             Export Inquiry
                             <ArrowRight size={16} />
                         </button>
-                        <button className="inline-flex items-center gap-2 rounded-md border border-[#d4af37] bg-transparent px-8 py-3 text-[13px] font-semibold text-[#d4af37] transition hover:bg-[#d4af37] hover:text-[#080b14]">
+                        <button className="inline-flex w-full sm:w-auto justify-center items-center gap-2 rounded-md border border-[#d4af37] bg-[#080b14]/50 sm:bg-transparent px-8 py-3.5 sm:py-3 text-[14px] sm:text-[13px] font-semibold text-[#d4af37] backdrop-blur-sm sm:backdrop-blur-none transition hover:bg-[#d4af37] hover:text-[#080b14]">
                             Download Brochure
                             <Download size={16} />
                         </button>

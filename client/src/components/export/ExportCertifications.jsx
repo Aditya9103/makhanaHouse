@@ -6,7 +6,6 @@ export default function ExportCertifications() {
         { icon: Award, name: "HACCP", desc: "Certified" },
         { icon: FileCheck, name: "FSSAI", desc: "Certified" },
         { icon: BadgeCheck, name: "GMP", desc: "Certified" },
-        { icon: CheckCircle, name: "Halal", desc: "Certified" },
         { icon: FileBadge2, name: "APEDA", desc: "Approved" },
     ];
 
@@ -23,7 +22,7 @@ export default function ExportCertifications() {
         <section className="py-16 lg:py-24 border-b border-white/5">
             <div className="mx-auto max-w-[1400px] px-6 lg:px-10">
                 <div className="grid grid-cols-1 gap-8 lg:grid-cols-2 lg:gap-12">
-                    
+
                     {/* Quality Certifications */}
                     <div>
                         <h2 className="mb-4 font-serif text-2xl leading-tight text-[#f8f9fa] sm:text-3xl">
@@ -33,7 +32,7 @@ export default function ExportCertifications() {
                         <p className="mb-8 text-[14px] leading-relaxed text-[#e4e4e7]">
                             Our Makhana meets global quality & food safety standards.
                         </p>
-                        
+
                         <div className="grid grid-cols-3 gap-4 sm:grid-cols-6 lg:gap-6">
                             {certs.map((cert, idx) => (
                                 <div key={idx} className="flex flex-col items-center text-center">
@@ -51,7 +50,7 @@ export default function ExportCertifications() {
                     <div className="relative overflow-hidden rounded-2xl bg-[#0a0d18] p-8 border border-white/5">
                         {/* Map Background Placeholder */}
                         <div className="absolute inset-0 right-0 z-0 bg-[url('https://upload.wikimedia.org/wikipedia/commons/e/ec/World_map_blank_without_borders.svg')] bg-contain bg-right bg-no-repeat opacity-5 mix-blend-screen"></div>
-                        
+
                         <div className="relative z-10">
                             <h2 className="mb-4 font-serif text-2xl leading-tight text-[#f8f9fa] sm:text-3xl">
                                 Countries Served
@@ -60,7 +59,7 @@ export default function ExportCertifications() {
                             <p className="mb-8 text-[14px] leading-relaxed text-[#e4e4e7]">
                                 Proudly exporting to 25+ countries and growing.
                             </p>
-                            
+
                             <div className="flex flex-wrap items-center gap-3 text-3xl">
                                 {flags.map((flag, idx) => (
                                     <span key={idx} title={flag.country} className="cursor-help transition hover:scale-110">

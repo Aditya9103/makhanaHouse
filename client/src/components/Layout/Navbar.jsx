@@ -155,7 +155,7 @@ export default function Navbar() {
                                 {label}
                             </Link>
                         ))}
-                        <Link to="/export#inquiry" onClick={() => setMenuOpen(false)} className="mt-3 inline-block text-center rounded-md bg-[#d4af37] px-5 py-2.5 text-sm font-semibold text-[#080b14]">
+                        <Link to="/export#inquiry" onClick={() => setMenuOpen(false)} className="mt-3 block w-full text-center rounded-md bg-[#d4af37] px-5 py-3 text-sm font-semibold text-[#080b14]">
                             Export Inquiry
                         </Link>
                     </nav>

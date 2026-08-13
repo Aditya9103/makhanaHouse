@@ -59,16 +59,18 @@ export default function AboutProcess() {
                                 <div className="h-[1px] w-8 bg-[#d4af37]/40"></div>
                             </div>
                             
-                            <p className="mb-8 max-w-xl text-[14px] leading-relaxed text-[#e4e4e7]">
+                            <p className="mb-8 max-w-xl text-[13px] sm:text-[14px] leading-relaxed text-[#e4e4e7] text-center xl:text-left">
                                 From harvesting in the pristine wetlands to hygienic processing and packaging, we ensure quality and purity at every step.
                             </p>
                             
-                            <button className="inline-flex items-center gap-3 rounded-md bg-[#d4af37] px-6 py-2.5 text-[13px] font-medium text-[#080b14] transition hover:bg-[#c39b2e]">
-                                Explore Our Quality
-                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M5 12H19M19 12L12 5M19 12L12 19" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-                                </svg>
-                            </button>
+                            <div className="flex justify-center xl:justify-start">
+                                <button className="inline-flex w-full sm:w-auto justify-center items-center gap-3 rounded-md bg-[#d4af37] px-6 py-3.5 sm:py-2.5 text-[14px] sm:text-[13px] font-medium text-[#080b14] transition hover:bg-[#c39b2e]">
+                                    Explore Our Quality
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M5 12H19M19 12L12 5M19 12L12 19" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                                    </svg>
+                                </button>
+                            </div>
                         </div>
 
                         {/* Right - Steps Container */}

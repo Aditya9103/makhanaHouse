@@ -33,7 +33,7 @@ export default function QualityHero() {
                     </p>
 
                     {/* 4 Features */}
-                    <div className="mb-16 flex flex-wrap gap-8 lg:gap-12">
+                    <div className="mb-16 grid grid-cols-2 gap-6 sm:flex sm:flex-wrap lg:gap-12">
                         <div className="flex flex-col gap-3">
                             <div className="flex h-12 w-12 items-center justify-center rounded-full border border-[#d4af37]/30 text-[#d4af37] shadow-[0_0_15px_rgba(212,175,55,0.1)]">
                                 <Leaf size={22} strokeWidth={1.5} />

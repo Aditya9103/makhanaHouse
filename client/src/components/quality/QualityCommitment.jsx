@@ -21,7 +21,7 @@ export default function QualityCommitment() {
                         </div>
 
                         {/* Gold Badge */}
-                        <div className="absolute right-6 top-1/2 -translate-y-1/2 flex flex-col items-center justify-center p-6 lg:p-8 rounded-[2rem] border border-[#d4af37] bg-black/60 backdrop-blur-md shadow-[0_0_30px_rgba(212,175,55,0.15)]">
+                        <div className="absolute right-4 lg:right-6 top-1/2 -translate-y-1/2 flex flex-col items-center justify-center p-4 lg:p-8 rounded-[1.5rem] lg:rounded-[2rem] border border-[#d4af37] bg-black/60 backdrop-blur-md shadow-[0_0_30px_rgba(212,175,55,0.15)]">
                             <div className="flex items-center gap-2 text-[#d4af37] mb-2">
                                 <div className="h-[1px] w-4 bg-[#d4af37]"></div>
                                 <svg width="12" height="12" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">

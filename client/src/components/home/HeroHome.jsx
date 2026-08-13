@@ -10,20 +10,21 @@ const trustPoints = [
 export default function HeroHome() {
     return (
         <section
-            className="relative overflow-hidden bg-cover bg-center"
+            className="relative flex items-center overflow-hidden bg-cover bg-[position:70%_center] lg:bg-center pt-16 pb-12 lg:py-0 lg:min-h-[90vh] bg-[#080b14]"
             style={{ backgroundImage: 'url(/homeherobg.png)' }}
         >
             {/* Dark overlay to ensure text remains readable against the background */}
-            <div className="absolute inset-0 bg-[#080b14]/60"></div>
+            <div className="absolute inset-0 bg-gradient-to-r from-[#080b14]/90 via-[#080b14]/70 to-transparent"></div>
+            <div className="absolute inset-0 bg-[#080b14]/40 lg:hidden"></div>
 
-            <div className="relative mx-auto grid max-w-[1400px] grid-cols-1 gap-10 px-6 pb-16 pt-8 lg:grid-cols-[1.05fr_1fr] lg:gap-6 lg:px-10 lg:pb-24 lg:pt-12">
+            <div className="relative z-10 mx-auto grid w-full max-w-[1400px] grid-cols-1 gap-8 px-6 py-4 lg:grid-cols-[1.2fr_1fr] lg:gap-8 lg:px-10 lg:py-20 xl:grid-cols-[1.05fr_1fr]">
                 {/* Left column — copy */}
-                <div className="flex flex-col justify-center">
-                    <p className="mb-4 flex items-center gap-2 font-serif text-sm italic tracking-wide text-[#d4af37]">
+                <div className="flex flex-col justify-center mt-4 lg:mt-0">
+                    <p className="mb-4 flex items-center gap-2 font-serif text-sm sm:text-base italic tracking-wide text-[#d4af37]">
                         From the Heart of Mithila to the World
                     </p>
 
-                    <h1 className="font-serif text-4xl leading-[1.15] text-[#f8f9fa] sm:text-5xl lg:text-[3.4rem]">
+                    <h1 className="font-serif text-4xl sm:text-5xl md:text-6xl lg:text-[3.5rem] xl:text-[4rem] leading-[1.15] text-[#f8f9fa]">
                         Bihar Mithila Makhana,
                         <br />
                         <span className="text-[#d4af37]">Pride of India.</span>
@@ -31,33 +32,35 @@ export default function HeroHome() {
                         Trusted Worldwide.
                     </h1>
 
-                    <p className="mt-6 max-w-md text-[15px] leading-relaxed text-[var(--color-text-secondary)]">
+                    <p className="mt-6 max-w-md text-sm sm:text-base lg:text-[15px] leading-relaxed text-[#e4e4e7]">
                         Grown in the fertile wetlands of Bihar, nourished by tradition,
                         crafted for wellness, delivered to the world.
                     </p>
 
-                    <div className="mt-8 flex flex-wrap items-center gap-4">
-                        <button className="group inline-flex items-center gap-2 rounded-md bg-[#d4af37] px-6 py-3 text-sm font-semibold text-[#080b14] transition hover:bg-[#c39d2e]">
+                    <div className="mt-8 flex flex-col sm:flex-row items-start sm:items-center gap-4">
+                        <button className="group inline-flex items-center justify-center gap-2 rounded-md bg-[#d4af37] px-6 py-3.5 sm:py-3 text-[15px] sm:text-sm font-semibold text-[#080b14] transition hover:bg-[#c39d2e] w-full sm:w-auto shadow-lg shadow-[#d4af37]/20">
                             Shop Makhana
                             <ArrowRight
                                 size={16}
                                 className="transition-transform group-hover:translate-x-1"
                             />
                         </button>
-                        <button className="inline-flex items-center gap-2 rounded-md border border-[#d4af37]/50 px-6 py-3 text-sm font-semibold text-[#f8f9fa] transition hover:border-[#d4af37] hover:bg-[#d4af37]/10">
+                        <button className="inline-flex items-center justify-center gap-2 rounded-md border border-[#d4af37]/50 px-6 py-3.5 sm:py-3 text-[15px] sm:text-sm font-semibold text-[#f8f9fa] transition hover:border-[#d4af37] hover:bg-[#d4af37]/10 w-full sm:w-auto">
                             Bulk &amp; Export Inquiry
                             <ArrowRight size={16} />
                         </button>
                     </div>
 
                     {/* Trust strip */}
-                    <div className="mt-12 grid grid-cols-2 gap-y-6 sm:grid-cols-4 sm:gap-x-4">
+                    <div className="mt-12 lg:mt-16 grid grid-cols-2 gap-y-8 gap-x-4 sm:grid-cols-4 sm:gap-x-6">
                         {trustPoints.map(({ icon: Icon, title, subtitle }) => (
                             <div key={title} className="flex flex-col items-start gap-2">
-                                <Icon size={22} className="text-[#d4af37]" strokeWidth={1.5} />
-                                <div className="text-xs leading-tight text-[#e4e4e7]">
-                                    <p className="font-medium">{title}</p>
-                                    <p className="text-[var(--color-text-secondary)]">{subtitle}</p>
+                                <div className="flex items-center justify-center h-10 w-10 rounded-full border border-[#d4af37]/20 bg-[#d4af37]/5 text-[#d4af37]">
+                                    <Icon size={18} strokeWidth={1.5} />
+                                </div>
+                                <div className="text-[11px] sm:text-xs leading-tight text-[#e4e4e7]">
+                                    <p className="font-semibold text-white mb-0.5">{title}</p>
+                                    <p className="text-[#e4e4e7]/70">{subtitle}</p>
                                 </div>
                             </div>
                         ))}

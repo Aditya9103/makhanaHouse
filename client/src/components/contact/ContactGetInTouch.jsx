@@ -2,7 +2,7 @@ import { Phone, Mail, MapPin, Clock, Download, ArrowRight, Users } from "lucide-
 
 export default function ContactGetInTouch() {
     return (
-        <section className="py-16 lg:py-24 bg-[#0a0d18] border-y border-white/5">
+        <section className="py-16 lg:py-24 bg-transparent border-y border-white/5">
             <div className="mx-auto max-w-[1400px] px-6 lg:px-10">
                 {/* Header */}
                 <div className="mb-16 text-center">
@@ -174,10 +174,12 @@ export default function ContactGetInTouch() {
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8">
                     {/* Map Card */}
                     <div className="lg:col-span-2 rounded-2xl border border-white/10 bg-[#080b14] p-8 lg:p-10 shadow-xl relative overflow-hidden min-h-[300px] flex items-end">
-                        <div className="absolute inset-0 opacity-20 pointer-events-none" style={{ backgroundImage: "radial-gradient(circle at center, #d4af37 1px, transparent 1px)", backgroundSize: "16px 16px" }}></div>
+                        <div className="absolute inset-0 opacity-50 pointer-events-none flex items-center justify-center p-8">
+                            <img src="/worldmap.png" alt="World Map" className="w-full h-full object-contain mix-blend-screen" />
+                        </div>
                         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-3/4 h-3/4 bg-[#d4af37]/5 blur-[100px] rounded-full"></div>
                         
-                        <button className="relative z-10 flex items-center gap-3 rounded-full border border-[#d4af37] bg-[#080b14]/80 backdrop-blur-sm px-6 py-2.5 text-[12px] font-medium text-[#d4af37] transition hover:bg-[#d4af37] hover:text-[#080b14]">
+                        <button className="relative z-10 flex w-full sm:w-auto justify-center items-center gap-3 rounded-full border border-[#d4af37] bg-[#080b14]/80 backdrop-blur-sm px-6 py-3 sm:py-2.5 text-[13px] sm:text-[12px] font-medium text-[#d4af37] transition hover:bg-[#d4af37] hover:text-[#080b14]">
                             Our Global Presence
                             <ArrowRight size={14} />
                         </button>

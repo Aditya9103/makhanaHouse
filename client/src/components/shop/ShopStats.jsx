@@ -12,7 +12,7 @@ export default function ShopStats() {
                         Experience the finest quality makhana, grown naturally in the pristine wetlands of Bihar.
                     </p>
                 </div>
-                <div className="flex flex-wrap items-center gap-8 sm:gap-12 lg:gap-16">
+                <div className="grid grid-cols-2 items-center gap-8 sm:flex sm:flex-wrap sm:gap-12 lg:gap-16">
                     {[
                         { icon: Sprout, val: "500+", lbl: "Happy Customers" },
                         { icon: Truck, val: "25+", lbl: "Countries" },

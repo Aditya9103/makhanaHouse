@@ -18,9 +18,9 @@ export default function ExportWorkflow() {
             <div className="mx-auto max-w-[1400px] px-6 lg:px-10">
                 <h3 className="mb-8 font-serif text-xl text-[#f8f9fa]">Export Workflow</h3>
                 
-                <div className="flex flex-wrap items-center gap-y-8 gap-x-2 sm:gap-x-4 md:flex-nowrap md:justify-between">
+                <div className="grid grid-cols-3 gap-y-8 gap-x-4 sm:grid-cols-4 md:flex md:flex-nowrap md:justify-between md:gap-0">
                     {workflowSteps.map((step, idx) => (
-                        <div key={idx} className="flex items-center gap-2 sm:gap-4 flex-shrink-0">
+                        <div key={idx} className="flex flex-col items-center gap-2 sm:gap-4 flex-shrink-0 md:flex-row">
                             <div className="flex flex-col items-center text-center gap-3">
                                 <div className="text-[#d4af37] transition hover:scale-110">
                                     <step.icon size={24} strokeWidth={1.5} />

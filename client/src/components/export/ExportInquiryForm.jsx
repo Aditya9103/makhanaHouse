@@ -127,7 +127,7 @@ export default function ExportInquiryForm() {
                                         <span className="text-[11px] text-[#e4e4e7]">Click to upload or drag & drop<br/><span className="text-white/40">(PDF, DOC, JPG, PNG)</span></span>
                                     </div>
                                 </div>
-                                <div className="flex items-end">
+                                <div className="flex items-end w-full sm:w-auto">
                                     <button type="button" className="inline-flex h-[52px] items-center justify-center gap-2 rounded-md bg-[#d4af37] px-8 text-[13px] font-semibold text-[#080b14] transition hover:bg-[#c39b2e] w-full sm:w-auto">
                                         Submit Inquiry
                                         <ArrowRight size={16} />

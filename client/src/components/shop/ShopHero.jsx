@@ -11,11 +11,7 @@ export default function ShopHero() {
                         <br />
                         <span className="text-[#d4af37]">Makhana</span>
                     </h1>
-                    <div className="flex items-center gap-2 text-sm text-[var(--color-text-secondary)]">
-                        <Link to="/" className="hover:text-[#d4af37]">Home</Link>
-                        <ChevronRight size={14} />
-                        <span className="text-[#f8f9fa]">Shop</span>
-                    </div>
+
                 </div>
                 {/* Placeholder for the bowl image */}
                 <div className="absolute right-0 top-1/2 hidden -translate-y-1/2 lg:block opacity-40">

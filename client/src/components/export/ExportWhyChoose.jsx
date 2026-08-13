@@ -64,9 +64,9 @@ export default function ExportWhyChoose() {
                     </div>
 
                     {/* Right Features Row */}
-                    <div className="flex w-full flex-col gap-6 sm:flex-row sm:flex-wrap xl:flex-nowrap lg:justify-center border-y border-white/5 py-6 lg:border-none lg:py-0">
+                    <div className="grid w-full grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:flex xl:flex-nowrap xl:justify-center border-y border-white/5 py-6 lg:border-none lg:py-0">
                         {reasons.map((reason, idx) => (
-                            <div key={idx} className={`flex flex-1 items-start gap-3 xl:gap-4 ${idx !== 0 ? 'sm:border-l sm:border-white/10 sm:pl-4 xl:pl-6' : ''}`}>
+                            <div key={idx} className={`flex items-start gap-3 xl:gap-4 ${idx !== 0 ? 'xl:border-l xl:border-white/10 xl:pl-6' : ''}`}>
                                 <div className="flex mt-1 text-[#d4af37] shrink-0">
                                     <reason.icon size={24} strokeWidth={1.5} />
                                 </div>

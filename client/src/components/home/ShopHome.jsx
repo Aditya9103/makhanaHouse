@@ -170,16 +170,16 @@ export default function ShopHome() {
         <section className=" py-16 lg:py-20">
             <div className="mx-auto max-w-[1400px] px-6 lg:px-10">
                 {/* Header row */}
-                <div className="mb-8 flex flex-wrap items-end justify-between gap-4">
+                <div className="mb-8 flex flex-col sm:flex-row sm:items-end justify-between gap-4 sm:gap-6">
                     <div>
-                        <p className="mb-2 text-xs font-semibold tracking-[0.18em] text-[#d4af37]">
+                        <p className="mb-2 text-[11px] sm:text-xs font-semibold tracking-[0.18em] text-[#d4af37]">
                             OUR PREMIUM RANGE
                         </p>
-                        <h2 className="font-serif text-3xl text-[#f8f9fa] sm:text-[2.1rem]">
+                        <h2 className="font-serif text-[1.75rem] leading-tight text-[#f8f9fa] sm:text-3xl lg:text-[2.1rem]">
                             Shop Best Quality Makhana
                         </h2>
                     </div>
-                    <button className="inline-flex items-center gap-2 rounded-md border border-[#d4af37]/40 px-5 py-2.5 text-sm font-medium text-[#f8f9fa] transition hover:border-[#d4af37] hover:bg-[#d4af37]/10">
+                    <button className="inline-flex w-full sm:w-auto items-center justify-center gap-2 rounded-md border border-[#d4af37]/40 px-5 py-3 sm:py-2.5 text-sm font-medium text-[#f8f9fa] transition hover:border-[#d4af37] hover:bg-[#d4af37]/10">
                         View All Products
                         <ChevronRight size={15} />
                     </button>
@@ -214,13 +214,15 @@ export default function ShopHome() {
                 </div>
 
                 {/* Feature strip */}
-                <div className="mt-12 grid grid-cols-2 gap-6 border-t border-white/10 pt-8 sm:grid-cols-4">
+                <div className="mt-12 grid grid-cols-1 gap-6 sm:gap-8 border-t border-white/10 pt-8 sm:grid-cols-2 lg:grid-cols-4">
                     {features.map(({ icon: Icon, title, subtitle }) => (
-                        <div key={title} className="flex items-start gap-3">
-                            <Icon size={22} className="mt-0.5 shrink-0 text-[#d4af37]" strokeWidth={1.4} />
+                        <div key={title} className="flex items-start gap-4 sm:gap-3 rounded-lg border border-white/5 bg-[#080b14]/50 p-4 sm:border-transparent sm:bg-transparent sm:p-0">
+                            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[#d4af37]/10 sm:h-auto sm:w-auto sm:bg-transparent">
+                                <Icon size={20} className="text-[#d4af37] sm:mt-0.5 sm:h-[22px] sm:w-[22px]" strokeWidth={1.4} />
+                            </div>
                             <div>
-                                <p className="text-sm font-medium text-[#f4f4f5]">{title}</p>
-                                <p className="text-xs text-[var(--color-text-secondary)]">{subtitle}</p>
+                                <p className="text-[15px] sm:text-sm font-semibold text-[#f8f9fa] sm:font-medium sm:text-[#f4f4f5]">{title}</p>
+                                <p className="mt-0.5 text-[13px] sm:mt-0 sm:text-xs text-[#e4e4e7]/80 sm:text-[var(--color-text-secondary)]">{subtitle}</p>
                             </div>
                         </div>
                     ))}
