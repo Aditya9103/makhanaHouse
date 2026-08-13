@@ -47,7 +47,7 @@ export default function WhyChooseHome() {
                     {/* Middle - Content */}
                     <div className="lg:col-span-6 flex flex-col justify-center px-0 lg:px-8">
                         <p className="mb-3 text-xs font-semibold tracking-[0.18em] text-[#d4af37]">
-                            WHY CHOOSE PRIME MAKHANA
+                            WHY CHOOSE MAKHANA HOUSE
                         </p>
                         <h2 className="mb-4 font-serif text-3xl leading-tight text-[#f8f9fa] sm:text-4xl">
                             Good for You, Good for Life.

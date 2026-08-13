@@ -11,7 +11,7 @@ export default function HeroHome() {
     return (
         <section
             className="relative overflow-hidden bg-cover bg-center"
-            style={{ backgroundImage: 'url(/herobg.png)' }}
+            style={{ backgroundImage: 'url(/homeherobg.png)' }}
         >
             {/* Dark overlay to ensure text remains readable against the background */}
             <div className="absolute inset-0 bg-[#080b14]/60"></div>

@@ -14,9 +14,9 @@ export default function Footer() {
                             </div>
                             <div className="leading-none">
                                 <p className="font-serif text-xl tracking-wide text-[#f8f9fa]">
-                                    PRIME
+                                    MAKHANA
                                     <span className="ml-1 text-[10px] font-sans tracking-[0.2em] text-[#d4af37] align-middle">
-                                        MAKHANA
+                                        HOUSE
                                     </span>
                                 </p>
                                 <p className="mt-0.5 text-[9px] tracking-[0.25em] text-[var(--color-text-secondary)]">
@@ -24,10 +24,15 @@ export default function Footer() {
                                 </p>
                             </div>
                         </a>
-                        <p className="mb-6 max-w-sm text-sm leading-relaxed text-[var(--color-text-secondary)]">
+                        <p className="mb-4 max-w-sm text-sm leading-relaxed text-[var(--color-text-secondary)]">
                             Delivering premium quality Makhana from Bihar Mithila to the world.
                             Naturally wholesome, globally trusted.
                         </p>
+                        <div className="mb-6 max-w-sm text-xs leading-relaxed text-[#e4e4e7]">
+                            <p className="font-semibold text-[#d4af37] mb-1">Address:</p>
+                            <p>Vill+po-Ughara, Dist- Darbhanga,</p>
+                            <p>State-Bihar, 847101</p>
+                        </div>
                         <div className="flex gap-4">
                             {[MessageCircle, Share2, Send, Globe].map((Icon, i) => (
                                 <a
@@ -113,7 +118,7 @@ export default function Footer() {
                 </div>
 
                 <div className="mt-16 flex flex-col items-center justify-between border-t border-white/10 py-6 text-xs text-[var(--color-text-secondary)] sm:flex-row">
-                    <p>© 2024 Prime Makhana. All Rights Reserved.</p>
+                    <p>© 2024 Makhana House. All Rights Reserved.</p>
                     <div className="mt-4 flex gap-4 sm:mt-0">
                         <a href="#" className="hover:text-[#d4af37]">Privacy Policy</a>
                         <span>|</span>

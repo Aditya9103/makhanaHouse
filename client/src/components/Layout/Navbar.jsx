@@ -53,11 +53,11 @@ export default function Navbar() {
                     <div className="flex items-center gap-6">
                         <span className="flex items-center gap-1.5">
                             <Mail size={13} className="text-[#d4af37]" />
-                            info@primemakhana.com
+                            info@makhanahouse.in
                         </span>
                         <span className="flex items-center gap-1.5">
                             <Phone size={13} className="text-[#d4af37]" />
-                            +91 12345 67890
+                            9801017333 / 8873405595
                         </span>
                         <span className="flex items-center gap-1.5">
                             🇮🇳 EN <ChevronDown size={12} />
@@ -76,9 +76,9 @@ export default function Navbar() {
                         </div>
                         <div className="leading-none">
                             <p className="font-serif text-xl tracking-wide text-[#f8f9fa]">
-                                PRIME
+                                MAKHANA
                                 <span className="ml-1 text-[10px] font-sans tracking-[0.2em] text-[#d4af37] align-middle">
-                                    MAKHANA
+                                    HOUSE
                                 </span>
                             </p>
                             <p className="mt-0.5 text-[9px] tracking-[0.25em] text-[var(--color-text-secondary)]">
