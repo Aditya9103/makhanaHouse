@@ -25,12 +25,11 @@ const utilityItems = [
 const navLinks = [
     { label: "Home", href: "/" },
     { label: "Shop", dropdown: true, href: "/shop" },
-    { label: "Makhana", dropdown: true, href: "#" },
-    { label: "About Us", href: "#" },
-    { label: "Export", href: "#" },
-    { label: "Quality", href: "#" },
+    { label: "About Us", href: "/about" },
+    { label: "Export", href: "/export" },
+    { label: "Quality", href: "/quality" },
     { label: "Blog", href: "#" },
-    { label: "Contact", href: "#" },
+    { label: "Contact", href: "/contact" },
 ];
 
 export default function Navbar() {
@@ -130,9 +129,9 @@ export default function Navbar() {
                                 2
                             </span>
                         </button>
-                        <button className="hidden rounded-md border border-[#d4af37] bg-transparent px-5 py-2 text-sm font-semibold text-[#d4af37] transition hover:bg-[#d4af37] hover:text-[#080b14] lg:block">
-                            Get in Touch
-                        </button>
+                        <Link to="/export#inquiry" className="hidden rounded-md border border-[#d4af37] bg-transparent px-5 py-2 text-sm font-semibold text-[#d4af37] transition hover:bg-[#d4af37] hover:text-[#080b14] lg:block">
+                            Export Inquiry
+                        </Link>
                         <button
                             className="text-[#e4e4e7] lg:hidden"
                             onClick={() => setMenuOpen((v) => !v)}
@@ -156,9 +155,9 @@ export default function Navbar() {
                                 {label}
                             </Link>
                         ))}
-                        <button className="mt-3 rounded-md bg-[#d4af37] px-5 py-2.5 text-sm font-semibold text-[#080b14]">
-                            Get in Touch
-                        </button>
+                        <Link to="/export#inquiry" onClick={() => setMenuOpen(false)} className="mt-3 inline-block text-center rounded-md bg-[#d4af37] px-5 py-2.5 text-sm font-semibold text-[#080b14]">
+                            Export Inquiry
+                        </Link>
                     </nav>
                 )}
             </header>

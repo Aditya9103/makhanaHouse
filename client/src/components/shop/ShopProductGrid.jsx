@@ -107,10 +107,13 @@ export default function ShopProductGrid() {
                                     {product.badge}
                                 </span>
                             )}
-                            <div className="flex h-full items-center justify-center">
-                                <div className="flex h-20 w-20 items-center justify-center rounded-full border border-[#d4af37]/30 bg-white/5">
-                                    <Sprout size={32} className="text-[#d4af37]" strokeWidth={1.3} />
-                                </div>
+                            <div className="absolute inset-0 overflow-hidden group">
+                                <img 
+                                    src="/homehero2.png" 
+                                    alt={product.name}
+                                    className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
+                                />
+                                <div className="absolute inset-0 bg-gradient-to-t from-[#080b14]/80 to-transparent"></div>
                             </div>
                         </div>
 
