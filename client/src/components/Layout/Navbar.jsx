@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
+import { useCart } from "../../context/CartContext";
 import {
     Wheat,
     Mail,
@@ -7,6 +8,7 @@ import {
     Search,
     User,
     ShoppingBag,
+    ShoppingCart,
     ChevronDown,
     Menu,
     X,
@@ -35,6 +37,7 @@ const navLinks = [
 export default function Navbar() {
     const [menuOpen, setMenuOpen] = useState(false);
     const location = useLocation();
+    const { cartItems } = useCart();
 
     return (
         <>
@@ -114,22 +117,26 @@ export default function Navbar() {
                         >
                             <Search size={18} />
                         </button>
-                        <button
+                        <Link
+                            to="/profile"
                             aria-label="Account"
                             className="hidden text-[#e4e4e7] hover:text-[#d4af37] sm:block"
                         >
                             <User size={18} />
-                        </button>
-                        <button
+                        </Link>
+                        <Link
+                            to="/cart"
                             aria-label="Cart"
                             className="relative hidden text-[#e4e4e7] hover:text-[#d4af37] sm:block"
                         >
-                            <ShoppingBag size={18} />
-                            <span className="absolute -right-2 -top-2 flex h-4 w-4 items-center justify-center rounded-full bg-[#d4af37] text-[9px] font-semibold text-[#080b14]">
-                                2
-                            </span>
-                        </button>
-                        <Link to="/export#inquiry" className="hidden rounded-md border border-[#d4af37] bg-transparent px-5 py-2 text-sm font-semibold text-[#d4af37] transition hover:bg-[#d4af37] hover:text-[#080b14] lg:block">
+                            <ShoppingCart size={18} />
+                            {cartItems.length > 0 && (
+                                <span className="absolute -right-2 -top-2 flex h-4 w-4 items-center justify-center rounded-full bg-[#d4af37] text-[9px] font-semibold text-[#080b14]">
+                                    {cartItems.reduce((total, item) => total + item.quantity, 0)}
+                                </span>
+                            )}
+                        </Link>
+                        <Link to="/export/new" className="hidden rounded-md border border-[#d4af37] bg-transparent px-5 py-2 text-sm font-semibold text-[#d4af37] transition hover:bg-[#d4af37] hover:text-[#080b14] lg:block">
                             Export Inquiry
                         </Link>
                         <button
@@ -155,7 +162,7 @@ export default function Navbar() {
                                 {label}
                             </Link>
                         ))}
-                        <Link to="/export#inquiry" onClick={() => setMenuOpen(false)} className="mt-3 block w-full text-center rounded-md bg-[#d4af37] px-5 py-3 text-sm font-semibold text-[#080b14]">
+                        <Link to="/export/new" onClick={() => setMenuOpen(false)} className="mt-3 block w-full text-center rounded-md bg-[#d4af37] px-5 py-3 text-sm font-semibold text-[#080b14]">
                             Export Inquiry
                         </Link>
                     </nav>

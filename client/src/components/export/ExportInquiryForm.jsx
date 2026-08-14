@@ -1,141 +1,186 @@
-import { Clock, Users, ShieldCheck, Upload, ArrowRight } from "lucide-react";
+import { Clock, Users, ShieldCheck, Upload, ArrowRight, CheckCircle2 } from "lucide-react";
+import { useState } from "react";
 
 export default function ExportInquiryForm() {
+    const [privateLabel, setPrivateLabel] = useState(false);
+
     return (
-        <section id="inquiry" className="scroll-mt-20 py-16 lg:py-24 bg-[#0a0d18] border-y border-white/5 relative overflow-hidden">
-            <div className="mx-auto max-w-[1400px] px-6 lg:px-10">
-                <div className="relative rounded-2xl border border-white/10 bg-[#080b14] p-8 lg:p-12 shadow-2xl flex flex-col lg:flex-row gap-12">
+        <section id="inquiry" className="scroll-mt-20 py-12 lg:py-20 relative overflow-hidden">
+            <div className="mx-auto max-w-[1300px] px-4 sm:px-6 lg:px-8">
+                
+                {/* Main Glass Container */}
+                <div className="relative rounded-3xl border border-white/10 bg-[#0a0d14]/70 backdrop-blur-xl p-6 sm:p-10 lg:p-14 shadow-[0_8px_32px_rgba(0,0,0,0.5)] flex flex-col lg:flex-row gap-12 lg:gap-20 overflow-hidden">
                     
-                    {/* Left Column */}
-                    <div className="w-full lg:w-1/3 flex flex-col justify-between">
+                    {/* Subtle Background Gradients inside the container */}
+                    <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-[#d4af37]/5 rounded-full blur-[100px] pointer-events-none -translate-y-1/2 translate-x-1/3"></div>
+                    <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-[#d4af37]/5 rounded-full blur-[100px] pointer-events-none translate-y-1/3 -translate-x-1/3"></div>
+
+                    {/* Left Column: Information */}
+                    <div className="w-full lg:w-5/12 flex flex-col justify-between relative z-10">
                         <div>
-                            <h2 className="mb-4 font-serif text-3xl leading-tight text-[#f8f9fa] sm:text-4xl">
-                                Export Inquiry
+                            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/5 border border-white/10 mb-6">
+                                <span className="w-2 h-2 rounded-full bg-[#d4af37] animate-pulse"></span>
+                                <span className="text-[11px] font-medium text-[#d4af37] uppercase tracking-widest">Global Reach</span>
+                            </div>
+                            
+                            <h2 className="mb-5 font-serif text-3xl sm:text-4xl lg:text-5xl leading-tight text-[#f8f9fa]">
+                                Let's Build a <span className="text-[#d4af37] italic">Partnership</span>
                             </h2>
-                            <p className="mb-10 text-[14px] leading-relaxed text-[#e4e4e7]">
-                                Tell us your requirement and our sales team will get back to you with the best quotation.
+                            <p className="mb-12 text-[14px] sm:text-[15px] leading-relaxed text-[var(--color-text-secondary)]">
+                                Tell us about your bulk requirement. Our export specialists will analyze your needs and provide a tailored quotation within 24 hours.
                             </p>
 
-                            <div className="flex gap-6 mb-12">
-                                <div className="flex flex-col items-center text-center gap-2">
-                                    <div className="text-[#d4af37]"><Clock size={24} strokeWidth={1.5} /></div>
-                                    <span className="text-[11px] text-[#e4e4e7]">Quick<br/>Response</span>
-                                </div>
-                                <div className="flex flex-col items-center text-center gap-2">
-                                    <div className="text-[#d4af37]"><Users size={24} strokeWidth={1.5} /></div>
-                                    <span className="text-[11px] text-[#e4e4e7]">Dedicated<br/>Support</span>
-                                </div>
-                                <div className="flex flex-col items-center text-center gap-2">
-                                    <div className="text-[#d4af37]"><ShieldCheck size={24} strokeWidth={1.5} /></div>
-                                    <span className="text-[11px] text-[#e4e4e7]">Secure &<br/>Confidential</span>
-                                </div>
-                            </div>
-                        </div>
-
-                        {/* Bottom decorative image */}
-                        <div className="relative mt-auto pt-8">
-                            <div className="absolute bottom-0 left-0 h-40 w-40 rounded-full bg-[#d4af37]/10 blur-3xl"></div>
-                            <img src="/makhanabowl.png" alt="Makhana" className="relative z-10 w-48 object-contain drop-shadow-[0_0_20px_rgba(212,175,55,0.15)]" />
-                        </div>
-                    </div>
-
-                    {/* Right Column - Form */}
-                    <div className="w-full lg:w-2/3">
-                        <form className="grid grid-cols-1 gap-6 sm:grid-cols-2">
-                            {/* Name & Company */}
-                            <div className="space-y-1.5">
-                                <label className="text-[12px] font-medium text-[#f8f9fa]">Name <span className="text-[#d4af37]">*</span></label>
-                                <input type="text" placeholder="Enter your name" className="w-full rounded-md border border-white/10 bg-transparent px-4 py-2.5 text-[13px] text-white placeholder-white/30 focus:border-[#d4af37] focus:outline-none" />
-                            </div>
-                            <div className="space-y-1.5">
-                                <label className="text-[12px] font-medium text-[#f8f9fa]">Company <span className="text-[#d4af37]">*</span></label>
-                                <input type="text" placeholder="Enter company name" className="w-full rounded-md border border-white/10 bg-transparent px-4 py-2.5 text-[13px] text-white placeholder-white/30 focus:border-[#d4af37] focus:outline-none" />
-                            </div>
-
-                            {/* Email & Phone */}
-                            <div className="space-y-1.5">
-                                <label className="text-[12px] font-medium text-[#f8f9fa]">Email <span className="text-[#d4af37]">*</span></label>
-                                <input type="email" placeholder="Enter email" className="w-full rounded-md border border-white/10 bg-transparent px-4 py-2.5 text-[13px] text-white placeholder-white/30 focus:border-[#d4af37] focus:outline-none" />
-                            </div>
-                            <div className="space-y-1.5">
-                                <label className="text-[12px] font-medium text-[#f8f9fa]">Phone <span className="text-[#d4af37]">*</span></label>
-                                <input type="tel" placeholder="Enter phone number" className="w-full rounded-md border border-white/10 bg-transparent px-4 py-2.5 text-[13px] text-white placeholder-white/30 focus:border-[#d4af37] focus:outline-none" />
-                            </div>
-
-                            {/* Country & Product */}
-                            <div className="space-y-1.5">
-                                <label className="text-[12px] font-medium text-[#f8f9fa]">Country <span className="text-[#d4af37]">*</span></label>
-                                <select className="w-full rounded-md border border-white/10 bg-[#080b14] px-4 py-2.5 text-[13px] text-white focus:border-[#d4af37] focus:outline-none appearance-none">
-                                    <option>Select country</option>
-                                    <option>USA</option>
-                                    <option>UK</option>
-                                    <option>Canada</option>
-                                </select>
-                            </div>
-                            <div className="space-y-1.5">
-                                <label className="text-[12px] font-medium text-[#f8f9fa]">Product <span className="text-[#d4af37]">*</span></label>
-                                <select className="w-full rounded-md border border-white/10 bg-[#080b14] px-4 py-2.5 text-[13px] text-white focus:border-[#d4af37] focus:outline-none appearance-none">
-                                    <option>Select product</option>
-                                    <option>Raw Makhana</option>
-                                    <option>Roasted Makhana</option>
-                                </select>
-                            </div>
-
-                            {/* Quantity & Packaging */}
-                            <div className="space-y-1.5">
-                                <label className="text-[12px] font-medium text-[#f8f9fa]">Quantity <span className="text-[#d4af37]">*</span></label>
-                                <input type="text" placeholder="Enter quantity" className="w-full rounded-md border border-white/10 bg-transparent px-4 py-2.5 text-[13px] text-white placeholder-white/30 focus:border-[#d4af37] focus:outline-none" />
-                            </div>
-                            <div className="space-y-1.5">
-                                <label className="text-[12px] font-medium text-[#f8f9fa]">Packaging <span className="text-[#d4af37]">*</span></label>
-                                <select className="w-full rounded-md border border-white/10 bg-[#080b14] px-4 py-2.5 text-[13px] text-white focus:border-[#d4af37] focus:outline-none appearance-none">
-                                    <option>Select packaging</option>
-                                    <option>Retail Packs</option>
-                                    <option>Bulk Packs</option>
-                                </select>
-                            </div>
-
-                            {/* Private Label & Destination Port */}
-                            <div className="space-y-1.5">
-                                <label className="text-[12px] font-medium text-[#f8f9fa]">Private Label? <span className="text-[#d4af37]">*</span></label>
-                                <div className="flex gap-6 pt-2">
-                                    <label className="flex items-center gap-2 cursor-pointer text-[13px] text-[#e4e4e7]">
-                                        <input type="radio" name="privateLabel" className="accent-[#d4af37]" /> Yes
-                                    </label>
-                                    <label className="flex items-center gap-2 cursor-pointer text-[13px] text-[#e4e4e7]">
-                                        <input type="radio" name="privateLabel" className="accent-[#d4af37]" defaultChecked /> No
-                                    </label>
-                                </div>
-                            </div>
-                            <div className="space-y-1.5">
-                                <label className="text-[12px] font-medium text-[#f8f9fa]">Destination Port</label>
-                                <input type="text" placeholder="Enter destination port" className="w-full rounded-md border border-white/10 bg-transparent px-4 py-2.5 text-[13px] text-white placeholder-white/30 focus:border-[#d4af37] focus:outline-none" />
-                            </div>
-
-                            {/* Message */}
-                            <div className="space-y-1.5 sm:col-span-2">
-                                <label className="text-[12px] font-medium text-[#f8f9fa]">Message</label>
-                                <input type="text" placeholder="Enter your message" className="w-full rounded-md border border-white/10 bg-transparent px-4 py-2.5 text-[13px] text-white placeholder-white/30 focus:border-[#d4af37] focus:outline-none" />
-                            </div>
-
-                            {/* File Upload & Submit button row */}
-                            <div className="sm:col-span-2 flex flex-col sm:flex-row gap-6 mt-2">
-                                <div className="flex-1 space-y-1.5">
-                                    <label className="text-[12px] font-medium text-[#f8f9fa]">Upload Requirement</label>
-                                    <div className="flex items-center gap-4 rounded-md border border-dashed border-white/20 bg-white/5 px-4 py-3 cursor-pointer hover:border-[#d4af37]/50 transition">
-                                        <Upload size={20} className="text-[#d4af37]" />
-                                        <span className="text-[11px] text-[#e4e4e7]">Click to upload or drag & drop<br/><span className="text-white/40">(PDF, DOC, JPG, PNG)</span></span>
+                            <div className="flex flex-col gap-8 mb-12">
+                                <div className="flex items-start gap-4">
+                                    <div className="w-10 h-10 rounded-full bg-[#d4af37]/10 border border-[#d4af37]/20 flex items-center justify-center shrink-0">
+                                        <Clock size={18} className="text-[#d4af37]" />
+                                    </div>
+                                    <div>
+                                        <h4 className="text-[14px] font-medium text-[#f8f9fa] mb-1">Quick Turnaround</h4>
+                                        <p className="text-[12px] text-[var(--color-text-secondary)] leading-relaxed">Fast processing and detailed quotations within 1 business day.</p>
                                     </div>
                                 </div>
-                                <div className="flex items-end w-full sm:w-auto">
-                                    <button type="button" className="inline-flex h-[52px] items-center justify-center gap-2 rounded-md bg-[#d4af37] px-8 text-[13px] font-semibold text-[#080b14] transition hover:bg-[#c39b2e] w-full sm:w-auto">
-                                        Submit Inquiry
-                                        <ArrowRight size={16} />
-                                    </button>
+                                <div className="flex items-start gap-4">
+                                    <div className="w-10 h-10 rounded-full bg-[#d4af37]/10 border border-[#d4af37]/20 flex items-center justify-center shrink-0">
+                                        <Users size={18} className="text-[#d4af37]" />
+                                    </div>
+                                    <div>
+                                        <h4 className="text-[14px] font-medium text-[#f8f9fa] mb-1">Dedicated Account Manager</h4>
+                                        <p className="text-[12px] text-[var(--color-text-secondary)] leading-relaxed">A single point of contact for end-to-step assistance.</p>
+                                    </div>
+                                </div>
+                                <div className="flex items-start gap-4">
+                                    <div className="w-10 h-10 rounded-full bg-[#d4af37]/10 border border-[#d4af37]/20 flex items-center justify-center shrink-0">
+                                        <ShieldCheck size={18} className="text-[#d4af37]" />
+                                    </div>
+                                    <div>
+                                        <h4 className="text-[14px] font-medium text-[#f8f9fa] mb-1">Secure & Confidential</h4>
+                                        <p className="text-[12px] text-[var(--color-text-secondary)] leading-relaxed">Your business data and private labels are strictly protected.</p>
+                                    </div>
                                 </div>
                             </div>
-                        </form>
+                        </div>
                     </div>
+
+                    {/* Right Column: Premium Form */}
+                    <div className="w-full lg:w-7/12 relative z-10 lg:pt-2">
+                        <form className="grid grid-cols-1 gap-x-6 gap-y-7 sm:grid-cols-2">
+                                
+                                {/* Personal Info */}
+                                <div className="space-y-2">
+                                    <label className="text-[11px] font-medium text-[var(--color-text-secondary)] uppercase tracking-wider">Full Name <span className="text-[#d4af37]">*</span></label>
+                                    <input type="text" placeholder="John Doe" className="w-full rounded-lg border border-white/10 bg-white/[0.03] px-4 py-3 text-[13px] text-[#f8f9fa] placeholder-white/20 hover:bg-white/[0.05] focus:bg-white/[0.08] focus:border-[#d4af37]/50 focus:ring-1 focus:ring-[#d4af37]/50 transition-all outline-none" />
+                                </div>
+                                <div className="space-y-2">
+                                    <label className="text-[11px] font-medium text-[var(--color-text-secondary)] uppercase tracking-wider">Company Name <span className="text-[#d4af37]">*</span></label>
+                                    <input type="text" placeholder="Acme Corp LLC" className="w-full rounded-lg border border-white/10 bg-white/[0.03] px-4 py-3 text-[13px] text-[#f8f9fa] placeholder-white/20 hover:bg-white/[0.05] focus:bg-white/[0.08] focus:border-[#d4af37]/50 focus:ring-1 focus:ring-[#d4af37]/50 transition-all outline-none" />
+                                </div>
+
+                                {/* Contact Details */}
+                                <div className="space-y-2">
+                                    <label className="text-[11px] font-medium text-[var(--color-text-secondary)] uppercase tracking-wider">Email Address <span className="text-[#d4af37]">*</span></label>
+                                    <input type="email" placeholder="john@example.com" className="w-full rounded-lg border border-white/10 bg-white/[0.03] px-4 py-3 text-[13px] text-[#f8f9fa] placeholder-white/20 hover:bg-white/[0.05] focus:bg-white/[0.08] focus:border-[#d4af37]/50 focus:ring-1 focus:ring-[#d4af37]/50 transition-all outline-none" />
+                                </div>
+                                <div className="space-y-2">
+                                    <label className="text-[11px] font-medium text-[var(--color-text-secondary)] uppercase tracking-wider">Phone Number <span className="text-[#d4af37]">*</span></label>
+                                    <input type="tel" placeholder="+1 (555) 000-0000" className="w-full rounded-lg border border-white/10 bg-white/[0.03] px-4 py-3 text-[13px] text-[#f8f9fa] placeholder-white/20 hover:bg-white/[0.05] focus:bg-white/[0.08] focus:border-[#d4af37]/50 focus:ring-1 focus:ring-[#d4af37]/50 transition-all outline-none" />
+                                </div>
+
+                                {/* Location & Product */}
+                                <div className="space-y-2">
+                                    <label className="text-[11px] font-medium text-[var(--color-text-secondary)] uppercase tracking-wider">Target Country <span className="text-[#d4af37]">*</span></label>
+                                    <div className="relative">
+                                        <select className="w-full rounded-lg border border-white/10 bg-white/[0.03] px-4 py-3 text-[13px] text-[#f8f9fa] hover:bg-white/[0.05] focus:bg-white/[0.08] focus:border-[#d4af37]/50 focus:ring-1 focus:ring-[#d4af37]/50 transition-all outline-none appearance-none cursor-pointer">
+                                            <option value="" className="bg-[#0a0d14] text-white/50">Select destination</option>
+                                            <option value="us" className="bg-[#0a0d14]">United States</option>
+                                            <option value="uk" className="bg-[#0a0d14]">United Kingdom</option>
+                                            <option value="ae" className="bg-[#0a0d14]">UAE</option>
+                                        </select>
+                                        <div className="absolute inset-y-0 right-4 flex items-center pointer-events-none">
+                                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-[var(--color-text-secondary)]"><path d="m6 9 6 6 6-6"/></svg>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="space-y-2">
+                                    <label className="text-[11px] font-medium text-[var(--color-text-secondary)] uppercase tracking-wider">Product Interest <span className="text-[#d4af37]">*</span></label>
+                                    <div className="relative">
+                                        <select className="w-full rounded-lg border border-white/10 bg-white/[0.03] px-4 py-3 text-[13px] text-[#f8f9fa] hover:bg-white/[0.05] focus:bg-white/[0.08] focus:border-[#d4af37]/50 focus:ring-1 focus:ring-[#d4af37]/50 transition-all outline-none appearance-none cursor-pointer">
+                                            <option value="" className="bg-[#0a0d14] text-white/50">Select category</option>
+                                            <option value="raw" className="bg-[#0a0d14]">Raw Fox Nuts (Phool Makhana)</option>
+                                            <option value="roasted" className="bg-[#0a0d14]">Roasted & Flavored Makhana</option>
+                                        </select>
+                                        <div className="absolute inset-y-0 right-4 flex items-center pointer-events-none">
+                                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-[var(--color-text-secondary)]"><path d="m6 9 6 6 6-6"/></svg>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {/* Order specifics */}
+                                <div className="space-y-2">
+                                    <label className="text-[11px] font-medium text-[var(--color-text-secondary)] uppercase tracking-wider">Est. Quantity <span className="text-[#d4af37]">*</span></label>
+                                    <input type="text" placeholder="e.g. 1000 KG" className="w-full rounded-lg border border-white/10 bg-white/[0.03] px-4 py-3 text-[13px] text-[#f8f9fa] placeholder-white/20 hover:bg-white/[0.05] focus:bg-white/[0.08] focus:border-[#d4af37]/50 focus:ring-1 focus:ring-[#d4af37]/50 transition-all outline-none" />
+                                </div>
+                                
+                                {/* Private Label Pills */}
+                                <div className="space-y-2 flex flex-col">
+                                    <label className="text-[11px] font-medium text-[var(--color-text-secondary)] uppercase tracking-wider">Private Labeling?</label>
+                                    <div className="flex bg-white/[0.03] border border-white/10 rounded-lg p-1 h-[46px]">
+                                        <button 
+                                            type="button"
+                                            onClick={() => setPrivateLabel(true)}
+                                            className={`flex-1 flex items-center justify-center gap-2 rounded-md text-[12px] font-medium transition-all ${privateLabel ? 'bg-[#d4af37] text-[#080b14] shadow-sm' : 'text-[var(--color-text-secondary)] hover:text-[#f8f9fa]'}`}
+                                        >
+                                            {privateLabel && <CheckCircle2 size={14} />} Yes
+                                        </button>
+                                        <button 
+                                            type="button"
+                                            onClick={() => setPrivateLabel(false)}
+                                            className={`flex-1 flex items-center justify-center gap-2 rounded-md text-[12px] font-medium transition-all ${!privateLabel ? 'bg-white/10 text-[#f8f9fa] shadow-sm' : 'text-[var(--color-text-secondary)] hover:text-[#f8f9fa]'}`}
+                                        >
+                                            {!privateLabel && <CheckCircle2 size={14} />} No
+                                        </button>
+                                    </div>
+                                </div>
+
+                                {/* Message */}
+                                <div className="space-y-2 sm:col-span-2">
+                                    <label className="text-[11px] font-medium text-[var(--color-text-secondary)] uppercase tracking-wider">Additional Requirements</label>
+                                    <textarea 
+                                        rows={3}
+                                        placeholder="Tell us about specific packaging needs, certifications required, or destination port details..." 
+                                        className="w-full rounded-lg border border-white/10 bg-white/[0.03] px-4 py-3 text-[13px] text-[#f8f9fa] placeholder-white/20 hover:bg-white/[0.05] focus:bg-white/[0.08] focus:border-[#d4af37]/50 focus:ring-1 focus:ring-[#d4af37]/50 transition-all outline-none resize-none"
+                                    ></textarea>
+                                </div>
+
+                                {/* Upload & Submit */}
+                                <div className="sm:col-span-2 pt-2 border-t border-white/10 mt-2 flex flex-col sm:flex-row gap-5">
+                                    
+                                    {/* Upload box */}
+                                    <div className="flex-1">
+                                        <div className="group relative flex items-center justify-center gap-3 w-full h-[54px] rounded-lg border border-dashed border-white/20 bg-white/[0.02] hover:bg-white/[0.05] hover:border-[#d4af37]/40 transition-all cursor-pointer overflow-hidden">
+                                            <Upload size={18} className="text-[#d4af37] group-hover:-translate-y-1 transition-transform duration-300" />
+                                            <div className="flex flex-col">
+                                                <span className="text-[12px] font-medium text-[#e4e4e7]">Upload Spec Sheet</span>
+                                                <span className="text-[10px] text-white/40">PDF, DOC up to 10MB</span>
+                                            </div>
+                                            <input type="file" className="absolute inset-0 opacity-0 cursor-pointer" />
+                                        </div>
+                                    </div>
+
+                                    {/* Submit Button */}
+                                    <button type="button" className="group relative inline-flex h-[54px] items-center justify-center gap-2 rounded-lg bg-[#d4af37] px-8 text-[13px] font-bold text-[#080b14] transition-all hover:bg-[#f3e5ab] w-full sm:w-[220px] shadow-[0_0_20px_rgba(212,175,55,0.2)] hover:shadow-[0_0_30px_rgba(212,175,55,0.4)] overflow-hidden">
+                                        <span className="relative z-10 flex items-center gap-2">
+                                            Submit Inquiry
+                                            <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
+                                        </span>
+                                        {/* Shimmer effect */}
+                                        <div className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/40 to-transparent group-hover:animate-[shimmer_1.5s_infinite]"></div>
+                                    </button>
+                                </div>
+
+                            </form>
+                    </div>
+
                 </div>
             </div>
         </section>

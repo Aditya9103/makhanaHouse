@@ -1,55 +1,7 @@
 import { ChevronDown, LayoutGrid, List, ChevronRight, Sprout, ShoppingCart, Star } from "lucide-react";
-
-const products = [
-    {
-        id: 1, name: "Premium Makhana", tag: "Super Quality | Big Size",
-        price: 299, weight: "250g", rating: 5, reviews: 128, badge: "Bestseller"
-    },
-    {
-        id: 2, name: "Roasted Makhana", tag: "Lightly Salted | Crunchy",
-        price: 249, weight: "250g", rating: 5, reviews: 96, badge: null
-    },
-    {
-        id: 3, name: "Peri Peri Makhana", tag: "Spicy & Tasty | Roasted",
-        price: 279, weight: "250g", rating: 5, reviews: 84, badge: null
-    },
-    {
-        id: 4, name: "Himalayan Pink Salt Makhana", tag: "Healthy & Delicious",
-        price: 259, weight: "250g", rating: 5, reviews: 73, badge: null
-    },
-    {
-        id: 5, name: "Chocolate Makhana", tag: "Healthy Snack | Kids Favorite",
-        price: 299, weight: "250g", rating: 5, reviews: 58, badge: null
-    },
-    {
-        id: 6, name: "Jumbo Makhana", tag: "Extra Large | Premium",
-        price: 349, weight: "250g", rating: 5, reviews: 42, badge: null
-    },
-    {
-        id: 7, name: "Masala Makhana", tag: "Indian Spices | Roasted",
-        price: 249, weight: "250g", rating: 5, reviews: 39, badge: "New"
-    },
-    {
-        id: 8, name: "Makhana Gift Pack", tag: "Premium Assorted Pack",
-        price: 499, weight: "Pack", rating: 5, reviews: 31, badge: null
-    },
-    {
-        id: 9, name: "Cream & Onion Makhana", tag: "Tangy & Flavorful",
-        price: 249, weight: "250g", rating: 5, reviews: 28, badge: null
-    },
-    {
-        id: 10, name: "Cheese Makhana", tag: "Cheesy & Crunchy",
-        price: 279, weight: "250g", rating: 5, reviews: 24, badge: null
-    },
-    {
-        id: 11, name: "Salt & Pepper Makhana", tag: "Classic & Light",
-        price: 249, weight: "250g", rating: 5, reviews: 26, badge: null
-    },
-    {
-        id: 12, name: "Bulk Makhana (5kg)", tag: "Best for Businesses",
-        price: 2199, weight: "5kg", rating: 5, reviews: 18, badge: null
-    },
-];
+import { Link } from "react-router-dom";
+import { productsData as products } from "../../data/productDetailData";
+import { useCart } from "../../context/CartContext";
 
 function StarRow({ rating }) {
     return (
@@ -70,6 +22,8 @@ function StarRow({ rating }) {
 }
 
 export default function ShopProductGrid() {
+    const { addToCart } = useCart();
+
     return (
         <div className="flex-1">
             {/* Header */}
@@ -107,20 +61,22 @@ export default function ShopProductGrid() {
                                     {product.badge}
                                 </span>
                             )}
-                            <div className="absolute inset-0 overflow-hidden group">
+                            <Link to={`/product/${product.slug}`} className="absolute inset-0 overflow-hidden group block">
                                 <img 
                                     src="/homehero2.png" 
                                     alt={product.name}
                                     className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
                                 />
                                 <div className="absolute inset-0 bg-gradient-to-t from-[#080b14]/80 to-transparent"></div>
-                            </div>
+                            </Link>
                         </div>
 
-                        <div className="flex flex-1 flex-col gap-1.5 p-4">
-                            <h3 className="text-sm font-medium leading-snug text-[#f8f9fa]">
-                                {product.name}
-                            </h3>
+        <div className="flex flex-1 flex-col gap-1.5 p-4">
+            <Link to={`/product/${product.slug}`} className="block">
+                <h3 className="text-sm font-medium leading-snug text-[#f8f9fa] hover:text-[#d4af37] transition-colors">
+                    {product.name}
+                </h3>
+            </Link>
                             <p className="text-xs text-[var(--color-text-secondary)]">{product.tag}</p>
 
                             <div className="flex items-center gap-1.5 mt-1">
@@ -138,6 +94,7 @@ export default function ShopProductGrid() {
                                     </span>
                                 </p>
                                 <button
+                                    onClick={() => addToCart(product, 1, product.weight)}
                                     aria-label={`Add ${product.name} to cart`}
                                     className="flex h-9 w-9 items-center justify-center rounded-full border border-[#d4af37]/40 text-[#d4af37] transition hover:bg-[#d4af37] hover:text-[#080b14]"
                                 >

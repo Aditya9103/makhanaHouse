@@ -10,7 +10,7 @@ const trustPoints = [
 export default function HeroHome() {
     return (
         <section
-            className="relative flex items-center overflow-hidden bg-cover bg-[position:70%_center] lg:bg-center pt-16 pb-12 lg:py-0 lg:min-h-[90vh] bg-[#080b14]"
+            className="relative flex items-center overflow-hidden bg-cover bg-[position:70%_center] lg:bg-center pt-10 pb-12 lg:py-0 lg:min-h-[90vh] bg-[#080b14]"
             style={{ backgroundImage: 'url(/homeherobg.png)' }}
         >
             {/* Dark overlay to ensure text remains readable against the background */}

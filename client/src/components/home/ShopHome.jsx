@@ -1,4 +1,5 @@
 import { useRef } from "react";
+import { Link } from "react-router-dom";
 import {
     ChevronLeft,
     ChevronRight,
@@ -10,58 +11,8 @@ import {
     Truck,
 } from "lucide-react";
 
-const products = [
-    {
-        id: 1,
-        name: "Premium Makhana",
-        tag: "Super Quality | Big Size",
-        price: 299,
-        weight: "250g",
-        rating: 5,
-        reviews: 128,
-        badge: null,
-    },
-    {
-        id: 2,
-        name: "Roasted Makhana",
-        tag: "Lightly Salted | Crunchy",
-        price: 249,
-        weight: "250g",
-        rating: 5,
-        reviews: 96,
-        badge: "Bestseller",
-    },
-    {
-        id: 3,
-        name: "Peri Peri Makhana",
-        tag: "Spicy & Tasty | Roasted",
-        price: 279,
-        weight: "250g",
-        rating: 4,
-        reviews: 84,
-        badge: null,
-    },
-    {
-        id: 4,
-        name: "Himalayan Pink Salt Makhana",
-        tag: "Healthy & Delicious",
-        price: 259,
-        weight: "250g",
-        rating: 4,
-        reviews: 73,
-        badge: null,
-    },
-    {
-        id: 5,
-        name: "Chocolate Makhana",
-        tag: "Healthy Snack | Kids Favorite",
-        price: 299,
-        weight: "250g",
-        rating: 4,
-        reviews: 58,
-        badge: null,
-    },
-];
+import { productsData as products } from "../../data/productDetailData";
+import { useCart } from "../../context/CartContext";
 
 const features = [
     {
@@ -105,15 +56,17 @@ function StarRow({ rating }) {
 }
 
 function ProductCard({ product }) {
+    const { addToCart } = useCart();
+
     return (
-        <div className="flex w-[220px] shrink-0 snap-start flex-col overflow-hidden rounded-xl border border-white/10 bg-white/5 transition hover:border-[#d4af37]/40 sm:w-[230px]">
+        <div className="flex w-[calc(50%-0.5rem)] sm:w-[calc(33.333%-0.666rem)] lg:w-[calc(25%-0.75rem)] xl:w-[calc(20%-0.8rem)] shrink-0 snap-start flex-col overflow-hidden rounded-xl border border-white/10 bg-white/5 transition hover:border-[#d4af37]/40">
             <div className="relative aspect-square bg-[linear-gradient(135deg,rgba(255,255,255,0.08),rgba(255,255,255,0.02))]">
                 {product.badge && (
-                    <span className="absolute left-2 top-2 rounded-md bg-[#d4af37] px-2 py-0.5 text-[10px] font-semibold text-[#080b14]">
+                    <span className="absolute left-2 top-2 rounded bg-[#d4af37] px-1.5 py-0.5 sm:px-2 sm:py-1 text-[9px] sm:text-[10px] font-semibold text-[#080b14] z-10 shadow-sm">
                         {product.badge}
                     </span>
                 )}
-                <div className="absolute inset-0 overflow-hidden group">
+                <Link to={`/product/${product.slug}`} className="absolute inset-0 overflow-hidden group block">
                     <img 
                         src="/homehero2.png" 
                         alt={product.name}
@@ -121,34 +74,39 @@ function ProductCard({ product }) {
                     />
                     {/* Subtle gradient overlay to make it blend with the dark theme */}
                     <div className="absolute inset-0 bg-gradient-to-t from-[#080b14]/80 to-transparent"></div>
-                </div>
+                </Link>
             </div>
 
-            <div className="flex flex-1 flex-col gap-1.5 p-3.5">
-                <h3 className="text-[13.5px] font-medium leading-snug text-[#f4f4f5]">
-                    {product.name}
-                </h3>
-                <p className="text-[11.5px] text-[var(--color-text-secondary)]">{product.tag}</p>
+            <div className="flex flex-1 flex-col gap-1 sm:gap-1.5 p-3 sm:p-4">
+                <Link to={`/product/${product.slug}`} className="block">
+                    <h3 className="text-xs sm:text-sm lg:text-[15px] font-medium leading-snug text-[#f4f4f5] hover:text-[#d4af37] transition-colors truncate">
+                        {product.name}
+                    </h3>
+                </Link>
+                <p className="text-[10px] sm:text-xs text-[var(--color-text-secondary)] truncate">{product.tag}</p>
 
-                <div className="flex items-center gap-1.5">
-                    <StarRow rating={product.rating} />
-                    <span className="text-[11px] text-[var(--color-text-secondary)]">
+                <div className="flex items-center gap-1 sm:gap-1.5 mt-0.5 sm:mt-1">
+                    <div className="scale-75 sm:scale-100 origin-left flex">
+                        <StarRow rating={product.rating} />
+                    </div>
+                    <span className="text-[9px] sm:text-[11px] text-[var(--color-text-secondary)]">
                         ({product.reviews})
                     </span>
                 </div>
 
-                <div className="mt-1 flex items-center justify-between">
-                    <p className="text-[15px] font-semibold text-[#f4f4f5]">
+                <div className="mt-auto flex items-center justify-between pt-2 sm:pt-3">
+                    <p className="text-sm sm:text-base lg:text-lg font-semibold text-[#f4f4f5]">
                         ₹{product.price}
-                        <span className="ml-1 text-[11px] font-normal text-[var(--color-text-secondary)]">
+                        <span className="ml-0.5 sm:ml-1 text-[9px] sm:text-[11px] font-normal text-[var(--color-text-secondary)]">
                             /{product.weight}
                         </span>
                     </p>
                     <button
+                        onClick={() => addToCart(product, 1, product.weight)}
                         aria-label={`Add ${product.name} to cart`}
-                        className="flex h-8 w-8 items-center justify-center rounded-full border border-[#d4af37]/40 text-[#d4af37] transition hover:bg-[#d4af37] hover:text-[#080b14]"
+                        className="flex h-7 w-7 sm:h-8 sm:w-8 lg:h-9 lg:w-9 items-center justify-center rounded-full border border-[#d4af37]/40 text-[#d4af37] transition hover:bg-[#d4af37] hover:text-[#080b14]"
                     >
-                        <ShoppingCart size={14} />
+                        <ShoppingCart size={14} className="sm:w-4 sm:h-4 lg:w-[18px] lg:h-[18px]" />
                     </button>
                 </div>
             </div>
