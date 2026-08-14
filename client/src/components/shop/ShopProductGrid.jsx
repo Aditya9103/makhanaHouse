@@ -1,7 +1,8 @@
-import { ChevronDown, LayoutGrid, List, ChevronRight, Sprout, ShoppingCart, Star } from "lucide-react";
+import { ChevronDown, LayoutGrid, List, ChevronRight, Sprout, ShoppingCart, Star, Heart } from "lucide-react";
 import { Link } from "react-router-dom";
 import { productsData as products } from "../../data/productDetailData";
 import { useCart } from "../../context/CartContext";
+import { useWishlist } from "../../context/WishlistContext";
 
 function StarRow({ rating }) {
     return (
@@ -23,6 +24,7 @@ function StarRow({ rating }) {
 
 export default function ShopProductGrid() {
     const { addToCart } = useCart();
+    const { isInWishlist, toggleWishlist } = useWishlist();
 
     return (
         <div className="flex-1">
@@ -57,11 +59,17 @@ export default function ShopProductGrid() {
                     <div key={product.id} className="flex flex-col overflow-hidden rounded-xl border border-white/10 bg-white/5 transition hover:border-[#d4af37]/40">
                         <div className="relative aspect-[4/3] bg-[linear-gradient(135deg,rgba(255,255,255,0.08),rgba(255,255,255,0.02))]">
                             {product.badge && (
-                                <span className="absolute left-3 top-3 rounded-md bg-[#d4af37] px-2.5 py-1 text-[10px] font-semibold tracking-wide text-[#080b14]">
+                                <span className="absolute left-3 top-3 rounded-md bg-[#d4af37] px-2.5 py-1 text-[10px] font-semibold tracking-wide text-[#080b14] z-10">
                                     {product.badge}
                                 </span>
                             )}
-                            <Link to={`/product/${product.slug}`} className="absolute inset-0 overflow-hidden group block">
+                            <button 
+                                onClick={() => toggleWishlist(product)}
+                                className={`absolute top-3 right-3 transition-colors z-20 ${isInWishlist(product.id) ? 'text-[#d4af37]' : 'text-white/40 hover:text-[#d4af37]'}`}
+                            >
+                                <Heart size={18} className={isInWishlist(product.id) ? 'fill-[#d4af37]' : ''} />
+                            </button>
+                            <Link to={`/product/${product.slug}`} className="absolute inset-0 overflow-hidden group block z-0">
                                 <img 
                                     src="/homehero2.png" 
                                     alt={product.name}

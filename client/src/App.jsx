@@ -1,5 +1,6 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import { CartProvider } from './context/CartContext'
+import { WishlistProvider } from './context/WishlistContext'
 import Home from './pages/Home'
 import Shop from './pages/Shop'
 import About from './pages/About'
@@ -11,6 +12,7 @@ import Quality from './pages/Quality'
 import Contact from './pages/Contact'
 import ProductDetail from './pages/ProductDetail'
 import Cart from './pages/Cart'
+import Checkout from './pages/Checkout'
 
 import Profile from './pages/Profile'
 import Orders from './pages/Orders'
@@ -24,8 +26,9 @@ import Settings from './pages/Settings'
 function App() {
   return (
     <CartProvider>
-      <BrowserRouter>
-        <Routes>
+      <WishlistProvider>
+        <BrowserRouter>
+          <Routes>
           <Route path="/" element={<MainLayout />}>
             <Route index element={<Home />} />
             <Route path="shop" element={<Shop />} />
@@ -36,6 +39,7 @@ function App() {
             <Route path="contact" element={<Contact />} />
             <Route path="product/:slug" element={<ProductDetail />} />
             <Route path="cart" element={<Cart />} />
+            <Route path="checkout" element={<Checkout />} />
             <Route path="profile" element={<Profile />} />
             <Route path="profile/orders" element={<Orders />} />
             <Route path="profile/addresses" element={<Addresses />} />
@@ -45,8 +49,9 @@ function App() {
             <Route path="profile/rewards" element={<Rewards />} />
             <Route path="profile/settings" element={<Settings />} />
           </Route>
-        </Routes>
-      </BrowserRouter>
+          </Routes>
+        </BrowserRouter>
+      </WishlistProvider>
     </CartProvider>
   )
 }

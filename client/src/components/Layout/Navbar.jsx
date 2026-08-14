@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { useCart } from "../../context/CartContext";
+import { useWishlist } from "../../context/WishlistContext";
 import {
     Wheat,
     Mail,
@@ -15,6 +16,7 @@ import {
     BadgeCheck,
     Tractor,
     ClipboardCheck,
+    Heart,
 } from "lucide-react";
 
 const utilityItems = [
@@ -38,6 +40,7 @@ export default function Navbar() {
     const [menuOpen, setMenuOpen] = useState(false);
     const location = useLocation();
     const { cartItems } = useCart();
+    const { wishlistItems } = useWishlist();
 
     return (
         <>
@@ -125,6 +128,18 @@ export default function Navbar() {
                             <User size={18} />
                         </Link>
                         <Link
+                            to="/profile/wishlist"
+                            aria-label="Wishlist"
+                            className="relative hidden text-[#e4e4e7] hover:text-[#d4af37] sm:block"
+                        >
+                            <Heart size={18} />
+                            {wishlistItems.length > 0 && (
+                                <span className="absolute -right-2 -top-2 flex h-4 w-4 items-center justify-center rounded-full bg-[#d4af37] text-[9px] font-semibold text-[#080b14]">
+                                    {wishlistItems.length}
+                                </span>
+                            )}
+                        </Link>
+                        <Link
                             to="/cart"
                             aria-label="Cart"
                             className="relative hidden text-[#e4e4e7] hover:text-[#d4af37] sm:block"
@@ -162,7 +177,46 @@ export default function Navbar() {
                                 {label}
                             </Link>
                         ))}
-                        <Link to="/export/new" onClick={() => setMenuOpen(false)} className="mt-3 block w-full text-center rounded-md bg-[#d4af37] px-5 py-3 text-sm font-semibold text-[#080b14]">
+                        
+                        {/* Mobile Actions */}
+                        <div className="mt-2 flex items-center justify-around border-t border-white/10 pt-4">
+                            <Link
+                                to="/profile"
+                                className="flex flex-col items-center gap-1 text-[#e4e4e7] hover:text-[#d4af37]"
+                                onClick={() => setMenuOpen(false)}
+                            >
+                                <User size={20} />
+                                <span className="text-[10px]">Profile</span>
+                            </Link>
+                            <Link
+                                to="/profile/wishlist"
+                                className="relative flex flex-col items-center gap-1 text-[#e4e4e7] hover:text-[#d4af37]"
+                                onClick={() => setMenuOpen(false)}
+                            >
+                                <Heart size={20} />
+                                {wishlistItems.length > 0 && (
+                                    <span className="absolute -top-1 right-2 flex h-3.5 w-3.5 items-center justify-center rounded-full bg-[#d4af37] text-[8px] font-bold text-[#080b14]">
+                                        {wishlistItems.length}
+                                    </span>
+                                )}
+                                <span className="text-[10px]">Wishlist</span>
+                            </Link>
+                            <Link
+                                to="/cart"
+                                className="relative flex flex-col items-center gap-1 text-[#e4e4e7] hover:text-[#d4af37]"
+                                onClick={() => setMenuOpen(false)}
+                            >
+                                <ShoppingCart size={20} />
+                                {cartItems.length > 0 && (
+                                    <span className="absolute -top-1 right-1 flex h-3.5 w-3.5 items-center justify-center rounded-full bg-[#d4af37] text-[8px] font-bold text-[#080b14]">
+                                        {cartItems.reduce((total, item) => total + item.quantity, 0)}
+                                    </span>
+                                )}
+                                <span className="text-[10px]">Cart</span>
+                            </Link>
+                        </div>
+
+                        <Link to="/export/new" onClick={() => setMenuOpen(false)} className="mt-4 block w-full text-center rounded-md bg-[#d4af37] px-5 py-3 text-sm font-semibold text-[#080b14]">
                             Export Inquiry
                         </Link>
                     </nav>

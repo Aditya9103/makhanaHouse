@@ -9,10 +9,12 @@ import {
     ShieldCheck,
     Package,
     Truck,
+    Heart,
 } from "lucide-react";
 
 import { productsData as products } from "../../data/productDetailData";
 import { useCart } from "../../context/CartContext";
+import { useWishlist } from "../../context/WishlistContext";
 
 const features = [
     {
@@ -57,6 +59,7 @@ function StarRow({ rating }) {
 
 function ProductCard({ product }) {
     const { addToCart } = useCart();
+    const { isInWishlist, toggleWishlist } = useWishlist();
 
     return (
         <div className="flex w-[calc(50%-0.5rem)] sm:w-[calc(33.333%-0.666rem)] lg:w-[calc(25%-0.75rem)] xl:w-[calc(20%-0.8rem)] shrink-0 snap-start flex-col overflow-hidden rounded-xl border border-white/10 bg-white/5 transition hover:border-[#d4af37]/40">
@@ -66,7 +69,13 @@ function ProductCard({ product }) {
                         {product.badge}
                     </span>
                 )}
-                <Link to={`/product/${product.slug}`} className="absolute inset-0 overflow-hidden group block">
+                <button 
+                    onClick={() => toggleWishlist(product)}
+                    className={`absolute top-2 right-2 transition-colors z-20 ${isInWishlist(product.id) ? 'text-[#d4af37]' : 'text-white/40 hover:text-[#d4af37]'}`}
+                >
+                    <Heart size={16} className={isInWishlist(product.id) ? 'fill-[#d4af37]' : ''} />
+                </button>
+                <Link to={`/product/${product.slug}`} className="absolute inset-0 overflow-hidden group block z-0">
                     <img 
                         src="/homehero2.png" 
                         alt={product.name}

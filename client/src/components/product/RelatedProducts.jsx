@@ -1,8 +1,10 @@
 import { Star, Heart } from "lucide-react";
 import { Link } from "react-router-dom";
 import { productsData } from "../../data/productDetailData";
+import { useWishlist } from "../../context/WishlistContext";
 
-export default function RelatedProducts({ className = "mx-auto max-w-[1400px] px-4 sm:px-6 lg:px-10", compact = false }) {
+export default function RelatedProducts({ className = "mx-auto max-w-[1400px] px-4 sm:px-6 lg:px-10", compact = false, title = "You May Also Like" }) {
+    const { isInWishlist, toggleWishlist } = useWishlist();
     // Show 6 random or sequential products as related
     const relatedProducts = productsData.slice(0, 6);
 
@@ -19,7 +21,7 @@ export default function RelatedProducts({ className = "mx-auto max-w-[1400px] px
         <section className={className}>
             <div className="flex items-center justify-center gap-4 mb-10">
                 <div className="h-[1px] w-12 bg-gradient-to-r from-transparent to-[#d4af37]/40"></div>
-                <h2 className="font-serif text-2xl sm:text-3xl text-[#f8f9fa]">You May Also Like</h2>
+                <h2 className="font-serif text-2xl sm:text-3xl text-[#f8f9fa]">{title}</h2>
                 <div className="h-[1px] w-12 bg-gradient-to-l from-transparent to-[#d4af37]/40"></div>
             </div>
 
@@ -27,8 +29,11 @@ export default function RelatedProducts({ className = "mx-auto max-w-[1400px] px
                 {relatedProducts.slice(0, 6).map((product, index) => (
                     <div key={product.id} className={`${getVisibilityClass(index)} flex-col overflow-hidden rounded-xl border border-white/10 bg-[#080b14]/50 backdrop-blur-md transition hover:border-[#d4af37]/40`}>
                         <div className="relative aspect-[4/3] w-full bg-[linear-gradient(135deg,rgba(255,255,255,0.05),rgba(255,255,255,0.01))] overflow-hidden group p-2 flex items-center justify-center">
-                            <button className="absolute top-2 right-2 text-white/30 hover:text-red-500 transition-colors z-10">
-                                <Heart size={14} />
+                            <button 
+                                onClick={() => toggleWishlist(product)}
+                                className={`absolute top-2 right-2 transition-colors z-10 ${isInWishlist(product.id) ? 'text-[#d4af37]' : 'text-white/30 hover:text-[#d4af37]'}`}
+                            >
+                                <Heart size={14} className={isInWishlist(product.id) ? 'fill-[#d4af37]' : ''} />
                             </button>
                             <Link to={`/product/${product.slug}`} className="block w-full h-full">
                                 <img 

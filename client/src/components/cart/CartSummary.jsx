@@ -53,10 +53,10 @@ export default function CartSummary() {
                     <span>You save ₹50 on this order</span>
                 </div>
 
-                <button className="flex w-full items-center justify-center gap-2 rounded-md bg-[#d4af37] px-4 py-3.5 text-sm font-semibold text-[#080b14] transition hover:bg-[#c19b2e]">
+                <Link to="/checkout" className="flex w-full items-center justify-center gap-2 rounded-md bg-[#d4af37] px-4 py-3.5 text-sm font-semibold text-[#080b14] transition hover:bg-[#c19b2e]">
                     Proceed to Checkout
                     <ArrowRight size={16} />
-                </button>
+                </Link>
                 
                 <Link to="/shop" className="flex w-full items-center justify-center gap-2 rounded-md border border-[#d4af37]/30 bg-transparent px-4 py-3 text-sm font-medium text-[#d4af37] transition hover:bg-[#d4af37]/10 mt-3">
                     Continue Shopping

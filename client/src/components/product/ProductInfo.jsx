@@ -1,6 +1,8 @@
 import { useState } from "react";
-import { Star, Leaf, WheatOff, Drumstick, Flame, Sprout, Minus, Plus, ShoppingCart } from "lucide-react";
+import { Star, Leaf, WheatOff, Drumstick, Flame, Sprout, Minus, Plus, ShoppingCart, Heart } from "lucide-react";
 import { useCart } from "../../context/CartContext";
+import { useNavigate } from "react-router-dom";
+import { useWishlist } from "../../context/WishlistContext";
 
 const getIcon = (name) => {
     const icons = {
@@ -18,6 +20,8 @@ export default function ProductInfo({ product }) {
     const [selectedSize, setSelectedSize] = useState(product.sizes[0]);
     const [quantity, setQuantity] = useState(1);
     const { addToCart } = useCart();
+    const navigate = useNavigate();
+    const { isInWishlist, toggleWishlist } = useWishlist();
 
     const handleAddToCart = () => {
         addToCart(product, quantity, selectedSize);
@@ -25,9 +29,17 @@ export default function ProductInfo({ product }) {
 
     return (
         <div className="flex flex-col h-full">
-            <h1 className="font-serif text-3xl sm:text-4xl lg:text-[2.5rem] leading-tight text-[#f8f9fa] mb-3">
-                {product.name}
-            </h1>
+            <div className="flex items-start justify-between gap-4 mb-3">
+                <h1 className="font-serif text-3xl sm:text-4xl lg:text-[2.5rem] leading-tight text-[#f8f9fa]">
+                    {product.name}
+                </h1>
+                <button 
+                    onClick={() => toggleWishlist(product)}
+                    className={`shrink-0 p-2 rounded-full border transition-colors mt-1 ${isInWishlist(product.id) ? 'border-[#d4af37] bg-[#d4af37]/10 text-[#d4af37]' : 'border-white/10 bg-white/5 text-white/30 hover:text-[#d4af37] hover:border-white/30'}`}
+                >
+                    <Heart size={20} className={isInWishlist(product.id) ? 'fill-[#d4af37]' : ''} />
+                </button>
+            </div>
 
             {/* Rating */}
             <div className="flex items-center gap-3 mb-4">
@@ -127,7 +139,13 @@ export default function ProductInfo({ product }) {
                     Add to Cart
                     <ShoppingCart size={18} />
                 </button>
-                <button className="flex-1 flex items-center justify-center py-3.5 px-6 rounded-md bg-[#d4af37] text-[#080b14] font-semibold transition hover:bg-[#c29b2b]">
+                <button 
+                    onClick={() => {
+                        handleAddToCart();
+                        navigate('/checkout');
+                    }}
+                    className="flex-1 flex items-center justify-center py-3.5 px-6 rounded-md bg-[#d4af37] text-[#080b14] font-semibold transition hover:bg-[#c29b2b]"
+                >
                     Buy Now
                 </button>
             </div>

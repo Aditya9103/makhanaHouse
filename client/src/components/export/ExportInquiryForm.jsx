@@ -9,53 +9,49 @@ export default function ExportInquiryForm() {
             <div className="mx-auto max-w-[1300px] px-4 sm:px-6 lg:px-8">
                 
                 {/* Main Glass Container */}
-                <div className="relative rounded-3xl border border-white/10 bg-[#0a0d14]/70 backdrop-blur-xl p-6 sm:p-10 lg:p-14 shadow-[0_8px_32px_rgba(0,0,0,0.5)] flex flex-col lg:flex-row gap-12 lg:gap-20 overflow-hidden">
+                <div className="relative rounded-3xl border border-white/10 bg-white/[0.03] backdrop-blur-xl p-6 sm:p-10 lg:p-14 shadow-[0_8px_32px_rgba(0,0,0,0.3)] flex flex-col lg:flex-row gap-12 lg:gap-20 overflow-hidden">
                     
-                    {/* Subtle Background Gradients inside the container */}
-                    <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-[#d4af37]/5 rounded-full blur-[100px] pointer-events-none -translate-y-1/2 translate-x-1/3"></div>
-                    <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-[#d4af37]/5 rounded-full blur-[100px] pointer-events-none translate-y-1/3 -translate-x-1/3"></div>
-
                     {/* Left Column: Information */}
                     <div className="w-full lg:w-5/12 flex flex-col justify-between relative z-10">
                         <div>
-                            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/5 border border-white/10 mb-6">
+                            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/10 border border-white/20 mb-6">
                                 <span className="w-2 h-2 rounded-full bg-[#d4af37] animate-pulse"></span>
                                 <span className="text-[11px] font-medium text-[#d4af37] uppercase tracking-widest">Global Reach</span>
                             </div>
                             
-                            <h2 className="mb-5 font-serif text-3xl sm:text-4xl lg:text-5xl leading-tight text-[#f8f9fa]">
+                            <h2 className="mb-5 font-serif text-3xl sm:text-4xl lg:text-5xl leading-tight text-white">
                                 Let's Build a <span className="text-[#d4af37] italic">Partnership</span>
                             </h2>
-                            <p className="mb-12 text-[14px] sm:text-[15px] leading-relaxed text-[var(--color-text-secondary)]">
+                            <p className="mb-12 text-[14px] sm:text-[15px] leading-relaxed text-[#e4e4e7]">
                                 Tell us about your bulk requirement. Our export specialists will analyze your needs and provide a tailored quotation within 24 hours.
                             </p>
 
                             <div className="flex flex-col gap-8 mb-12">
                                 <div className="flex items-start gap-4">
-                                    <div className="w-10 h-10 rounded-full bg-[#d4af37]/10 border border-[#d4af37]/20 flex items-center justify-center shrink-0">
+                                    <div className="w-10 h-10 rounded-full bg-[#d4af37]/15 border border-[#d4af37]/30 flex items-center justify-center shrink-0">
                                         <Clock size={18} className="text-[#d4af37]" />
                                     </div>
                                     <div>
-                                        <h4 className="text-[14px] font-medium text-[#f8f9fa] mb-1">Quick Turnaround</h4>
-                                        <p className="text-[12px] text-[var(--color-text-secondary)] leading-relaxed">Fast processing and detailed quotations within 1 business day.</p>
+                                        <h4 className="text-[14px] font-medium text-white mb-1">Quick Turnaround</h4>
+                                        <p className="text-[12px] text-[#e4e4e7] leading-relaxed">Fast processing and detailed quotations within 1 business day.</p>
                                     </div>
                                 </div>
                                 <div className="flex items-start gap-4">
-                                    <div className="w-10 h-10 rounded-full bg-[#d4af37]/10 border border-[#d4af37]/20 flex items-center justify-center shrink-0">
+                                    <div className="w-10 h-10 rounded-full bg-[#d4af37]/15 border border-[#d4af37]/30 flex items-center justify-center shrink-0">
                                         <Users size={18} className="text-[#d4af37]" />
                                     </div>
                                     <div>
-                                        <h4 className="text-[14px] font-medium text-[#f8f9fa] mb-1">Dedicated Account Manager</h4>
-                                        <p className="text-[12px] text-[var(--color-text-secondary)] leading-relaxed">A single point of contact for end-to-step assistance.</p>
+                                        <h4 className="text-[14px] font-medium text-white mb-1">Dedicated Account Manager</h4>
+                                        <p className="text-[12px] text-[#e4e4e7] leading-relaxed">A single point of contact for end-to-step assistance.</p>
                                     </div>
                                 </div>
                                 <div className="flex items-start gap-4">
-                                    <div className="w-10 h-10 rounded-full bg-[#d4af37]/10 border border-[#d4af37]/20 flex items-center justify-center shrink-0">
+                                    <div className="w-10 h-10 rounded-full bg-[#d4af37]/15 border border-[#d4af37]/30 flex items-center justify-center shrink-0">
                                         <ShieldCheck size={18} className="text-[#d4af37]" />
                                     </div>
                                     <div>
-                                        <h4 className="text-[14px] font-medium text-[#f8f9fa] mb-1">Secure & Confidential</h4>
-                                        <p className="text-[12px] text-[var(--color-text-secondary)] leading-relaxed">Your business data and private labels are strictly protected.</p>
+                                        <h4 className="text-[14px] font-medium text-white mb-1">Secure & Confidential</h4>
+                                        <p className="text-[12px] text-[#e4e4e7] leading-relaxed">Your business data and private labels are strictly protected.</p>
                                     </div>
                                 </div>
                             </div>
@@ -68,74 +64,74 @@ export default function ExportInquiryForm() {
                                 
                                 {/* Personal Info */}
                                 <div className="space-y-2">
-                                    <label className="text-[11px] font-medium text-[var(--color-text-secondary)] uppercase tracking-wider">Full Name <span className="text-[#d4af37]">*</span></label>
-                                    <input type="text" placeholder="John Doe" className="w-full rounded-lg border border-white/10 bg-white/[0.03] px-4 py-3 text-[13px] text-[#f8f9fa] placeholder-white/20 hover:bg-white/[0.05] focus:bg-white/[0.08] focus:border-[#d4af37]/50 focus:ring-1 focus:ring-[#d4af37]/50 transition-all outline-none" />
+                                    <label className="text-[11px] font-medium text-[#e4e4e7] uppercase tracking-wider">Full Name <span className="text-[#d4af37]">*</span></label>
+                                    <input type="text" placeholder="John Doe" className="w-full rounded-lg border border-white/10 bg-white/[0.05] px-4 py-3 text-[13px] text-white placeholder-white/40 hover:bg-white/[0.08] focus:bg-white/[0.1] focus:border-[#d4af37]/50 focus:ring-1 focus:ring-[#d4af37]/50 transition-all outline-none" />
                                 </div>
                                 <div className="space-y-2">
-                                    <label className="text-[11px] font-medium text-[var(--color-text-secondary)] uppercase tracking-wider">Company Name <span className="text-[#d4af37]">*</span></label>
-                                    <input type="text" placeholder="Acme Corp LLC" className="w-full rounded-lg border border-white/10 bg-white/[0.03] px-4 py-3 text-[13px] text-[#f8f9fa] placeholder-white/20 hover:bg-white/[0.05] focus:bg-white/[0.08] focus:border-[#d4af37]/50 focus:ring-1 focus:ring-[#d4af37]/50 transition-all outline-none" />
+                                    <label className="text-[11px] font-medium text-[#e4e4e7] uppercase tracking-wider">Company Name <span className="text-[#d4af37]">*</span></label>
+                                    <input type="text" placeholder="Acme Corp LLC" className="w-full rounded-lg border border-white/10 bg-white/[0.05] px-4 py-3 text-[13px] text-white placeholder-white/40 hover:bg-white/[0.08] focus:bg-white/[0.1] focus:border-[#d4af37]/50 focus:ring-1 focus:ring-[#d4af37]/50 transition-all outline-none" />
                                 </div>
 
                                 {/* Contact Details */}
                                 <div className="space-y-2">
-                                    <label className="text-[11px] font-medium text-[var(--color-text-secondary)] uppercase tracking-wider">Email Address <span className="text-[#d4af37]">*</span></label>
-                                    <input type="email" placeholder="john@example.com" className="w-full rounded-lg border border-white/10 bg-white/[0.03] px-4 py-3 text-[13px] text-[#f8f9fa] placeholder-white/20 hover:bg-white/[0.05] focus:bg-white/[0.08] focus:border-[#d4af37]/50 focus:ring-1 focus:ring-[#d4af37]/50 transition-all outline-none" />
+                                    <label className="text-[11px] font-medium text-[#e4e4e7] uppercase tracking-wider">Email Address <span className="text-[#d4af37]">*</span></label>
+                                    <input type="email" placeholder="john@example.com" className="w-full rounded-lg border border-white/10 bg-white/[0.05] px-4 py-3 text-[13px] text-white placeholder-white/40 hover:bg-white/[0.08] focus:bg-white/[0.1] focus:border-[#d4af37]/50 focus:ring-1 focus:ring-[#d4af37]/50 transition-all outline-none" />
                                 </div>
                                 <div className="space-y-2">
-                                    <label className="text-[11px] font-medium text-[var(--color-text-secondary)] uppercase tracking-wider">Phone Number <span className="text-[#d4af37]">*</span></label>
-                                    <input type="tel" placeholder="+1 (555) 000-0000" className="w-full rounded-lg border border-white/10 bg-white/[0.03] px-4 py-3 text-[13px] text-[#f8f9fa] placeholder-white/20 hover:bg-white/[0.05] focus:bg-white/[0.08] focus:border-[#d4af37]/50 focus:ring-1 focus:ring-[#d4af37]/50 transition-all outline-none" />
+                                    <label className="text-[11px] font-medium text-[#e4e4e7] uppercase tracking-wider">Phone Number <span className="text-[#d4af37]">*</span></label>
+                                    <input type="tel" placeholder="+1 (555) 000-0000" className="w-full rounded-lg border border-white/10 bg-white/[0.05] px-4 py-3 text-[13px] text-white placeholder-white/40 hover:bg-white/[0.08] focus:bg-white/[0.1] focus:border-[#d4af37]/50 focus:ring-1 focus:ring-[#d4af37]/50 transition-all outline-none" />
                                 </div>
 
                                 {/* Location & Product */}
                                 <div className="space-y-2">
-                                    <label className="text-[11px] font-medium text-[var(--color-text-secondary)] uppercase tracking-wider">Target Country <span className="text-[#d4af37]">*</span></label>
+                                    <label className="text-[11px] font-medium text-[#e4e4e7] uppercase tracking-wider">Target Country <span className="text-[#d4af37]">*</span></label>
                                     <div className="relative">
-                                        <select className="w-full rounded-lg border border-white/10 bg-white/[0.03] px-4 py-3 text-[13px] text-[#f8f9fa] hover:bg-white/[0.05] focus:bg-white/[0.08] focus:border-[#d4af37]/50 focus:ring-1 focus:ring-[#d4af37]/50 transition-all outline-none appearance-none cursor-pointer">
+                                        <select className="w-full rounded-lg border border-white/10 bg-white/[0.05] px-4 py-3 text-[13px] text-white hover:bg-white/[0.08] focus:bg-white/[0.1] focus:border-[#d4af37]/50 focus:ring-1 focus:ring-[#d4af37]/50 transition-all outline-none appearance-none cursor-pointer">
                                             <option value="" className="bg-[#0a0d14] text-white/50">Select destination</option>
                                             <option value="us" className="bg-[#0a0d14]">United States</option>
                                             <option value="uk" className="bg-[#0a0d14]">United Kingdom</option>
                                             <option value="ae" className="bg-[#0a0d14]">UAE</option>
                                         </select>
                                         <div className="absolute inset-y-0 right-4 flex items-center pointer-events-none">
-                                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-[var(--color-text-secondary)]"><path d="m6 9 6 6 6-6"/></svg>
+                                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-[#e4e4e7]"><path d="m6 9 6 6 6-6"/></svg>
                                         </div>
                                     </div>
                                 </div>
                                 <div className="space-y-2">
-                                    <label className="text-[11px] font-medium text-[var(--color-text-secondary)] uppercase tracking-wider">Product Interest <span className="text-[#d4af37]">*</span></label>
+                                    <label className="text-[11px] font-medium text-[#e4e4e7] uppercase tracking-wider">Product Interest <span className="text-[#d4af37]">*</span></label>
                                     <div className="relative">
-                                        <select className="w-full rounded-lg border border-white/10 bg-white/[0.03] px-4 py-3 text-[13px] text-[#f8f9fa] hover:bg-white/[0.05] focus:bg-white/[0.08] focus:border-[#d4af37]/50 focus:ring-1 focus:ring-[#d4af37]/50 transition-all outline-none appearance-none cursor-pointer">
+                                        <select className="w-full rounded-lg border border-white/10 bg-white/[0.05] px-4 py-3 text-[13px] text-white hover:bg-white/[0.08] focus:bg-white/[0.1] focus:border-[#d4af37]/50 focus:ring-1 focus:ring-[#d4af37]/50 transition-all outline-none appearance-none cursor-pointer">
                                             <option value="" className="bg-[#0a0d14] text-white/50">Select category</option>
                                             <option value="raw" className="bg-[#0a0d14]">Raw Fox Nuts (Phool Makhana)</option>
                                             <option value="roasted" className="bg-[#0a0d14]">Roasted & Flavored Makhana</option>
                                         </select>
                                         <div className="absolute inset-y-0 right-4 flex items-center pointer-events-none">
-                                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-[var(--color-text-secondary)]"><path d="m6 9 6 6 6-6"/></svg>
+                                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-[#e4e4e7]"><path d="m6 9 6 6 6-6"/></svg>
                                         </div>
                                     </div>
                                 </div>
 
                                 {/* Order specifics */}
                                 <div className="space-y-2">
-                                    <label className="text-[11px] font-medium text-[var(--color-text-secondary)] uppercase tracking-wider">Est. Quantity <span className="text-[#d4af37]">*</span></label>
-                                    <input type="text" placeholder="e.g. 1000 KG" className="w-full rounded-lg border border-white/10 bg-white/[0.03] px-4 py-3 text-[13px] text-[#f8f9fa] placeholder-white/20 hover:bg-white/[0.05] focus:bg-white/[0.08] focus:border-[#d4af37]/50 focus:ring-1 focus:ring-[#d4af37]/50 transition-all outline-none" />
+                                    <label className="text-[11px] font-medium text-[#e4e4e7] uppercase tracking-wider">Est. Quantity <span className="text-[#d4af37]">*</span></label>
+                                    <input type="text" placeholder="e.g. 1000 KG" className="w-full rounded-lg border border-white/10 bg-white/[0.05] px-4 py-3 text-[13px] text-white placeholder-white/40 hover:bg-white/[0.08] focus:bg-white/[0.1] focus:border-[#d4af37]/50 focus:ring-1 focus:ring-[#d4af37]/50 transition-all outline-none" />
                                 </div>
                                 
                                 {/* Private Label Pills */}
                                 <div className="space-y-2 flex flex-col">
-                                    <label className="text-[11px] font-medium text-[var(--color-text-secondary)] uppercase tracking-wider">Private Labeling?</label>
-                                    <div className="flex bg-white/[0.03] border border-white/10 rounded-lg p-1 h-[46px]">
+                                    <label className="text-[11px] font-medium text-[#e4e4e7] uppercase tracking-wider">Private Labeling?</label>
+                                    <div className="flex bg-white/[0.05] border border-white/10 rounded-lg p-1 h-[46px]">
                                         <button 
                                             type="button"
                                             onClick={() => setPrivateLabel(true)}
-                                            className={`flex-1 flex items-center justify-center gap-2 rounded-md text-[12px] font-medium transition-all ${privateLabel ? 'bg-[#d4af37] text-[#080b14] shadow-sm' : 'text-[var(--color-text-secondary)] hover:text-[#f8f9fa]'}`}
+                                            className={`flex-1 flex items-center justify-center gap-2 rounded-md text-[12px] font-medium transition-all ${privateLabel ? 'bg-[#d4af37] text-[#080b14] shadow-sm' : 'text-[#e4e4e7] hover:text-white'}`}
                                         >
                                             {privateLabel && <CheckCircle2 size={14} />} Yes
                                         </button>
                                         <button 
                                             type="button"
                                             onClick={() => setPrivateLabel(false)}
-                                            className={`flex-1 flex items-center justify-center gap-2 rounded-md text-[12px] font-medium transition-all ${!privateLabel ? 'bg-white/10 text-[#f8f9fa] shadow-sm' : 'text-[var(--color-text-secondary)] hover:text-[#f8f9fa]'}`}
+                                            className={`flex-1 flex items-center justify-center gap-2 rounded-md text-[12px] font-medium transition-all ${!privateLabel ? 'bg-white/10 text-white shadow-sm' : 'text-[#e4e4e7] hover:text-white'}`}
                                         >
                                             {!privateLabel && <CheckCircle2 size={14} />} No
                                         </button>
@@ -144,11 +140,11 @@ export default function ExportInquiryForm() {
 
                                 {/* Message */}
                                 <div className="space-y-2 sm:col-span-2">
-                                    <label className="text-[11px] font-medium text-[var(--color-text-secondary)] uppercase tracking-wider">Additional Requirements</label>
+                                    <label className="text-[11px] font-medium text-[#e4e4e7] uppercase tracking-wider">Additional Requirements</label>
                                     <textarea 
                                         rows={3}
                                         placeholder="Tell us about specific packaging needs, certifications required, or destination port details..." 
-                                        className="w-full rounded-lg border border-white/10 bg-white/[0.03] px-4 py-3 text-[13px] text-[#f8f9fa] placeholder-white/20 hover:bg-white/[0.05] focus:bg-white/[0.08] focus:border-[#d4af37]/50 focus:ring-1 focus:ring-[#d4af37]/50 transition-all outline-none resize-none"
+                                        className="w-full rounded-lg border border-white/10 bg-white/[0.05] px-4 py-3 text-[13px] text-white placeholder-white/40 hover:bg-white/[0.08] focus:bg-white/[0.1] focus:border-[#d4af37]/50 focus:ring-1 focus:ring-[#d4af37]/50 transition-all outline-none resize-none"
                                     ></textarea>
                                 </div>
 
