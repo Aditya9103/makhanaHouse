@@ -1,6 +1,6 @@
 import { ArrowRight, ChevronDown, Package } from "lucide-react";
 import { Link } from "react-router-dom";
-import { useCart } from "../../context/CartContext";
+import { useCart } from "../../hooks/useCart";
 
 export default function CartSummary() {
     const { cartItems } = useCart();

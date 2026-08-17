@@ -1,7 +1,7 @@
 import { Star, Heart } from "lucide-react";
 import { Link } from "react-router-dom";
 import { productsData } from "../../data/productDetailData";
-import { useWishlist } from "../../context/WishlistContext";
+import { useWishlist } from "../../hooks/useWishlist";
 
 export default function RelatedProducts({ className = "mx-auto max-w-[1400px] px-4 sm:px-6 lg:px-10", compact = false, title = "You May Also Like" }) {
     const { isInWishlist, toggleWishlist } = useWishlist();

@@ -13,8 +13,8 @@ import {
 } from "lucide-react";
 
 import { useGetProductsQuery } from "../../store/api/productApiSlice";
-import { useCart } from "../../context/CartContext";
-import { useWishlist } from "../../context/WishlistContext";
+import { useCart } from "../../hooks/useCart";
+import { useWishlist } from "../../hooks/useWishlist";
 import { Loader2 } from "lucide-react";
 
 const features = [

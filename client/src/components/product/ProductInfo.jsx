@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { Star, Leaf, WheatOff, Drumstick, Flame, Sprout, Minus, Plus, ShoppingCart, Heart } from "lucide-react";
-import { useCart } from "../../context/CartContext";
+import { useCart } from "../../hooks/useCart";
 import { useNavigate } from "react-router-dom";
-import { useWishlist } from "../../context/WishlistContext";
+import { useWishlist } from "../../hooks/useWishlist";
 
 const getIcon = (name) => {
     const icons = {

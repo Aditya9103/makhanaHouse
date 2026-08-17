@@ -1,8 +1,20 @@
-import { Plus, CreditCard, Trash2, SmartphoneNfc } from "lucide-react";
-import { useState } from "react";
+import { CreditCard, Calendar, Eye, Loader2, ArrowRight } from "lucide-react";
+import { useGetMyOrdersQuery } from "../../store/api/orderApiSlice";
+import { Link } from "react-router-dom";
 
 export default function PaymentsMain() {
-    const [activeTab, setActiveTab] = useState("cards");
+    const { data: orders, isLoading, error } = useGetMyOrdersQuery();
+
+    const getStatusColor = (status) => {
+        switch (status) {
+            case 'Pending': return "text-amber-500 bg-amber-500/10 border-amber-500/20";
+            case 'Processing': return "text-blue-400 bg-blue-400/10 border-blue-400/20";
+            case 'Shipped': return "text-purple-400 bg-purple-400/10 border-purple-400/20";
+            case 'Delivered': return "text-[#16a34a] bg-[#16a34a]/10 border-[#16a34a]/20";
+            case 'Cancelled': return "text-red-500 bg-red-500/10 border-red-500/20";
+            default: return "text-[var(--color-text-secondary)] bg-white/5 border-white/10";
+        }
+    };
 
     return (
         <div className="rounded-2xl border border-white/10 bg-[#080b14]/80 backdrop-blur-md overflow-hidden shadow-sm flex flex-col">
@@ -10,134 +22,88 @@ export default function PaymentsMain() {
             {/* Header Section */}
             <div className="p-5 sm:p-6 pb-4 border-b border-white/10 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                 <div>
-                    <h2 className="text-2xl font-serif text-[#f8f9fa] mb-1">Payment Methods</h2>
-                    <p className="text-[13px] text-[var(--color-text-secondary)]">Manage your saved cards and UPI IDs for faster checkout.</p>
+                    <h2 className="text-2xl font-serif text-[#f8f9fa] mb-1">Payment History</h2>
+                    <p className="text-[13px] text-[var(--color-text-secondary)]">Review your recent transactions and payment status.</p>
                 </div>
-                
-                <button className="flex items-center justify-center gap-2 px-5 py-2.5 rounded-md bg-[#d4af37] text-[#080b14] text-[13px] font-medium hover:bg-[#f3e5ab] transition-colors shadow-[0_0_15px_rgba(212,175,55,0.2)] shrink-0">
-                    <Plus size={16} />
-                    Add Payment Method
-                </button>
-            </div>
-
-            {/* Tabs */}
-            <div className="flex border-b border-white/10 px-2 sm:px-6">
-                <button
-                    onClick={() => setActiveTab("cards")}
-                    className={`px-4 py-4 text-[13px] font-medium border-b-2 transition-colors ${
-                        activeTab === "cards" 
-                        ? "border-[#d4af37] text-[#d4af37]" 
-                        : "border-transparent text-[var(--color-text-secondary)] hover:text-[#f8f9fa]"
-                    }`}
-                >
-                    Saved Cards (2)
-                </button>
-                <button
-                    onClick={() => setActiveTab("upi")}
-                    className={`px-4 py-4 text-[13px] font-medium border-b-2 transition-colors ${
-                        activeTab === "upi" 
-                        ? "border-[#d4af37] text-[#d4af37]" 
-                        : "border-transparent text-[var(--color-text-secondary)] hover:text-[#f8f9fa]"
-                    }`}
-                >
-                    Saved UPI (1)
-                </button>
             </div>
 
             {/* Content Area */}
-            <div className="p-4 sm:p-6 grid grid-cols-1 md:grid-cols-2 gap-5">
-                
-                {activeTab === "cards" ? (
-                    <>
-                        {/* Card 1 */}
-                        <div className="rounded-xl border border-[#d4af37]/30 bg-gradient-to-br from-[#d4af37]/10 to-transparent p-5 relative overflow-hidden group">
-                            {/* Glassmorphic overlays */}
-                            <div className="absolute top-[-50%] right-[-20%] w-[150%] h-[150%] bg-[radial-gradient(ellipse_at_center,rgba(212,175,55,0.05)_0%,transparent_70%)] pointer-events-none transform rotate-12"></div>
-                            
-                            <div className="flex justify-between items-start mb-6 relative z-10">
-                                <div className="text-[12px] font-medium text-[#f8f9fa] bg-white/10 px-2.5 py-1 rounded-md border border-white/10">Default</div>
-                                <div className="text-xl font-bold italic tracking-tighter text-white">VISA</div>
-                            </div>
-                            
-                            <div className="text-[18px] font-medium text-[#e4e4e7] tracking-widest mb-4 relative z-10 font-mono">
-                                **** **** **** 4242
-                            </div>
-                            
-                            <div className="flex justify-between items-end relative z-10">
-                                <div className="flex flex-col">
-                                    <span className="text-[10px] text-[var(--color-text-secondary)] uppercase tracking-wider mb-0.5">Card Holder</span>
-                                    <span className="text-[13px] text-[#f8f9fa] font-medium">ADITYA KUMAR</span>
-                                </div>
-                                <div className="flex flex-col text-right">
-                                    <span className="text-[10px] text-[var(--color-text-secondary)] uppercase tracking-wider mb-0.5">Expires</span>
-                                    <span className="text-[13px] text-[#f8f9fa] font-medium font-mono">12/28</span>
-                                </div>
-                            </div>
-                            
-                            {/* Hover Actions */}
-                            <div className="absolute inset-0 bg-[#080b14]/80 backdrop-blur-sm opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center gap-3 z-20">
-                                <button className="h-10 w-10 rounded-full bg-white/10 text-red-400 hover:bg-red-400/20 hover:text-red-300 flex items-center justify-center transition-colors">
-                                    <Trash2 size={16} />
-                                </button>
-                            </div>
-                        </div>
-
-                        {/* Card 2 */}
-                        <div className="rounded-xl border border-white/10 bg-[#0a0d14]/50 p-5 relative overflow-hidden group hover:border-white/20 transition-colors">
-                            
-                            <div className="flex justify-end items-start mb-6 relative z-10">
-                                <div className="flex items-center">
-                                    <div className="h-6 w-6 rounded-full bg-red-500/80 mix-blend-screen relative left-2"></div>
-                                    <div className="h-6 w-6 rounded-full bg-yellow-500/80 mix-blend-screen"></div>
-                                </div>
-                            </div>
-                            
-                            <div className="text-[18px] font-medium text-[#e4e4e7] tracking-widest mb-4 relative z-10 font-mono">
-                                **** **** **** 8890
-                            </div>
-                            
-                            <div className="flex justify-between items-end relative z-10">
-                                <div className="flex flex-col">
-                                    <span className="text-[10px] text-[var(--color-text-secondary)] uppercase tracking-wider mb-0.5">Card Holder</span>
-                                    <span className="text-[13px] text-[#f8f9fa] font-medium">ADITYA KUMAR</span>
-                                </div>
-                                <div className="flex flex-col text-right">
-                                    <span className="text-[10px] text-[var(--color-text-secondary)] uppercase tracking-wider mb-0.5">Expires</span>
-                                    <span className="text-[13px] text-[#f8f9fa] font-medium font-mono">08/26</span>
-                                </div>
-                            </div>
-                            
-                            {/* Hover Actions */}
-                            <div className="absolute inset-0 bg-[#080b14]/80 backdrop-blur-sm opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center gap-3 z-20">
-                                <button className="px-4 py-2 rounded-md bg-[#d4af37] text-[#080b14] text-[12px] font-medium hover:bg-[#f3e5ab] transition-colors">
-                                    Set as Default
-                                </button>
-                                <button className="h-9 w-9 rounded-md bg-white/10 text-red-400 hover:bg-red-400/20 hover:text-red-300 flex items-center justify-center transition-colors">
-                                    <Trash2 size={16} />
-                                </button>
-                            </div>
-                        </div>
-                    </>
+            <div className="flex flex-col p-4 sm:p-6 gap-4">
+                {isLoading ? (
+                    <div className="flex justify-center p-10"><Loader2 className="animate-spin text-[#d4af37]" /></div>
+                ) : !orders || orders.length === 0 ? (
+                    <div className="text-center p-10 text-[var(--color-text-secondary)] flex flex-col items-center gap-4">
+                        <CreditCard size={48} className="opacity-20 mb-2" />
+                        <p>No payment history found.</p>
+                        <Link to="/products" className="text-[#d4af37] text-sm hover:underline">Start Shopping</Link>
+                    </div>
                 ) : (
-                    <>
-                        {/* UPI 1 */}
-                        <div className="rounded-xl border border-white/10 bg-[#0a0d14]/50 p-5 flex items-center justify-between group hover:border-white/20 transition-colors">
-                            <div className="flex items-center gap-4">
-                                <div className="h-12 w-12 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center">
-                                    <SmartphoneNfc size={20} className="text-[#d4af37]" />
+                    orders.map((order) => {
+                        const createdAt = new Date(order.createdAt);
+                        const date = createdAt.toLocaleDateString();
+                        
+                        return (
+                        <div key={order._id} className="flex flex-col lg:flex-row gap-5 p-5 rounded-xl border border-white/10 bg-[#0a0d14]/50 hover:bg-white/[0.02] hover:border-white/20 transition-all group items-start lg:items-center">
+                            
+                            {/* Details */}
+                            <div className="flex-1 flex flex-col min-w-0 w-full">
+                                
+                                {/* Top row: ID, Date & Status */}
+                                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-5">
+                                    <div>
+                                        <div className="flex items-center gap-3 mb-1.5">
+                                            <h3 className="text-[16px] font-semibold text-[#f8f9fa] truncate uppercase">
+                                                Order {order.orderId}
+                                            </h3>
+                                            <span className={`inline-flex text-[10px] px-2.5 py-1 rounded-md border font-medium uppercase tracking-wider shrink-0 ${order.isPaid ? 'text-[#16a34a] bg-[#16a34a]/10 border-[#16a34a]/20' : 'text-amber-500 bg-amber-500/10 border-amber-500/20'}`}>
+                                                {order.isPaid ? 'Paid' : 'Unpaid'}
+                                            </span>
+                                        </div>
+                                        <div className="flex items-center gap-1.5 text-[12px] text-[var(--color-text-secondary)]">
+                                            <Calendar size={13} className="text-[#d4af37]" />
+                                            <span className="truncate">{date}</span>
+                                        </div>
+                                    </div>
                                 </div>
-                                <div>
-                                    <h4 className="text-[14px] font-medium text-[#f8f9fa] mb-0.5">Google Pay</h4>
-                                    <p className="text-[12px] text-[var(--color-text-secondary)]">adityakumar@okhdfcbank</p>
+
+                                {/* Middle row: Specs */}
+                                <div className="grid grid-cols-2 md:grid-cols-3 gap-y-4 gap-x-6 w-full lg:w-[90%] bg-white/[0.02] p-4 rounded-lg border border-white/5">
+                                    <div className="flex flex-col gap-1 min-w-0">
+                                        <span className="text-[11px] text-[var(--color-text-secondary)] uppercase tracking-wider">Amount</span>
+                                        <span className="text-[14px] font-bold text-[#f8f9fa] truncate">₹{order.totalPrice}</span>
+                                    </div>
+                                    <div className="flex flex-col gap-1 min-w-0">
+                                        <span className="text-[11px] text-[var(--color-text-secondary)] uppercase tracking-wider">Payment Method</span>
+                                        <span className="text-[13px] text-[#e4e4e7] truncate">{order.paymentMethod}</span>
+                                    </div>
+                                    <div className="flex flex-col gap-1 min-w-0 col-span-2 md:col-span-1">
+                                        <span className="text-[11px] text-[var(--color-text-secondary)] uppercase tracking-wider">Order Status</span>
+                                        <span className="text-[13px] text-[#e4e4e7] flex items-center gap-1.5 truncate">
+                                            <span className={`px-2 py-0.5 rounded text-[10px] font-medium border ${getStatusColor(order.status)}`}>{order.status}</span>
+                                        </span>
+                                    </div>
+                                </div>
+                                
+                                {/* Mobile View Details Button */}
+                                <div className="flex items-center justify-end mt-4 pt-4 border-t border-white/5 lg:hidden">
+                                    <Link to={`/order/${order._id}`} className="w-full flex items-center justify-center gap-1.5 px-4 py-2 rounded-lg border border-[#d4af37]/40 text-[#d4af37] text-[12px] font-medium hover:bg-[#d4af37] hover:text-[#080b14] transition-all whitespace-nowrap">
+                                        <Eye size={14} />
+                                        View Order
+                                    </Link>
                                 </div>
                             </div>
-                            <button className="h-8 w-8 rounded-md text-[var(--color-text-secondary)] hover:text-red-400 hover:bg-red-400/10 flex items-center justify-center transition-all opacity-0 group-hover:opacity-100">
-                                <Trash2 size={16} />
-                            </button>
+
+                            {/* Right side Desktop Actions */}
+                            <div className="hidden lg:flex shrink-0 w-[140px] pl-6 border-l border-white/10 h-full items-center justify-center">
+                                <Link to={`/order/${order._id}`} className="w-full flex items-center justify-center gap-1.5 px-4 py-2.5 rounded-lg border border-[#d4af37]/40 text-[#d4af37] text-[12px] font-medium hover:bg-[#d4af37] hover:text-[#080b14] transition-all">
+                                    <Eye size={14} />
+                                    View Order
+                                </Link>
+                            </div>
+
                         </div>
-                    </>
+                    )})
                 )}
-                
             </div>
         </div>
     );

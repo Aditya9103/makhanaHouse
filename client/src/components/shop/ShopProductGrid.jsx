@@ -1,8 +1,8 @@
 import { ChevronDown, LayoutGrid, List, ChevronRight, ShoppingCart, Star, Heart, Loader2 } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useState } from "react";
-import { useCart } from "../../context/CartContext";
-import { useWishlist } from "../../context/WishlistContext";
+import { useCart } from "../../hooks/useCart";
+import { useWishlist } from "../../hooks/useWishlist";
 import { useGetProductsQuery } from "../../store/api/productApiSlice";
 
 function StarRow({ rating }) {

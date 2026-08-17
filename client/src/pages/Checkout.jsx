@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import CheckoutStepper from "../components/checkout/CheckoutStepper";
 import CheckoutAddress from "../components/checkout/CheckoutAddress";
@@ -8,6 +8,9 @@ import CheckoutSummary from "../components/checkout/CheckoutSummary";
 import CheckoutTrust from "../components/checkout/CheckoutTrust";
 
 export default function Checkout() {
+    const [selectedAddressId, setSelectedAddressId] = useState(null);
+    const [paymentMethod, setPaymentMethod] = useState("cod");
+
     useEffect(() => {
         window.scrollTo(0, 0);
     }, []);
@@ -36,14 +39,23 @@ export default function Checkout() {
                 <div className="flex flex-col lg:flex-row gap-6 lg:gap-8">
                     {/* Left Column: Flow */}
                     <div className="w-full lg:w-[65%] xl:w-[70%] flex flex-col gap-6">
-                        <CheckoutAddress />
+                        <CheckoutAddress 
+                            selectedAddressId={selectedAddressId} 
+                            setSelectedAddressId={setSelectedAddressId} 
+                        />
                         <CheckoutShipping />
-                        <CheckoutPayment />
+                        <CheckoutPayment 
+                            paymentMethod={paymentMethod} 
+                            setPaymentMethod={setPaymentMethod} 
+                        />
                     </div>
 
                     {/* Right Column: Summary & Trust */}
                     <div className="w-full lg:w-[35%] xl:w-[30%] flex flex-col gap-6">
-                        <CheckoutSummary />
+                        <CheckoutSummary 
+                            selectedAddressId={selectedAddressId} 
+                            paymentMethod={paymentMethod} 
+                        />
                         <CheckoutTrust />
                     </div>
                 </div>

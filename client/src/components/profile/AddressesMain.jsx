@@ -1,52 +1,38 @@
 import { Plus, MoreVertical, Home, Building, Users, Map } from "lucide-react";
 import { useState } from "react";
 import AddressModal from "./AddressModal";
+import { useGetAddressesQuery, useUpdateAddressesMutation } from "../../store/api/usersApiSlice";
 
 export default function AddressesMain() {
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [editingAddress, setEditingAddress] = useState(null);
 
-    const addresses = [
-        {
-            id: 1,
-            type: "Home",
-            icon: Home,
-            isDefault: true,
-            name: "Aditya Kumar",
-            line1: "123, Boring Road, Patna",
-            line2: "Bihar - 800001, India",
-            phone: "+91 98765 43210"
-        },
-        {
-            id: 2,
-            type: "Office",
-            icon: Building,
-            isDefault: false,
-            name: "Aditya Kumar",
-            line1: "Tech Park, Tower - B, Floor 5",
-            line2: "Gandhinagar, Gujarat - 382355, India",
-            phone: "+91 98765 43210"
-        },
-        {
-            id: 3,
-            type: "Parents House",
-            icon: Users,
-            isDefault: false,
-            name: "Aditya Kumar",
-            line1: "Vill - Ekdanga, P.O - Bhagwanpur",
-            line2: "Siwan - 841226, Bihar, India",
-            phone: "+91 98765 43210"
-        },
-        {
-            id: 4,
-            type: "Farm Location",
-            icon: Map,
-            isDefault: false,
-            name: "Makhana House Farms",
-            line1: "Near Makhana Lake, Darbhanga Road",
-            line2: "Madhubani - 847211, Bihar, India",
-            phone: "+91 98765 43210"
+    const { data: addresses = [], isLoading } = useGetAddressesQuery();
+    const [updateAddresses] = useUpdateAddressesMutation();
+
+    const handleDelete = async (id) => {
+        const newAddresses = addresses.filter(addr => addr._id !== id);
+        await updateAddresses(newAddresses);
+    };
+
+    const handleSetDefault = async (id) => {
+        const newAddresses = addresses.map(addr => ({
+            ...addr,
+            isDefault: addr._id === id
+        }));
+        await updateAddresses(newAddresses);
+    };
+
+    const getIcon = (type) => {
+        switch(type) {
+            case 'Office': return Building;
+            case 'Parents House': return Users;
+            case 'Farm Location': return Map;
+            default: return Home;
         }
-    ];
+    };
+
+
 
     return (
         <div className="flex flex-col gap-6">
@@ -59,7 +45,10 @@ export default function AddressesMain() {
                 </div>
                 
                 <button 
-                    onClick={() => setIsModalOpen(true)}
+                    onClick={() => {
+                        setEditingAddress(null);
+                        setIsModalOpen(true);
+                    }}
                     className="flex items-center justify-center gap-2 px-5 py-2.5 rounded-md bg-[#d4af37] text-[#080b14] text-[13px] font-medium hover:bg-[#f3e5ab] transition-colors shadow-[0_0_15px_rgba(212,175,55,0.2)] shrink-0"
                 >
                     <Plus size={16} />
@@ -70,11 +59,14 @@ export default function AddressesMain() {
             <p className="text-[14px] text-[#f8f9fa] font-medium -mb-2">Saved Addresses ({addresses.length})</p>
 
             {/* Address Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 lg:gap-6">
-                {addresses.map((address) => {
-                    const Icon = address.icon;
-                    return (
-                        <div key={address.id} className="relative p-5 rounded-xl border border-white/10 bg-[#080b14]/80 backdrop-blur-md shadow-sm hover:border-[#d4af37]/30 transition-all flex flex-col h-full group">
+            {isLoading ? (
+                <div className="text-[var(--color-text-secondary)] text-[13px] py-4">Loading addresses...</div>
+            ) : (
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 lg:gap-6">
+                    {addresses.map((address) => {
+                        const Icon = getIcon(address.type);
+                        return (
+                            <div key={address._id} className="relative p-5 rounded-xl border border-white/10 bg-[#080b14]/80 backdrop-blur-md shadow-sm hover:border-[#d4af37]/30 transition-all flex flex-col h-full group">
                             
                             {/* Top row: Pill & Menu */}
                             <div className="flex items-start justify-between mb-2">
@@ -116,7 +108,10 @@ export default function AddressesMain() {
                                         <span className="font-medium whitespace-nowrap">Default</span>
                                     </div>
                                 ) : (
-                                    <button className="flex items-center gap-1.5 text-[var(--color-text-secondary)] hover:text-[#f8f9fa] transition-colors shrink-0">
+                                    <button 
+                                        onClick={() => handleSetDefault(address._id)}
+                                        className="flex items-center gap-1.5 text-[var(--color-text-secondary)] hover:text-[#f8f9fa] transition-colors shrink-0"
+                                    >
                                         <div className="h-3.5 w-3.5 rounded-full border border-current shrink-0"></div>
                                         <span className="whitespace-nowrap">Set as Default</span>
                                     </button>
@@ -124,13 +119,19 @@ export default function AddressesMain() {
                                 
                                 <div className="flex items-center gap-3 sm:gap-4 shrink-0">
                                     <button 
-                                        onClick={() => setIsModalOpen(true)}
+                                        onClick={() => {
+                                            setEditingAddress(address);
+                                            setIsModalOpen(true);
+                                        }}
                                         className="text-[#d4af37] flex items-center gap-1 hover:text-[#f3e5ab] transition-colors font-medium whitespace-nowrap"
                                     >
                                         <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"></path></svg>
                                         Edit
                                     </button>
-                                    <button className="text-red-400 flex items-center gap-1 hover:text-red-300 transition-colors font-medium whitespace-nowrap">
+                                    <button 
+                                        onClick={() => handleDelete(address._id)}
+                                        className="text-red-400 flex items-center gap-1 hover:text-red-300 transition-colors font-medium whitespace-nowrap"
+                                    >
                                         <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
                                         Delete
                                     </button>
@@ -140,6 +141,7 @@ export default function AddressesMain() {
                     );
                 })}
             </div>
+            )}
 
             {/* Bottom Promotional Banner */}
             <div className="relative overflow-hidden rounded-xl border border-[#d4af37]/30 bg-[#d4af37]/5 p-5 sm:p-6 mt-2 flex flex-col sm:flex-row sm:items-center justify-between gap-6 backdrop-blur-md">
@@ -181,7 +183,12 @@ export default function AddressesMain() {
             </div>
 
             {/* Modal */}
-            <AddressModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
+            <AddressModal 
+                isOpen={isModalOpen} 
+                onClose={() => setIsModalOpen(false)} 
+                existingAddress={editingAddress}
+                addresses={addresses}
+            />
         </div>
     );
 }

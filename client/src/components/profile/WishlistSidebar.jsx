@@ -1,8 +1,8 @@
 import { ArrowRight, Star, ShoppingCart } from "lucide-react";
 import { Link } from "react-router-dom";
 import { productsData } from "../../data/productDetailData";
-import { useWishlist } from "../../context/WishlistContext";
-import { useCart } from "../../context/CartContext";
+import { useWishlist } from "../../hooks/useWishlist";
+import { useCart } from "../../hooks/useCart";
 
 export default function WishlistSidebar() {
     const { wishlistItems } = useWishlist();

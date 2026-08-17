@@ -1,7 +1,7 @@
 import { Trash2, ShoppingCart, Heart } from "lucide-react";
 import { Link } from "react-router-dom";
-import { useWishlist } from "../../context/WishlistContext";
-import { useCart } from "../../context/CartContext";
+import { useWishlist } from "../../hooks/useWishlist";
+import { useCart } from "../../hooks/useCart";
 
 export default function WishlistMain() {
     const { wishlistItems, removeFromWishlist } = useWishlist();

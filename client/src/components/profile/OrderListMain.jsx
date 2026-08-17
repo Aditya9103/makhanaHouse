@@ -1,64 +1,23 @@
-import { Search, ChevronLeft, ChevronRight } from "lucide-react";
+import { Search, ChevronLeft, ChevronRight, Loader2 } from "lucide-react";
 import OrderCard from "./OrderCard";
 import { useState } from "react";
+import { useGetMyOrdersQuery } from "../../store/api/orderApiSlice";
 
 export default function OrderListMain() {
     const [activeTab, setActiveTab] = useState("All Orders");
+    const { data: orders = [], isLoading } = useGetMyOrdersQuery();
 
     const tabs = [
-        { name: "All Orders", count: 12 },
-        { name: "Processing", count: 2 },
-        { name: "Shipped", count: 3 },
-        { name: "Delivered", count: 6 },
-        { name: "Cancelled", count: 1 },
+        { name: "All Orders", count: orders.length },
+        { name: "Processing", count: orders.filter(o => o.status === "Processing").length },
+        { name: "Shipped", count: orders.filter(o => o.status === "Shipped").length },
+        { name: "Delivered", count: orders.filter(o => o.status === "Delivered").length },
+        { name: "Cancelled", count: orders.filter(o => o.status === "Cancelled").length },
     ];
 
-    const mockOrders = [
-        {
-            id: "MH100245",
-            date: "12 May 2024",
-            itemsCount: 3,
-            price: "1,249",
-            paymentMethod: "UPI",
-            status: "Delivered",
-            statusDate: "16 May 2024",
-            image: "/makhanabowl.png",
-            thumbnails: ["/makhanabowl.png", "/makhanabowl.png", "/makhanabowl.png"]
-        },
-        {
-            id: "MH100221",
-            date: "02 May 2024",
-            itemsCount: 5,
-            price: "2,699",
-            paymentMethod: "Razorpay",
-            status: "Shipped",
-            statusDate: "08 May 2024",
-            image: "/makhanabowl.png",
-            thumbnails: ["/makhanabowl.png", "/makhanabowl.png", "/makhanabowl.png", "/makhanabowl.png", "/makhanabowl.png"]
-        },
-        {
-            id: "MH100198",
-            date: "20 Apr 2024",
-            itemsCount: 2,
-            price: "899",
-            paymentMethod: "UPI",
-            status: "Delivered",
-            statusDate: "23 Apr 2024",
-            image: "/makhanabowl.png",
-            thumbnails: ["/makhanabowl.png", "/makhanabowl.png"]
-        },
-        {
-            id: "MH100156",
-            date: "10 Apr 2024",
-            itemsCount: 4,
-            price: "1,598",
-            paymentMethod: "Credit Card",
-            status: "Cancelled",
-            statusDate: "11 Apr 2024",
-            image: "/makhanabowl.png",
-            thumbnails: ["/makhanabowl.png", "/makhanabowl.png", "/makhanabowl.png", "/makhanabowl.png"]
-        }
-    ];
+    const filteredOrders = activeTab === "All Orders" 
+        ? orders 
+        : orders.filter(o => o.status === activeTab);
 
     return (
         <div className="flex flex-col gap-6">
@@ -102,10 +61,31 @@ export default function OrderListMain() {
                 </div>
 
                 {/* Orders List */}
-                <div className="flex flex-col divide-y divide-white/10">
-                    {mockOrders.map((order, idx) => (
-                        <OrderCard key={idx} order={order} />
-                    ))}
+                <div className="flex flex-col divide-y divide-white/10 min-h-[400px]">
+                    {isLoading ? (
+                        <div className="flex-1 flex flex-col items-center justify-center text-[var(--color-text-secondary)] gap-3">
+                            <Loader2 size={24} className="animate-spin text-[#d4af37]" />
+                            <p className="text-[13px]">Loading your orders...</p>
+                        </div>
+                    ) : filteredOrders.length > 0 ? (
+                        filteredOrders.map((order, idx) => (
+                            <OrderCard key={idx} order={{
+                                id: order.orderId || order._id,
+                                date: new Date(order.createdAt).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }),
+                                itemsCount: order.orderItems.length,
+                                price: order.totalPrice.toLocaleString('en-IN'),
+                                paymentMethod: order.paymentMethod,
+                                status: order.status || (order.isDelivered ? 'Delivered' : order.isPaid ? 'Processing' : 'Pending'),
+                                statusDate: new Date(order.updatedAt).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }),
+                                image: order.orderItems[0]?.image || "/makhanabowl.png",
+                                thumbnails: order.orderItems.map(item => item.image || "/makhanabowl.png")
+                            }} />
+                        ))
+                    ) : (
+                        <div className="flex-1 flex items-center justify-center text-[var(--color-text-secondary)] text-[13px]">
+                            No orders found.
+                        </div>
+                    )}
                 </div>
 
                 {/* Pagination */}

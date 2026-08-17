@@ -1,8 +1,28 @@
 import { Gift, Copy, CheckCircle2 } from "lucide-react";
 import { useState } from "react";
+import { useSelector } from "react-redux";
 
 export default function RewardsMain() {
     const [copiedId, setCopiedId] = useState(null);
+    const { userInfo } = useSelector((state) => state.auth);
+    const points = userInfo?.rewardsPoints || 0;
+
+    let currentTier = "SILVER";
+    let nextTier = "Gold";
+    let nextTierPoints = 2500;
+    
+    if (points >= 5000) {
+        currentTier = "PLATINUM";
+        nextTier = "Diamond";
+        nextTierPoints = 10000;
+    } else if (points >= 2500) {
+        currentTier = "GOLD";
+        nextTier = "Platinum";
+        nextTierPoints = 5000;
+    }
+
+    const progressPercent = Math.min((points / nextTierPoints) * 100, 100);
+    const pointsNeeded = nextTierPoints - points;
 
     const coupons = [
         {
@@ -59,7 +79,7 @@ export default function RewardsMain() {
                                 <path d="M12 22c3-2 8-5 8-11s-3-5-5-5" />
                             </svg>
                         </div>
-                        <h2 className="text-xl font-serif text-[#d4af37] tracking-wider">GOLD TIER</h2>
+                        <h2 className="text-xl font-serif text-[#d4af37] tracking-wider">{currentTier} TIER</h2>
                     </div>
 
                     {/* Right: Progress */}
@@ -67,17 +87,17 @@ export default function RewardsMain() {
                         <div className="flex justify-between items-end mb-2">
                             <div>
                                 <p className="text-[12px] text-[var(--color-text-secondary)] uppercase tracking-wider mb-1">Current Points</p>
-                                <p className="text-3xl font-serif text-[#f8f9fa] leading-none">3,750 <span className="text-[14px] text-[#d4af37] font-sans font-medium">pts</span></p>
+                                <p className="text-3xl font-serif text-[#f8f9fa] leading-none">{points.toLocaleString()} <span className="text-[14px] text-[#d4af37] font-sans font-medium">pts</span></p>
                             </div>
                             <div className="text-right">
                                 <p className="text-[12px] text-[var(--color-text-secondary)] uppercase tracking-wider mb-1">Next Tier</p>
-                                <p className="text-[14px] font-medium text-[#f8f9fa]">Platinum (5,000 pts)</p>
+                                <p className="text-[14px] font-medium text-[#f8f9fa]">{nextTier} ({nextTierPoints.toLocaleString()} pts)</p>
                             </div>
                         </div>
 
                         <div className="relative mt-4">
                             <div className="h-2 w-full bg-white/10 rounded-full overflow-hidden">
-                                <div className="h-full bg-gradient-to-r from-[#d4af37] to-[#f3e5ab] w-[75%] rounded-full relative">
+                                <div className="h-full bg-gradient-to-r from-[#d4af37] to-[#f3e5ab] rounded-full relative" style={{ width: `${progressPercent}%` }}>
                                     <div className="absolute top-0 right-0 bottom-0 w-20 bg-gradient-to-r from-transparent to-white/30 animate-pulse"></div>
                                 </div>
                             </div>
@@ -88,7 +108,7 @@ export default function RewardsMain() {
                         </div>
                         
                         <p className="text-[12px] text-[var(--color-text-secondary)] mt-4 leading-relaxed">
-                            You need <strong className="text-[#f8f9fa] font-medium">1,250 more points</strong> to unlock Platinum tier and get 15% off all orders.
+                            You need <strong className="text-[#f8f9fa] font-medium">{pointsNeeded.toLocaleString()} more points</strong> to unlock {nextTier} tier and get exclusive offers.
                         </p>
                     </div>
 

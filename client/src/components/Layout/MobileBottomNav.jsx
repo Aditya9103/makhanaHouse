@@ -1,7 +1,7 @@
 import { Link, useLocation } from "react-router-dom";
 import { Home, Store, Heart, ShoppingCart, User, ShoppingBag, MapPin, CreditCard, Gift, Settings, Info, Phone, FileText } from "lucide-react";
-import { useCart } from "../../context/CartContext";
-import { useWishlist } from "../../context/WishlistContext";
+import { useCart } from "../../hooks/useCart";
+import { useWishlist } from "../../hooks/useWishlist";
 
 export default function MobileBottomNav() {
     const location = useLocation();

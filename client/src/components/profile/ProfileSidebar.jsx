@@ -1,12 +1,32 @@
 import { User, ShoppingBag, Heart, MapPin, CreditCard, FileText, Bell, Gift, Settings, LogOut } from "lucide-react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { logout } from "../../store/slices/authSlice";
 
 export default function ProfileSidebar() {
     const location = useLocation();
     const navigate = useNavigate();
     const dispatch = useDispatch();
+    const { userInfo } = useSelector((state) => state.auth);
+    
+    const points = userInfo?.rewardsPoints || 0;
+    
+    let currentTier = "SILVER";
+    let nextTier = "Gold";
+    let nextTierPoints = 2500;
+    
+    if (points >= 5000) {
+        currentTier = "PLATINUM";
+        nextTier = "Diamond";
+        nextTierPoints = 10000;
+    } else if (points >= 2500) {
+        currentTier = "GOLD";
+        nextTier = "Platinum";
+        nextTierPoints = 5000;
+    }
+
+    const progressPercent = Math.min((points / nextTierPoints) * 100, 100);
+    const pointsNeeded = nextTierPoints - points;
 
     const logoutHandler = () => {
         dispatch(logout());
@@ -25,7 +45,7 @@ export default function ProfileSidebar() {
     ];
 
     return (
-        <div className="flex flex-col gap-6 h-full">
+        <div className="flex flex-col gap-6 md:sticky md:top-24 z-10">
             {/* Navigation Menu */}
             <div className="rounded-xl border border-white/10 bg-white/[0.03] backdrop-blur-xl md:overflow-hidden shadow-[0_4px_24px_rgba(0,0,0,0.2)]">
                 <div className="hidden md:block p-6 pb-4">
@@ -109,17 +129,17 @@ export default function ProfileSidebar() {
                         </div>
                         <div className="flex flex-col gap-0.5">
                             <h4 className="text-[#f8f9fa] font-serif font-medium text-[15px] leading-tight">Makhana Rewards</h4>
-                            <p className="text-[12px] text-[#d4af37] font-medium">Gold Member</p>
+                            <p className="text-[12px] text-[#d4af37] font-medium capitalize">{currentTier.toLowerCase()} Member</p>
                         </div>
                     </div>
 
                     <div className="relative z-10">
                         <div className="h-1.5 w-full bg-white/10 rounded-full overflow-hidden mb-3">
-                            <div className="h-full bg-gradient-to-r from-[#d4af37] to-[#f3e5ab] w-[65%] rounded-full"></div>
+                            <div className="h-full bg-gradient-to-r from-[#d4af37] to-[#f3e5ab] rounded-full" style={{ width: `${progressPercent}%` }}></div>
                         </div>
                         <p className="text-[12px] text-[var(--color-text-secondary)] leading-relaxed mb-5">
-                            You are <strong className="text-[#f8f9fa] font-medium">1,250 points</strong> away from <br />
-                            <span className="text-[#d4af37] font-medium">Platinum Member</span>
+                            You are <strong className="text-[#f8f9fa] font-medium">{pointsNeeded.toLocaleString()} points</strong> away from <br />
+                            <span className="text-[#d4af37] font-medium capitalize">{nextTier} Member</span>
                         </p>
                         <button className="w-full flex items-center justify-between px-4 py-2.5 rounded-lg border border-[#d4af37]/20 hover:border-[#d4af37]/40 text-[#e4e4e7] hover:text-[#d4af37] transition-colors text-[12px] font-medium group bg-transparent">
                             View Rewards

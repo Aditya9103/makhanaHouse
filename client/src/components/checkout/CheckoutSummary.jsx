@@ -1,15 +1,58 @@
-import { useCart } from "../../context/CartContext";
-import { Lock, Tag } from "lucide-react";
-import { Link } from "react-router-dom";
+import { useCart } from "../../hooks/useCart";
+import { Lock, Tag, Loader2 } from "lucide-react";
+import { Link, useNavigate } from "react-router-dom";
+import { useCreateOrderMutation } from "../../store/api/orderApiSlice";
+import { useGetAddressesQuery } from "../../store/api/usersApiSlice";
+import { toast } from "react-toastify";
 
-export default function CheckoutSummary() {
+export default function CheckoutSummary({ selectedAddressId, paymentMethod }) {
     const { cartItems } = useCart();
+    const { data: addresses = [] } = useGetAddressesQuery();
+    const [createOrder, { isLoading }] = useCreateOrderMutation();
+    const navigate = useNavigate();
     
-    // Calculate totals
     const subtotal = cartItems.reduce((total, item) => total + (item.price * item.quantity), 0);
     const discount = subtotal > 0 ? 50 : 0; // Mock discount like the image
     const shipping = subtotal > 999 ? 0 : (subtotal > 0 ? 99 : 0);
     const total = subtotal - discount + shipping;
+
+    const placeOrderHandler = async () => {
+        if (!selectedAddressId) {
+            toast.error("Please select a shipping address.");
+            return;
+        }
+
+        const address = addresses.find(a => a._id === selectedAddressId);
+        
+        try {
+            const res = await createOrder({
+                orderItems: cartItems.map(item => ({
+                    product: item.id,
+                    name: item.name,
+                    price: item.price,
+                    image: item.image,
+                    quantity: item.quantity,
+                    size: item.size
+                })),
+                shippingAddress: {
+                    type: address.type,
+                    name: address.name,
+                    line1: address.line1,
+                    line2: address.line2,
+                    phone: address.phone
+                },
+                paymentMethod,
+                itemsPrice: subtotal,
+                taxPrice: 0,
+                shippingPrice: shipping,
+                totalPrice: total,
+            }).unwrap();
+            
+            navigate(`/order-success/${res.orderId || res._id}`);
+        } catch (err) {
+            toast.error(err?.data?.message || err.error);
+        }
+    };
 
     return (
         <div className="bg-white/[0.03] border border-white/10 rounded-2xl p-6 sm:p-8 backdrop-blur-md">
@@ -87,11 +130,12 @@ export default function CheckoutSummary() {
 
             {/* Place Order Button */}
             <button 
-                disabled={cartItems.length === 0}
+                onClick={placeOrderHandler}
+                disabled={cartItems.length === 0 || isLoading}
                 className="w-full h-[52px] rounded-xl bg-[#d4af37] text-[#080b14] font-bold text-[14px] flex items-center justify-center gap-2 hover:bg-[#f3e5ab] transition shadow-[0_0_20px_rgba(212,175,55,0.2)] hover:shadow-[0_0_30px_rgba(212,175,55,0.4)] disabled:opacity-50 disabled:cursor-not-allowed"
             >
-                <Lock size={16} />
-                Place Order
+                {isLoading ? <Loader2 size={16} className="animate-spin" /> : <Lock size={16} />}
+                {isLoading ? "Processing..." : "Place Order"}
             </button>
             <p className="text-center text-[10px] text-[var(--color-text-secondary)] mt-4 leading-relaxed px-4">
                 By placing this order, you agree to our <br/>

@@ -1,9 +1,10 @@
 import { useState } from "react";
 import { Smartphone, CreditCard, Landmark, Wallet, Banknote, ShieldCheck, Lock } from "lucide-react";
 
-export default function CheckoutPayment() {
+export default function CheckoutPayment({ paymentMethod, setPaymentMethod }) {
     // Default to Cash on Delivery based on user instructions
-    const [activeTab, setActiveTab] = useState("cod");
+    const activeTab = paymentMethod || "cod";
+    const setActiveTab = setPaymentMethod;
 
     const tabs = [
         { id: "upi", icon: Smartphone, title: "UPI", desc: "Pay using any UPI app" },

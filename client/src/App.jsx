@@ -1,18 +1,19 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
-import { CartProvider } from './context/CartContext'
-import { WishlistProvider } from './context/WishlistContext'
 import Home from './pages/Home'
 import Shop from './pages/Shop'
 import About from './pages/About'
 import Export from './pages/Export'
 import NewExportInquiry from './pages/NewExportInquiry'
 import MainLayout from './components/Layout/MainLayout'
+import { ToastContainer } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
 
 import Quality from './pages/Quality'
 import Contact from './pages/Contact'
 import ProductDetail from './pages/ProductDetail'
 import Cart from './pages/Cart'
 import Checkout from './pages/Checkout'
+import OrderSuccess from './pages/OrderSuccess'
 
 import Login from './pages/Login'
 import Register from './pages/Register'
@@ -40,9 +41,8 @@ import Settings from './pages/Settings'
 
 function App() {
   return (
-    <CartProvider>
-      <WishlistProvider>
         <BrowserRouter>
+          <ToastContainer position="bottom-right" theme="dark" />
           <Routes>
             <Route path="/" element={<MainLayout />}>
               <Route index element={<Home />} />
@@ -61,6 +61,7 @@ function App() {
 
               {/* Private Routes */}
               <Route path="" element={<PrivateRoute />}>
+                <Route path="order-success/:id" element={<OrderSuccess />} />
                 <Route path="profile" element={<Profile />} />
                 <Route path="profile/orders" element={<Orders />} />
                 <Route path="profile/addresses" element={<Addresses />} />
@@ -95,8 +96,6 @@ function App() {
 
           </Routes>
         </BrowserRouter>
-      </WishlistProvider>
-    </CartProvider>
   )
 }
 

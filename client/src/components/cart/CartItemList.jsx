@@ -1,6 +1,6 @@
 import { Trash2, Heart, Check, Minus, Plus } from "lucide-react";
 import { Link } from "react-router-dom";
-import { useCart } from "../../context/CartContext";
+import { useCart } from "../../hooks/useCart";
 
 export default function CartItemList() {
     const { cartItems, removeFromCart, updateQuantity, clearCart } = useCart();

@@ -1,76 +1,34 @@
-import { Plus, Calendar, Eye, ChevronLeft, ChevronRight } from "lucide-react";
+import { Plus, Calendar, Eye, ChevronLeft, ChevronRight, Loader2 } from "lucide-react";
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import { useGetMyExportInquiriesQuery } from "../../store/api/exportApiSlice";
 
 export default function ExportInquiriesMain() {
     const [activeTab, setActiveTab] = useState("all");
+    const { data: inquiriesData, isLoading, error } = useGetMyExportInquiriesQuery();
+
+    const inquiries = inquiriesData || [];
+
+    const getStatusColor = (status) => {
+        switch (status) {
+            case 'Pending': return "text-purple-400 bg-purple-400/10 border-purple-400/20";
+            case 'Reviewed': return "text-blue-400 bg-blue-400/10 border-blue-400/20";
+            case 'Contacted': return "text-amber-500 bg-amber-500/10 border-amber-500/20";
+            case 'Closed': return "text-[var(--color-text-secondary)] bg-white/5 border-white/10";
+            default: return "text-[var(--color-text-secondary)] bg-white/5 border-white/10";
+        }
+    };
 
     const tabs = [
-        { id: "all", label: "All Inquiries (6)" },
-        { id: "quotation", label: "Quotation Sent (2)" },
-        { id: "discussion", label: "In Discussion (1)" },
-        { id: "followup", label: "Follow Up (1)" },
-        { id: "converted", label: "Converted (1)" },
-        { id: "closed", label: "Closed (1)" }
+        { id: "all", label: `All Inquiries (${inquiries.length})` },
+        { id: "Pending", label: `Pending (${inquiries.filter(i => i.status === 'Pending').length})` },
+        { id: "Reviewed", label: `Reviewed (${inquiries.filter(i => i.status === 'Reviewed').length})` },
+        { id: "Contacted", label: `Contacted (${inquiries.filter(i => i.status === 'Contacted').length})` },
+        { id: "Closed", label: `Closed (${inquiries.filter(i => i.status === 'Closed').length})` }
     ];
 
-    const inquiries = [
-        {
-            id: "#EXP-2024-1256",
-            date: "15 May 2024",
-            time: "10:30 AM",
-            product: "Roasted Makhana (Plain)",
-            quantity: "500 KG",
-            country: "United States",
-            flag: "🇺🇸",
-            status: "Quotation Sent",
-            statusColor: "text-purple-400 bg-purple-400/10 border-purple-400/20"
-        },
-        {
-            id: "#EXP-2024-1249",
-            date: "14 May 2024",
-            time: "02:15 PM",
-            product: "Peri Peri Makhana",
-            quantity: "1,000 KG",
-            country: "United Arab Emirates",
-            flag: "🇦🇪",
-            status: "In Discussion",
-            statusColor: "text-amber-500 bg-amber-500/10 border-amber-500/20"
-        },
-        {
-            id: "#EXP-2024-1238",
-            date: "08 May 2024",
-            time: "11:45 AM",
-            product: "Cream & Onion Makhana",
-            quantity: "750 KG",
-            country: "Germany",
-            flag: "🇩🇪",
-            status: "Follow Up",
-            statusColor: "text-blue-400 bg-blue-400/10 border-blue-400/20"
-        },
-        {
-            id: "#EXP-2024-1205",
-            date: "02 May 2024",
-            time: "09:20 AM",
-            product: "Chocolate Makhana",
-            quantity: "600 KG",
-            country: "Australia",
-            flag: "🇦🇺",
-            status: "Converted",
-            statusColor: "text-[#16a34a] bg-[#16a34a]/10 border-[#16a34a]/20"
-        },
-        {
-            id: "#EXP-2024-1189",
-            date: "25 Apr 2024",
-            time: "04:35 PM",
-            product: "Mixed Flavors Makhana",
-            quantity: "1,200 KG",
-            country: "Singapore",
-            flag: "🇸🇬",
-            status: "Closed",
-            statusColor: "text-[var(--color-text-secondary)] bg-white/5 border-white/10"
-        }
-    ];
+    const filteredInquiries = activeTab === "all" ? inquiries : inquiries.filter(i => i.status === activeTab);
+
 
     return (
         <div className="rounded-2xl border border-white/10 bg-[#080b14]/80 backdrop-blur-md overflow-hidden shadow-sm flex flex-col">
@@ -107,68 +65,78 @@ export default function ExportInquiriesMain() {
 
             {/* Inquiries List */}
             <div className="flex flex-col p-4 sm:p-6 gap-4">
-                {inquiries.map((inquiry) => (
-                    <div key={inquiry.id} className="flex flex-col lg:flex-row gap-5 p-5 rounded-xl border border-white/10 bg-[#0a0d14]/50 hover:bg-white/[0.02] hover:border-white/20 transition-all group items-start lg:items-center">
+                {isLoading ? (
+                    <div className="flex justify-center p-10"><Loader2 className="animate-spin text-[#d4af37]" /></div>
+                ) : filteredInquiries.length === 0 ? (
+                    <div className="text-center p-10 text-[var(--color-text-secondary)]">No inquiries found.</div>
+                ) : (
+                    filteredInquiries.map((inquiry) => {
+                        const createdAt = new Date(inquiry.createdAt);
+                        const date = createdAt.toLocaleDateString();
+                        const time = createdAt.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
                         
-                        {/* Details */}
-                        <div className="flex-1 flex flex-col min-w-0 w-full">
+                        return (
+                        <div key={inquiry._id} className="flex flex-col lg:flex-row gap-5 p-5 rounded-xl border border-white/10 bg-[#0a0d14]/50 hover:bg-white/[0.02] hover:border-white/20 transition-all group items-start lg:items-center">
                             
-                            {/* Top row: ID, Date & Status */}
-                            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-5">
-                                <div>
-                                    <div className="flex items-center gap-3 mb-1.5">
-                                        <h3 className="text-[16px] font-semibold text-[#f8f9fa] truncate">
-                                            Inquiry {inquiry.id}
-                                        </h3>
-                                        <span className={`inline-flex text-[10px] px-2.5 py-1 rounded-md border font-medium uppercase tracking-wider shrink-0 ${inquiry.statusColor}`}>
-                                            {inquiry.status}
+                            {/* Details */}
+                            <div className="flex-1 flex flex-col min-w-0 w-full">
+                                
+                                {/* Top row: ID, Date & Status */}
+                                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-5">
+                                    <div>
+                                        <div className="flex items-center gap-3 mb-1.5">
+                                            <h3 className="text-[16px] font-semibold text-[#f8f9fa] truncate uppercase">
+                                                Inquiry #{inquiry._id.substring(18)}
+                                            </h3>
+                                            <span className={`inline-flex text-[10px] px-2.5 py-1 rounded-md border font-medium uppercase tracking-wider shrink-0 ${getStatusColor(inquiry.status)}`}>
+                                                {inquiry.status}
+                                            </span>
+                                        </div>
+                                        <div className="flex items-center gap-1.5 text-[12px] text-[var(--color-text-secondary)]">
+                                            <Calendar size={13} className="text-[#d4af37]" />
+                                            <span className="truncate">{date} • {time}</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {/* Middle row: Specs */}
+                                <div className="grid grid-cols-2 md:grid-cols-3 gap-y-4 gap-x-6 w-full lg:w-[90%] bg-white/[0.02] p-4 rounded-lg border border-white/5">
+                                    <div className="flex flex-col gap-1 min-w-0">
+                                        <span className="text-[11px] text-[var(--color-text-secondary)] uppercase tracking-wider">Product Interest</span>
+                                        <span className="text-[13px] text-[#e4e4e7] truncate">{inquiry.productInterest}</span>
+                                    </div>
+                                    <div className="flex flex-col gap-1 min-w-0">
+                                        <span className="text-[11px] text-[var(--color-text-secondary)] uppercase tracking-wider">Quantity</span>
+                                        <span className="text-[13px] font-medium text-[#f8f9fa] truncate">{inquiry.estimatedQuantity}</span>
+                                    </div>
+                                    <div className="flex flex-col gap-1 min-w-0 col-span-2 md:col-span-1">
+                                        <span className="text-[11px] text-[var(--color-text-secondary)] uppercase tracking-wider">Country</span>
+                                        <span className="text-[13px] text-[#e4e4e7] flex items-center gap-1.5 truncate">
+                                            <span className="truncate uppercase">{inquiry.targetCountry}</span>
                                         </span>
                                     </div>
-                                    <div className="flex items-center gap-1.5 text-[12px] text-[var(--color-text-secondary)]">
-                                        <Calendar size={13} className="text-[#d4af37]" />
-                                        <span className="truncate">{inquiry.date} • {inquiry.time}</span>
-                                    </div>
+                                </div>
+                                
+                                {/* Mobile View Details Button */}
+                                <div className="flex items-center justify-end mt-4 pt-4 border-t border-white/5 lg:hidden">
+                                    <button className="w-full flex items-center justify-center gap-1.5 px-4 py-2 rounded-lg border border-[#d4af37]/40 text-[#d4af37] text-[12px] font-medium hover:bg-[#d4af37] hover:text-[#080b14] transition-all whitespace-nowrap">
+                                        <Eye size={14} />
+                                        View Details
+                                    </button>
                                 </div>
                             </div>
 
-                            {/* Middle row: Specs */}
-                            <div className="grid grid-cols-2 md:grid-cols-3 gap-y-4 gap-x-6 w-full lg:w-[90%] bg-white/[0.02] p-4 rounded-lg border border-white/5">
-                                <div className="flex flex-col gap-1 min-w-0">
-                                    <span className="text-[11px] text-[var(--color-text-secondary)] uppercase tracking-wider">Product Interest</span>
-                                    <span className="text-[13px] text-[#e4e4e7] truncate">{inquiry.product}</span>
-                                </div>
-                                <div className="flex flex-col gap-1 min-w-0">
-                                    <span className="text-[11px] text-[var(--color-text-secondary)] uppercase tracking-wider">Quantity</span>
-                                    <span className="text-[13px] font-medium text-[#f8f9fa] truncate">{inquiry.quantity}</span>
-                                </div>
-                                <div className="flex flex-col gap-1 min-w-0 col-span-2 md:col-span-1">
-                                    <span className="text-[11px] text-[var(--color-text-secondary)] uppercase tracking-wider">Country</span>
-                                    <span className="text-[13px] text-[#e4e4e7] flex items-center gap-1.5 truncate">
-                                        <span className="text-base leading-none">{inquiry.flag}</span> 
-                                        <span className="truncate">{inquiry.country}</span>
-                                    </span>
-                                </div>
-                            </div>
-                            
-                            {/* Mobile View Details Button */}
-                            <div className="flex items-center justify-end mt-4 pt-4 border-t border-white/5 lg:hidden">
-                                <button className="w-full flex items-center justify-center gap-1.5 px-4 py-2 rounded-lg border border-[#d4af37]/40 text-[#d4af37] text-[12px] font-medium hover:bg-[#d4af37] hover:text-[#080b14] transition-all whitespace-nowrap">
+                            {/* Right side Desktop Actions */}
+                            <div className="hidden lg:flex shrink-0 w-[140px] pl-6 border-l border-white/10 h-full items-center justify-center">
+                                <button className="w-full flex items-center justify-center gap-1.5 px-4 py-2.5 rounded-lg border border-[#d4af37]/40 text-[#d4af37] text-[12px] font-medium hover:bg-[#d4af37] hover:text-[#080b14] transition-all">
                                     <Eye size={14} />
                                     View Details
                                 </button>
                             </div>
-                        </div>
 
-                        {/* Right side Desktop Actions */}
-                        <div className="hidden lg:flex shrink-0 w-[140px] pl-6 border-l border-white/10 h-full items-center justify-center">
-                            <button className="w-full flex items-center justify-center gap-1.5 px-4 py-2.5 rounded-lg border border-[#d4af37]/40 text-[#d4af37] text-[12px] font-medium hover:bg-[#d4af37] hover:text-[#080b14] transition-all">
-                                <Eye size={14} />
-                                View Details
-                            </button>
                         </div>
-
-                    </div>
-                ))}
+                    )})
+                )}
             </div>
 
             {/* Pagination Footer */}
