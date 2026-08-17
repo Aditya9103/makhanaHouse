@@ -18,7 +18,7 @@ import OrderSuccess from './pages/OrderSuccess'
 import Login from './pages/Login'
 import Register from './pages/Register'
 import PrivateRoute from './components/Routing/PrivateRoute'
-import AdminRoute from './components/routing/AdminRoute'
+import AdminRoute from './components/Routing/AdminRoute'
 
 import AdminLogin from './pages/admin/AdminLogin'
 import AdminRegister from './pages/admin/AdminRegister'
