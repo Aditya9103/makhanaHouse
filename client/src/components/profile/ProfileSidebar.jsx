@@ -1,8 +1,17 @@
 import { User, ShoppingBag, Heart, MapPin, CreditCard, FileText, Bell, Gift, Settings, LogOut } from "lucide-react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { logout } from "../../store/slices/authSlice";
 
 export default function ProfileSidebar() {
     const location = useLocation();
+    const navigate = useNavigate();
+    const dispatch = useDispatch();
+
+    const logoutHandler = () => {
+        dispatch(logout());
+        navigate('/login');
+    };
 
     const menuItems = [
         { name: "My Profile", icon: User, path: "/profile" },
@@ -45,7 +54,10 @@ export default function ProfileSidebar() {
 
                     <div className="hidden md:block my-2 mx-6 h-[1px] bg-white/5"></div>
 
-                    <button className="flex flex-col md:flex-row items-center justify-center md:justify-start gap-1.5 md:gap-3.5 p-2 md:px-6 md:py-3.5 text-[10px] md:text-[14px] font-medium text-[#e4e4e7] hover:bg-white/[0.02] hover:text-red-400 transition-all duration-200 shrink-0 md:shrink-auto w-1/4 md:w-auto snap-start rounded-2xl md:rounded-none border-transparent md:border-l-[3px] bg-transparent">
+                    <button 
+                        onClick={logoutHandler}
+                        className="flex flex-col md:flex-row items-center justify-center md:justify-start gap-1.5 md:gap-3.5 p-2 md:px-6 md:py-3.5 text-[10px] md:text-[14px] font-medium text-[#e4e4e7] hover:bg-white/[0.02] hover:text-red-400 transition-all duration-200 shrink-0 md:shrink-auto w-1/4 md:w-auto snap-start rounded-2xl md:rounded-none border-transparent md:border-l-[3px] bg-transparent"
+                    >
                         <LogOut size={18} className="md:w-[18px] md:h-[18px] text-[#e4e4e7]/60" />
                         <span className="whitespace-nowrap truncate w-full text-center md:text-left">Logout</span>
                     </button>

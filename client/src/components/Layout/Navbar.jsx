@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
+import { useSelector } from "react-redux";
 import { useCart } from "../../context/CartContext";
 import { useWishlist } from "../../context/WishlistContext";
 import {
@@ -41,6 +42,7 @@ export default function Navbar() {
     const location = useLocation();
     const { cartItems } = useCart();
     const { wishlistItems } = useWishlist();
+    const { userInfo } = useSelector((state) => state.auth);
 
     return (
         <>
@@ -120,13 +122,26 @@ export default function Navbar() {
                         >
                             <Search size={18} />
                         </button>
-                        <Link
-                            to="/profile"
-                            aria-label="Account"
-                            className="hidden text-[#e4e4e7] hover:text-[#d4af37] sm:block"
-                        >
-                            <User size={18} />
-                        </Link>
+                        {userInfo ? (
+                            <Link
+                                to="/profile"
+                                aria-label="Account"
+                                className="hidden text-[#e4e4e7] hover:text-[#d4af37] sm:block relative group"
+                            >
+                                {userInfo.avatar ? (
+                                    <img src={userInfo.avatar} alt={userInfo.name} className="w-6 h-6 rounded-full border border-[#d4af37]/50" />
+                                ) : (
+                                    <User size={18} />
+                                )}
+                            </Link>
+                        ) : (
+                            <Link
+                                to="/login"
+                                className="hidden text-[13px] font-medium text-[#e4e4e7] hover:text-[#d4af37] sm:block"
+                            >
+                                Sign In
+                            </Link>
+                        )}
                         <Link
                             to="/profile/wishlist"
                             aria-label="Wishlist"
@@ -177,17 +192,32 @@ export default function Navbar() {
                                 {label}
                             </Link>
                         ))}
-                        
+
                         {/* Mobile Actions */}
                         <div className="mt-2 flex items-center justify-around border-t border-white/10 pt-4">
+                            {userInfo ? (
+                                <Link
+                                    to="/profile"
+                                    className="flex flex-col items-center gap-1 text-[#e4e4e7] hover:text-[#d4af37]"
+                                    onClick={() => setMenuOpen(false)}
+                                >
+                                    {userInfo.avatar ? (
+                                        <img src={userInfo.avatar} alt={userInfo.name} className="w-5 h-5 rounded-full" />
+                                    ) : (
+                                        <User size={20} />
+                                    )}
+                                    <span className="text-[10px]">Profile</span>
+                                </Link>
+                            ) : (
                             <Link
-                                to="/profile"
+                                to="/login"
                                 className="flex flex-col items-center gap-1 text-[#e4e4e7] hover:text-[#d4af37]"
                                 onClick={() => setMenuOpen(false)}
                             >
                                 <User size={20} />
-                                <span className="text-[10px]">Profile</span>
+                                <span className="text-[10px]">Sign In</span>
                             </Link>
+                            )}
                             <Link
                                 to="/profile/wishlist"
                                 className="relative flex flex-col items-center gap-1 text-[#e4e4e7] hover:text-[#d4af37]"

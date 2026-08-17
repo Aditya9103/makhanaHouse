@@ -1,0 +1,51 @@
+import express from 'express';
+import dotenv from 'dotenv';
+import cors from 'cors';
+import connectDB from './config/db.js';
+
+import authRoutes from './routes/authRoutes.js';
+import uploadRoutes from './routes/uploadRoutes.js';
+import productRoutes from './routes/productRoutes.js';
+import { notFound, errorHandler } from './middlewares/errorMiddleware.js';
+
+// Load env variables
+dotenv.config();
+
+// Connect to database
+connectDB();
+
+const app = express();
+
+// Middleware
+app.use(express.json());
+app.use(cors({
+    origin: [
+        process.env.CLIENT_URL,
+        'http://localhost:5173',
+        'http://localhost:5174',
+        'http://localhost:5175'
+    ].filter(Boolean),
+    credentials: true,
+}));
+
+// Routes
+app.use('/api/auth', authRoutes);
+app.use('/api/upload', uploadRoutes);
+app.use('/api/products', productRoutes);
+
+// Basic route for testing
+app.get('/', (req, res) => {
+    res.send('Makhana House API is running...');
+});
+
+// Error Handlers
+app.use(notFound);
+app.use(errorHandler);
+
+// Set port
+const PORT = process.env.PORT || 3001;
+
+// Start server
+app.listen(PORT, () => {
+    console.log(`Server running in ${process.env.NODE_ENV} mode on port ${PORT}`);
+});

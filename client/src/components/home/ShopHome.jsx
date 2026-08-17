@@ -12,9 +12,10 @@ import {
     Heart,
 } from "lucide-react";
 
-import { productsData as products } from "../../data/productDetailData";
+import { useGetProductsQuery } from "../../store/api/productApiSlice";
 import { useCart } from "../../context/CartContext";
 import { useWishlist } from "../../context/WishlistContext";
+import { Loader2 } from "lucide-react";
 
 const features = [
     {
@@ -61,6 +62,11 @@ function ProductCard({ product }) {
     const { addToCart } = useCart();
     const { isInWishlist, toggleWishlist } = useWishlist();
 
+    const variation = product.variations?.[0] || { weight: '250g', price: 0 };
+    const price = variation.price;
+    const weight = variation.weight;
+    const image = product.images?.[0] || "/homehero2.png";
+
     return (
         <div className="flex w-[calc(50%-0.5rem)] sm:w-[calc(33.333%-0.666rem)] lg:w-[calc(25%-0.75rem)] xl:w-[calc(20%-0.8rem)] shrink-0 snap-start flex-col overflow-hidden rounded-xl border border-white/10 bg-white/5 transition hover:border-[#d4af37]/40">
             <div className="relative aspect-square bg-[linear-gradient(135deg,rgba(255,255,255,0.08),rgba(255,255,255,0.02))]">
@@ -71,13 +77,13 @@ function ProductCard({ product }) {
                 )}
                 <button 
                     onClick={() => toggleWishlist(product)}
-                    className={`absolute top-2 right-2 transition-colors z-20 ${isInWishlist(product.id) ? 'text-[#d4af37]' : 'text-white/40 hover:text-[#d4af37]'}`}
+                    className={`absolute top-2 right-2 transition-colors z-20 ${isInWishlist(product._id) ? 'text-[#d4af37]' : 'text-white/40 hover:text-[#d4af37]'}`}
                 >
-                    <Heart size={16} className={isInWishlist(product.id) ? 'fill-[#d4af37]' : ''} />
+                    <Heart size={16} className={isInWishlist(product._id) ? 'fill-[#d4af37]' : ''} />
                 </button>
                 <Link to={`/product/${product.slug}`} className="absolute inset-0 overflow-hidden group block z-0">
                     <img 
-                        src="/homehero2.png" 
+                        src={image} 
                         alt={product.name}
                         className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
                     />
@@ -92,26 +98,32 @@ function ProductCard({ product }) {
                         {product.name}
                     </h3>
                 </Link>
-                <p className="text-[10px] sm:text-xs text-[var(--color-text-secondary)] truncate">{product.tag}</p>
+                <p className="text-[10px] sm:text-xs text-[var(--color-text-secondary)] truncate">{product.tag || 'Premium Quality'}</p>
 
                 <div className="flex items-center gap-1 sm:gap-1.5 mt-0.5 sm:mt-1">
                     <div className="scale-75 sm:scale-100 origin-left flex">
-                        <StarRow rating={product.rating} />
+                        <StarRow rating={product.rating || 5} />
                     </div>
                     <span className="text-[9px] sm:text-[11px] text-[var(--color-text-secondary)]">
-                        ({product.reviews})
+                        ({product.numReviews || 0})
                     </span>
                 </div>
 
                 <div className="mt-auto flex items-center justify-between pt-2 sm:pt-3">
                     <p className="text-sm sm:text-base lg:text-lg font-semibold text-[#f4f4f5]">
-                        ₹{product.price}
+                        ₹{price}
                         <span className="ml-0.5 sm:ml-1 text-[9px] sm:text-[11px] font-normal text-[var(--color-text-secondary)]">
-                            /{product.weight}
+                            /{weight}
                         </span>
                     </p>
                     <button
-                        onClick={() => addToCart(product, 1, product.weight)}
+                        onClick={() => addToCart({
+                            id: product._id,
+                            name: product.name,
+                            price: price,
+                            weight: weight,
+                            image: image
+                        }, 1, weight)}
                         aria-label={`Add ${product.name} to cart`}
                         className="flex h-7 w-7 sm:h-8 sm:w-8 lg:h-9 lg:w-9 items-center justify-center rounded-full border border-[#d4af37]/40 text-[#d4af37] transition hover:bg-[#d4af37] hover:text-[#080b14]"
                     >
@@ -125,6 +137,7 @@ function ProductCard({ product }) {
 
 export default function ShopHome() {
     const scrollerRef = useRef(null);
+    const { data: products, isLoading, error } = useGetProductsQuery({});
 
     const scrollBy = (dir) => {
         scrollerRef.current?.scrollBy({
@@ -166,9 +179,17 @@ export default function ShopHome() {
                         ref={scrollerRef}
                         className="scrollbar-none flex snap-x gap-4 overflow-x-auto scroll-smooth pb-2"
                     >
-                        {products.map((p) => (
-                            <ProductCard key={p.id} product={p} />
-                        ))}
+                        {isLoading ? (
+                            <div className="w-full flex justify-center py-12 text-[#d4af37]">
+                                <Loader2 size={32} className="animate-spin" />
+                            </div>
+                        ) : error ? (
+                            <div className="w-full text-center py-12 text-red-400">Failed to load products.</div>
+                        ) : (
+                            products?.slice(0, 10).map((p) => (
+                                <ProductCard key={p._id} product={p} />
+                            ))
+                        )}
                     </div>
 
                     <button

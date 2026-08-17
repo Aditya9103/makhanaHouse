@@ -17,14 +17,27 @@ const getIcon = (name) => {
 };
 
 export default function ProductInfo({ product }) {
-    const [selectedSize, setSelectedSize] = useState(product.sizes[0]);
+    // Derive data from variations
+    const sizes = product.variations?.map(v => v.weight) || [];
+    const [selectedSize, setSelectedSize] = useState(sizes[0] || '250g');
     const [quantity, setQuantity] = useState(1);
     const { addToCart } = useCart();
     const navigate = useNavigate();
     const { isInWishlist, toggleWishlist } = useWishlist();
 
+    const currentVariation = product.variations?.find(v => v.weight === selectedSize) || product.variations?.[0];
+    const price = currentVariation ? currentVariation.price : 0;
+    const countInStock = currentVariation ? currentVariation.countInStock : 0;
+    const stockStatus = countInStock > 0 ? "In Stock" : "Out of Stock";
+
     const handleAddToCart = () => {
-        addToCart(product, quantity, selectedSize);
+        addToCart({
+            id: product._id,
+            name: product.name,
+            price: price,
+            weight: selectedSize,
+            image: product.images?.[0]
+        }, quantity, selectedSize);
     };
 
     return (
@@ -48,29 +61,29 @@ export default function ProductInfo({ product }) {
                         <Star 
                             key={i} 
                             size={14} 
-                            className={i < Math.floor(product.rating) ? "fill-[#d4af37] text-[#d4af37]" : "text-white/20"} 
+                            className={i < Math.floor(product.rating || 5) ? "fill-[#d4af37] text-[#d4af37]" : "text-white/20"} 
                         />
                     ))}
                 </div>
-                <span className="text-sm text-[#e4e4e7]">({product.reviewsCount} Reviews)</span>
+                <span className="text-sm text-[#e4e4e7]">({product.numReviews || 0} Reviews)</span>
                 <span className="text-white/20">|</span>
-                <span className="text-sm text-[var(--color-text-secondary)]">{product.soldThisMonth}+ Sold this month</span>
+                <span className="text-sm text-[var(--color-text-secondary)]">{product.tag || "Premium Quality"}</span>
             </div>
 
             {/* Price */}
             <div className="mb-6 flex items-end gap-3">
                 <span className="font-serif text-[2.5rem] leading-none text-[#d4af37]">
-                    ₹{product.price}
+                    ₹{price}
                 </span>
-                <span className="mb-1 text-sm text-[var(--color-text-secondary)] font-medium">/{product.baseWeight}</span>
-                <span className="mb-1 ml-2 text-[11px] uppercase tracking-wider font-semibold text-[#16a34a] bg-[#16a34a]/10 px-2 py-1 rounded">
-                    {product.stockStatus}
+                <span className="mb-1 text-sm text-[var(--color-text-secondary)] font-medium">/{selectedSize}</span>
+                <span className={`mb-1 ml-2 text-[11px] uppercase tracking-wider font-semibold px-2 py-1 rounded ${countInStock > 0 ? 'text-[#16a34a] bg-[#16a34a]/10' : 'text-red-400 bg-red-400/10'}`}>
+                    {stockStatus}
                 </span>
             </div>
 
             {/* Description list */}
             <ul className="mb-8 space-y-2.5">
-                {product.description.map((item, index) => (
+                {product.description?.map((item, index) => (
                     <li key={index} className="flex items-start gap-2.5 text-sm text-[var(--color-text-secondary)]">
                         <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-[#d4af37]" />
                         <span className="leading-relaxed">{item}</span>
@@ -80,7 +93,7 @@ export default function ProductInfo({ product }) {
 
             {/* Badges */}
             <div className="flex flex-wrap gap-2.5 mb-8 pb-8 border-b border-white/10">
-                {product.badges.map((badge, index) => (
+                {product.badges?.map((badge, index) => (
                     <div key={index} className="flex items-center gap-1.5 rounded-full border border-white/10 bg-white/5 px-3 py-1.5">
                         {getIcon(badge.icon)}
                         <span className="text-[11px] font-medium text-[#e4e4e7] uppercase tracking-wider">{badge.label}</span>
@@ -94,7 +107,7 @@ export default function ProductInfo({ product }) {
                 <div>
                     <h3 className="text-sm font-medium text-[#e4e4e7] mb-3 uppercase tracking-wider">Select Size</h3>
                     <div className="flex flex-wrap gap-2">
-                        {product.sizes.map((size) => (
+                        {sizes.map((size) => (
                             <button
                                 key={size}
                                 onClick={() => setSelectedSize(size)}
@@ -135,7 +148,11 @@ export default function ProductInfo({ product }) {
 
             {/* Action Buttons */}
             <div className="flex flex-col sm:flex-row gap-4 mt-auto">
-                <button onClick={handleAddToCart} className="flex-1 flex items-center justify-center gap-2 py-3.5 px-6 rounded-md border border-[#d4af37] text-[#d4af37] font-semibold transition hover:bg-[#d4af37] hover:text-[#080b14]">
+                <button 
+                    onClick={handleAddToCart} 
+                    disabled={countInStock === 0}
+                    className="flex-1 flex items-center justify-center gap-2 py-3.5 px-6 rounded-md border border-[#d4af37] text-[#d4af37] font-semibold transition hover:bg-[#d4af37] hover:text-[#080b14] disabled:opacity-50 disabled:cursor-not-allowed"
+                >
                     Add to Cart
                     <ShoppingCart size={18} />
                 </button>

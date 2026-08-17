@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
-import { ChevronRight } from "lucide-react";
-import { getProductBySlug } from "../data/productDetailData";
+import { ChevronRight, Loader2 } from "lucide-react";
+import { useGetProductDetailsQuery } from "../store/api/productApiSlice";
 import ProductGallery from "../components/product/ProductGallery";
 import ProductInfo from "../components/product/ProductInfo";
 import ProductTrustBanner from "../components/product/ProductTrustBanner";
@@ -11,15 +11,23 @@ import RelatedProducts from "../components/product/RelatedProducts";
 
 export default function ProductDetail() {
     const { slug } = useParams();
-    const [product, setProduct] = useState(null);
+    const { data: product, isLoading, error } = useGetProductDetailsQuery(slug);
 
     useEffect(() => {
         window.scrollTo(0, 0);
-        const data = getProductBySlug(slug);
-        setProduct(data);
     }, [slug]);
 
-    if (!product) return <div className="min-h-screen pt-32 text-center text-white">Loading...</div>;
+    if (isLoading) {
+        return (
+            <div className="min-h-screen pt-32 flex justify-center text-[#d4af37]">
+                <Loader2 size={40} className="animate-spin" />
+            </div>
+        );
+    }
+
+    if (error || !product) {
+        return <div className="min-h-screen pt-32 text-center text-red-400">Product not found.</div>;
+    }
 
     return (
         <div className="w-full pb-20">
@@ -56,7 +64,14 @@ export default function ProductDetail() {
             <ProductSpecs product={product} />
 
             {/* Customer Reviews */}
-            <ProductReviews reviews={product.reviewsDetails} />
+            <ProductReviews 
+                reviews={{
+                    average: product.rating || 5,
+                    total: product.numReviews || 0,
+                    distribution: { 5: product.numReviews || 0, 4: 0, 3: 0, 2: 0, 1: 0 },
+                    list: []
+                }} 
+            />
 
             {/* Related Products */}
             <RelatedProducts />
