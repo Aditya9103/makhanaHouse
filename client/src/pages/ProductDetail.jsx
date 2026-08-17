@@ -64,14 +64,7 @@ export default function ProductDetail() {
             <ProductSpecs product={product} />
 
             {/* Customer Reviews */}
-            <ProductReviews 
-                reviews={{
-                    average: product.rating || 5,
-                    total: product.numReviews || 0,
-                    distribution: { 5: product.numReviews || 0, 4: 0, 3: 0, 2: 0, 1: 0 },
-                    list: []
-                }} 
-            />
+            <ProductReviews product={product} />
 
             {/* Related Products */}
             <RelatedProducts />

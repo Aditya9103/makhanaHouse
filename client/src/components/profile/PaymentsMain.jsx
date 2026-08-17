@@ -86,7 +86,7 @@ export default function PaymentsMain() {
                                 
                                 {/* Mobile View Details Button */}
                                 <div className="flex items-center justify-end mt-4 pt-4 border-t border-white/5 lg:hidden">
-                                    <Link to={`/order/${order._id}`} className="w-full flex items-center justify-center gap-1.5 px-4 py-2 rounded-lg border border-[#d4af37]/40 text-[#d4af37] text-[12px] font-medium hover:bg-[#d4af37] hover:text-[#080b14] transition-all whitespace-nowrap">
+                                    <Link to={`/profile/orders/${order._id}`} className="w-full flex items-center justify-center gap-1.5 px-4 py-2 rounded-lg border border-[#d4af37]/40 text-[#d4af37] text-[12px] font-medium hover:bg-[#d4af37] hover:text-[#080b14] transition-all whitespace-nowrap">
                                         <Eye size={14} />
                                         View Order
                                     </Link>
@@ -95,7 +95,7 @@ export default function PaymentsMain() {
 
                             {/* Right side Desktop Actions */}
                             <div className="hidden lg:flex shrink-0 w-[140px] pl-6 border-l border-white/10 h-full items-center justify-center">
-                                <Link to={`/order/${order._id}`} className="w-full flex items-center justify-center gap-1.5 px-4 py-2.5 rounded-lg border border-[#d4af37]/40 text-[#d4af37] text-[12px] font-medium hover:bg-[#d4af37] hover:text-[#080b14] transition-all">
+                                <Link to={`/profile/orders/${order._id}`} className="w-full flex items-center justify-center gap-1.5 px-4 py-2.5 rounded-lg border border-[#d4af37]/40 text-[#d4af37] text-[12px] font-medium hover:bg-[#d4af37] hover:text-[#080b14] transition-all">
                                     <Eye size={14} />
                                     View Order
                                 </Link>

@@ -1,4 +1,4 @@
-import { LayoutDashboard, Package, Users, FileText, Settings, LogOut, ChevronRight } from "lucide-react";
+import { LayoutDashboard, Package, ShoppingCart, ShoppingBag, Gift, BarChart3, Users, FileText, Settings, LogOut, ChevronRight, Star, Globe } from "lucide-react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { logout } from "../../store/slices/authSlice";
@@ -16,8 +16,12 @@ export default function AdminSidebar() {
     const menuItems = [
         { name: "Dashboard", icon: LayoutDashboard, path: "/admin/dashboard" },
         { name: "Products", icon: Package, path: "/admin/products" },
-        { name: "Export Inquiries", icon: FileText, path: "/admin/inquiries" },
-        { name: "Users", icon: Users, path: "/admin/users" },
+        { path: "/admin/orders", icon: ShoppingBag, name: "Orders" },
+        { path: "/admin/customers", icon: Users, name: "Customers" },
+        { path: "/admin/offers", icon: Gift, name: "Rewards & Offers" },
+        { name: "Export Inquiries", icon: Globe, path: "/admin/export-inquiries" },
+        { path: "/admin/reports", icon: BarChart3, name: "Reports" },
+        { name: "Reviews", icon: Star, path: "/admin/reviews" },
         { name: "Settings", icon: Settings, path: "/admin/settings" },
     ];
 

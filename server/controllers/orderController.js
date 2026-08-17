@@ -1,4 +1,7 @@
 import Order from '../models/Order.js';
+import RewardHistory from '../models/RewardHistory.js';
+import sendEmail from '../utils/emailService.js';
+import { getOrderStatusEmailTemplate } from '../utils/emailTemplates.js';
 
 // @desc    Create new order
 // @route   POST /api/orders
@@ -33,7 +36,22 @@ export const addOrderItems = async (req, res) => {
 
             // Clear the user's cart after successful order creation
             req.user.cart = [];
+            
+            // Assign reward points (e.g. 10 points for every 100 spent)
+            const earnedPoints = Math.floor(totalPrice / 100) * 10;
+            req.user.rewardsPoints = (req.user.rewardsPoints || 0) + earnedPoints;
+            
             await req.user.save();
+
+            // Create reward history entry
+            if (earnedPoints > 0) {
+                await RewardHistory.create({
+                    user: req.user._id,
+                    description: `Order #${createdOrder.orderId || createdOrder._id}`,
+                    points: earnedPoints,
+                    type: 'earned'
+                });
+            }
 
             res.status(201).json(createdOrder);
         }
@@ -100,6 +118,65 @@ export const updateOrderToPaid = async (req, res) => {
                 const pointsEarned = Math.floor(order.totalPrice / 100);
                 req.user.rewardsPoints = (req.user.rewardsPoints || 0) + pointsEarned;
                 await req.user.save();
+            }
+
+            res.json(updatedOrder);
+        } else {
+            res.status(404).json({ message: 'Order not found' });
+        }
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
+
+// @desc    Get all orders
+// @route   GET /api/orders
+// @access  Private/Admin
+export const getOrders = async (req, res) => {
+    try {
+        const orders = await Order.find({}).populate('user', 'id name email').sort({ createdAt: -1 });
+        res.json(orders);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
+
+// @desc    Update order status
+// @route   PUT /api/orders/:id/status
+// @access  Private/Admin
+export const updateOrderStatus = async (req, res) => {
+    try {
+        const order = await Order.findById(req.params.id).populate('user', 'name email');
+
+        if (order) {
+            order.status = req.body.status || order.status;
+            
+            if (req.body.trackingNumber) {
+                order.trackingNumber = req.body.trackingNumber;
+            }
+            if (req.body.courierName) {
+                order.courierName = req.body.courierName;
+            }
+
+            if (req.body.status === 'Delivered') {
+                order.isDelivered = true;
+                order.deliveredAt = Date.now();
+            } else if (req.body.status === 'Processing' || req.body.status === 'Shipped' || req.body.status === 'Cancelled') {
+                order.isDelivered = false;
+            }
+
+            const updatedOrder = await order.save();
+
+            // Send Email Notification
+            if (order.user && order.user.email) {
+                const subject = `Your Makhana House Order ${order.orderId || order._id} is now ${order.status}`;
+                const htmlContent = getOrderStatusEmailTemplate(order);
+
+                await sendEmail({
+                    email: order.user.email,
+                    subject: subject,
+                    html: htmlContent,
+                });
             }
 
             res.json(updatedOrder);

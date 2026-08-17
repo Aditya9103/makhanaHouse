@@ -1,6 +1,9 @@
-import { Star, Gift, ShoppingBag, Trophy } from "lucide-react";
+import { Star, Gift, ShoppingBag, Trophy, Loader2 } from "lucide-react";
+import { useGetMyRewardHistoryQuery } from "../../store/api/rewardApiSlice";
 
 export default function RewardsSidebar() {
+    const { data: history = [], isLoading: loadingHistory } = useGetMyRewardHistoryQuery();
+
     return (
         <div className="flex flex-col gap-6">
             
@@ -55,29 +58,25 @@ export default function RewardsSidebar() {
                 </div>
                 
                 <div className="flex flex-col gap-3">
-                    <div className="flex items-center justify-between pb-3 border-b border-white/5">
-                        <div className="flex flex-col gap-0.5">
-                            <span className="text-[12px] text-[#e4e4e7]">Order #ORD-9281</span>
-                            <span className="text-[10px] text-[var(--color-text-secondary)]">12 Aug 2024</span>
-                        </div>
-                        <span className="text-[12px] font-medium text-[#16a34a]">+120 pts</span>
-                    </div>
-                    
-                    <div className="flex items-center justify-between pb-3 border-b border-white/5">
-                        <div className="flex flex-col gap-0.5">
-                            <span className="text-[12px] text-[#e4e4e7]">Review Bonus</span>
-                            <span className="text-[10px] text-[var(--color-text-secondary)]">05 Aug 2024</span>
-                        </div>
-                        <span className="text-[12px] font-medium text-[#16a34a]">+50 pts</span>
-                    </div>
-                    
-                    <div className="flex items-center justify-between">
-                        <div className="flex flex-col gap-0.5">
-                            <span className="text-[12px] text-[#e4e4e7]">Redeemed Discount</span>
-                            <span className="text-[10px] text-[var(--color-text-secondary)]">28 Jul 2024</span>
-                        </div>
-                        <span className="text-[12px] font-medium text-red-400">-500 pts</span>
-                    </div>
+                    {loadingHistory ? (
+                        <div className="flex justify-center py-4"><Loader2 className="animate-spin text-[#d4af37]" /></div>
+                    ) : history.length === 0 ? (
+                        <div className="text-[11px] text-[var(--color-text-secondary)] text-center py-4">No recent history found.</div>
+                    ) : (
+                        history.map((item, index) => (
+                            <div key={item._id} className={`flex items-center justify-between pb-3 ${index !== history.length - 1 ? 'border-b border-white/5' : ''}`}>
+                                <div className="flex flex-col gap-0.5">
+                                    <span className="text-[12px] text-[#e4e4e7]">{item.description}</span>
+                                    <span className="text-[10px] text-[var(--color-text-secondary)]">
+                                        {new Date(item.createdAt).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' })}
+                                    </span>
+                                </div>
+                                <span className={`text-[12px] font-medium ${item.type === 'earned' ? 'text-[#16a34a]' : 'text-red-400'}`}>
+                                    {item.type === 'earned' ? '+' : '-'}{item.points} pts
+                                </span>
+                            </div>
+                        ))
+                    )}
                 </div>
             </div>
 

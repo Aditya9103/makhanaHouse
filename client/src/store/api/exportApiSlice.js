@@ -16,7 +16,26 @@ export const exportApiSlice = apiSlice.injectEndpoints({
             }),
             providesTags: ['Export'],
         }),
+        getExportInquiries: builder.query({
+            query: () => ({
+                url: '/export',
+            }),
+            providesTags: ['Export'],
+        }),
+        updateExportInquiryStatus: builder.mutation({
+            query: ({ id, status, customMessage }) => ({
+                url: `/export/${id}/status`,
+                method: 'PUT',
+                body: { status, customMessage },
+            }),
+            invalidatesTags: ['Export'],
+        }),
     }),
 });
 
-export const { useCreateExportInquiryMutation, useGetMyExportInquiriesQuery } = exportApiSlice;
+export const { 
+    useCreateExportInquiryMutation, 
+    useGetMyExportInquiriesQuery,
+    useGetExportInquiriesQuery,
+    useUpdateExportInquiryStatusMutation
+} = exportApiSlice;

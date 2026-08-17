@@ -1,4 +1,6 @@
 import ExportInquiry from '../models/ExportInquiry.js';
+import sendEmail from '../utils/emailService.js';
+import { getExportInquiryStatusEmailTemplate } from '../utils/emailTemplates.js';
 
 // @desc    Create new export inquiry
 // @route   POST /api/export
@@ -56,8 +58,41 @@ export const getMyExportInquiries = async (req, res) => {
 // @access  Private/Admin
 export const getExportInquiries = async (req, res) => {
     try {
-        const inquiries = await ExportInquiry.find({}).sort({ createdAt: -1 });
+        const inquiries = await ExportInquiry.find({}).sort({ createdAt: -1 }).populate('user', 'name email');
         res.json(inquiries);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
+
+// @desc    Update export inquiry status (Admin)
+// @route   PUT /api/export/:id/status
+// @access  Private/Admin
+export const updateExportInquiryStatus = async (req, res) => {
+    try {
+        const { status, customMessage } = req.body;
+        
+        const inquiry = await ExportInquiry.findById(req.params.id);
+
+        if (inquiry) {
+            inquiry.status = status;
+            const updatedInquiry = await inquiry.save();
+
+            // Send notification email
+            if (inquiry.email) {
+                const emailHtml = getExportInquiryStatusEmailTemplate(updatedInquiry, customMessage);
+                await sendEmail({
+                    email: inquiry.email,
+                    subject: `Update on your Export Inquiry #${inquiry._id.toString().substring(18)}`,
+                    html: emailHtml
+                });
+            }
+
+            res.json(updatedInquiry);
+        } else {
+            res.status(404);
+            throw new Error('Inquiry not found');
+        }
     } catch (error) {
         res.status(500).json({ message: error.message });
     }

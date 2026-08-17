@@ -7,9 +7,15 @@ import ShopStats from "../components/shop/ShopStats";
 
 export default function Shop() {
     const [appliedFilters, setAppliedFilters] = useState({
-        category: "All Products",
+        categories: [],
+        flavors: [],
+        dietary: [],
+        packSizes: [],
         minPrice: 0,
         maxPrice: 5000,
+        rating: 0,
+        availability: false,
+        sort: "newest"
     });
 
     return (
@@ -27,7 +33,10 @@ export default function Shop() {
                     <ShopSidebar appliedFilters={appliedFilters} setAppliedFilters={setAppliedFilters} />
 
                     {/* Main Products Area */}
-                    <ShopProductGrid appliedFilters={appliedFilters} />
+                    <ShopProductGrid 
+                        appliedFilters={appliedFilters} 
+                        setAppliedFilters={setAppliedFilters}
+                    />
                 </div>
             </section>
 

@@ -1,4 +1,5 @@
 import { Download } from "lucide-react";
+import { Link } from "react-router-dom";
 
 export default function OrderCard({ order }) {
     const getStatusColor = (status) => {
@@ -75,9 +76,9 @@ export default function OrderCard({ order }) {
 
                 {/* Actions */}
                 <div className="flex flex-col gap-2 items-start sm:items-end col-span-2 sm:col-span-1 mt-2 sm:mt-0">
-                    <button className="w-full sm:w-auto px-4 py-1.5 rounded-md border border-[#d4af37]/40 text-[#d4af37] text-[11px] font-medium hover:bg-[#d4af37] hover:text-[#080b14] transition-all text-center whitespace-nowrap">
+                    <Link to={`/profile/orders/${order.id}`} className="w-full sm:w-auto px-4 py-1.5 rounded-md border border-[#d4af37]/40 text-[#d4af37] text-[11px] font-medium hover:bg-[#d4af37] hover:text-[#080b14] transition-all text-center whitespace-nowrap block">
                         View Details
-                    </button>
+                    </Link>
                     <button className="w-full sm:w-auto flex items-center justify-center sm:justify-end gap-1.5 text-[var(--color-text-secondary)] text-[11px] hover:text-[#f8f9fa] transition-colors group whitespace-nowrap">
                         <Download size={12} className="text-[#d4af37] group-hover:text-[#f3e5ab] transition-colors" />
                         Download Invoice

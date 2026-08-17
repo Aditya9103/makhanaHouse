@@ -23,14 +23,19 @@ function StarRow({ rating }) {
     );
 }
 
-export default function ShopProductGrid({ appliedFilters }) {
+export default function ShopProductGrid({ appliedFilters, setAppliedFilters }) {
     const { addToCart } = useCart();
     const { isInWishlist, toggleWishlist } = useWishlist();
-    const [sortOption, setSortOption] = useState("newest");
     const [isSortOpen, setIsSortOpen] = useState(false);
     
-    // Construct query filters
-    const queryParams = { ...appliedFilters, sort: sortOption };
+    // Construct query filters - join arrays for backend
+    const queryParams = { 
+        ...appliedFilters,
+        categories: appliedFilters.categories?.join(','),
+        flavors: appliedFilters.flavors?.join(','),
+        dietary: appliedFilters.dietary?.join(','),
+        packSizes: appliedFilters.packSizes?.join(','),
+    };
     const { data: products, isLoading, error } = useGetProductsQuery(queryParams);
 
     return (
@@ -47,11 +52,11 @@ export default function ShopProductGrid({ appliedFilters }) {
                                 onClick={() => setIsSortOpen(!isSortOpen)}
                                 className="flex items-center gap-2 rounded-md border border-white/10 bg-white/5 px-3 py-1.5 text-[#f8f9fa] transition hover:border-[#d4af37]/50"
                             >
-                                {sortOption === 'newest' && 'Newest'}
-                                {sortOption === 'price_asc' && 'Price: Low to High'}
-                                {sortOption === 'price_desc' && 'Price: High to Low'}
-                                {sortOption === 'rating' && 'Highest Rated'}
-                                {sortOption === 'featured' && 'Featured'}
+                                {appliedFilters.sort === 'newest' && 'Newest'}
+                                {appliedFilters.sort === 'price_asc' && 'Price: Low to High'}
+                                {appliedFilters.sort === 'price_desc' && 'Price: High to Low'}
+                                {appliedFilters.sort === 'rating' && 'Highest Rated'}
+                                {appliedFilters.sort === 'featured' && 'Featured'}
                                 <ChevronDown size={14} />
                             </button>
 
@@ -67,7 +72,7 @@ export default function ShopProductGrid({ appliedFilters }) {
                                         <button
                                             key={opt.value}
                                             onClick={() => {
-                                                setSortOption(opt.value);
+                                                setAppliedFilters(prev => ({ ...prev, sort: opt.value }));
                                                 setIsSortOpen(false);
                                             }}
                                             className="w-full text-left px-4 py-2 text-sm text-[var(--color-text-secondary)] hover:bg-white/5 hover:text-[#d4af37]"

@@ -1,13 +1,20 @@
 import { Plus, Calendar, Eye, ChevronLeft, ChevronRight, Loader2 } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useGetMyExportInquiriesQuery } from "../../store/api/exportApiSlice";
 
-export default function ExportInquiriesMain() {
+export default function ExportInquiriesMain({ selectedInquiry, setSelectedInquiry }) {
     const [activeTab, setActiveTab] = useState("all");
     const { data: inquiriesData, isLoading, error } = useGetMyExportInquiriesQuery();
 
     const inquiries = inquiriesData || [];
+
+    // Automatically select the first inquiry if none is selected
+    useEffect(() => {
+        if (inquiries.length > 0 && !selectedInquiry) {
+            setSelectedInquiry(inquiries[0]);
+        }
+    }, [inquiries, selectedInquiry, setSelectedInquiry]);
 
     const getStatusColor = (status) => {
         switch (status) {
@@ -119,18 +126,24 @@ export default function ExportInquiriesMain() {
                                 
                                 {/* Mobile View Details Button */}
                                 <div className="flex items-center justify-end mt-4 pt-4 border-t border-white/5 lg:hidden">
-                                    <button className="w-full flex items-center justify-center gap-1.5 px-4 py-2 rounded-lg border border-[#d4af37]/40 text-[#d4af37] text-[12px] font-medium hover:bg-[#d4af37] hover:text-[#080b14] transition-all whitespace-nowrap">
+                                    <button 
+                                        onClick={() => setSelectedInquiry(inquiry)}
+                                        className={`w-full flex items-center justify-center gap-1.5 px-4 py-2 rounded-lg border text-[12px] font-medium transition-all whitespace-nowrap ${selectedInquiry?._id === inquiry._id ? 'bg-[#d4af37] text-[#080b14] border-[#d4af37]' : 'border-[#d4af37]/40 text-[#d4af37] hover:bg-[#d4af37] hover:text-[#080b14]'}`}
+                                    >
                                         <Eye size={14} />
-                                        View Details
+                                        {selectedInquiry?._id === inquiry._id ? 'Viewing' : 'View Details'}
                                     </button>
                                 </div>
                             </div>
 
                             {/* Right side Desktop Actions */}
                             <div className="hidden lg:flex shrink-0 w-[140px] pl-6 border-l border-white/10 h-full items-center justify-center">
-                                <button className="w-full flex items-center justify-center gap-1.5 px-4 py-2.5 rounded-lg border border-[#d4af37]/40 text-[#d4af37] text-[12px] font-medium hover:bg-[#d4af37] hover:text-[#080b14] transition-all">
+                                <button 
+                                    onClick={() => setSelectedInquiry(inquiry)}
+                                    className={`w-full flex items-center justify-center gap-1.5 px-4 py-2.5 rounded-lg border text-[12px] font-medium transition-all ${selectedInquiry?._id === inquiry._id ? 'bg-[#d4af37] text-[#080b14] border-[#d4af37]' : 'border-[#d4af37]/40 text-[#d4af37] hover:bg-[#d4af37] hover:text-[#080b14]'}`}
+                                >
                                     <Eye size={14} />
-                                    View Details
+                                    {selectedInquiry?._id === inquiry._id ? 'Viewing' : 'View Details'}
                                 </button>
                             </div>
 

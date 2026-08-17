@@ -1,12 +1,22 @@
 import { ShoppingBag, CreditCard, Heart, Gift, FileText } from "lucide-react";
 import { Link } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { useGetMyOrdersQuery } from "../../store/api/orderApiSlice";
+import { useGetMyExportInquiriesQuery } from "../../store/api/exportApiSlice";
 
 export default function ProfileStats() {
+    const { userInfo } = useSelector(state => state.auth);
+    const { data: orders = [] } = useGetMyOrdersQuery();
+    const { data: inquiries = [] } = useGetMyExportInquiriesQuery();
+
+    const totalSpent = orders.reduce((acc, order) => acc + (order.isPaid ? order.totalPrice : 0), 0);
+    const wishlistCount = userInfo?.wishlist?.length || 0;
+
     const stats = [
-        { label: "Total Orders", value: "12", subtext: "View all orders →", icon: ShoppingBag, link: "/profile/orders" },
-        { label: "Total Spent", value: "₹12,850", subtext: "All time", icon: CreditCard, link: null },
-        { label: "Wishlist Items", value: "8", subtext: "View wishlist →", icon: Heart, link: "/profile/wishlist" },
-        { label: "Export Inquiries", value: "3", subtext: "View inquiries →", icon: FileText, link: "/profile/inquiries" },
+        { label: "Total Orders", value: orders.length.toString(), subtext: "View all orders →", icon: ShoppingBag, link: "/profile/orders" },
+        { label: "Total Spent", value: `₹${totalSpent.toLocaleString('en-IN')}`, subtext: "All time", icon: CreditCard, link: null },
+        { label: "Wishlist Items", value: wishlistCount.toString(), subtext: "View wishlist →", icon: Heart, link: "/profile/wishlist" },
+        { label: "Export Inquiries", value: inquiries.length.toString(), subtext: "View inquiries →", icon: FileText, link: "/profile/inquiries" },
     ];
 
     return (

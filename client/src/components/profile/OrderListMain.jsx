@@ -1,4 +1,4 @@
-import { Search, ChevronLeft, ChevronRight, Loader2 } from "lucide-react";
+import { Search, ChevronLeft, ChevronRight, Loader2, Package, CreditCard, CheckCircle2, Clock, Calendar as CalendarIcon, ChevronDown } from "lucide-react";
 import OrderCard from "./OrderCard";
 import { useState } from "react";
 import { useGetMyOrdersQuery } from "../../store/api/orderApiSlice";
@@ -19,24 +19,100 @@ export default function OrderListMain() {
         ? orders 
         : orders.filter(o => o.status === activeTab);
 
+    // Calculate dynamic stats
+    const totalOrders = orders.length;
+    const totalSpent = orders.reduce((acc, order) => acc + (order.totalPrice || 0), 0);
+    const deliveredOrders = orders.filter(o => o.status === "Delivered").length;
+    const processingOrders = orders.filter(o => o.status === "Processing").length;
+
     return (
         <div className="flex flex-col gap-6">
             
+            {/* Dynamic Horizontal Stats */}
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+                <div className="rounded-xl border border-white/10 bg-[#080b14]/80 backdrop-blur-md p-4 sm:p-5 shadow-sm flex flex-col justify-between hover:border-[#d4af37]/30 transition-colors">
+                    <div className="flex items-center gap-3 mb-3">
+                        <div className="h-8 w-8 rounded flex items-center justify-center border border-[#d4af37]/30 bg-[#d4af37]/10">
+                            <Package size={14} className="text-[#d4af37]" />
+                        </div>
+                        <span className="text-[13px] text-[#e4e4e7]">Total Orders</span>
+                    </div>
+                    <span className="text-[20px] font-semibold text-[#f8f9fa]">{totalOrders}</span>
+                </div>
+                
+                <div className="rounded-xl border border-white/10 bg-[#080b14]/80 backdrop-blur-md p-4 sm:p-5 shadow-sm flex flex-col justify-between hover:border-[#d4af37]/30 transition-colors">
+                    <div className="flex items-center gap-3 mb-3">
+                        <div className="h-8 w-8 rounded flex items-center justify-center border border-[#d4af37]/30 bg-[#d4af37]/10">
+                            <CreditCard size={14} className="text-[#d4af37]" />
+                        </div>
+                        <span className="text-[13px] text-[#e4e4e7]">Total Spent</span>
+                    </div>
+                    <span className="text-[20px] font-semibold text-[#f8f9fa]">₹{totalSpent.toLocaleString('en-IN')}</span>
+                </div>
+
+                <div className="rounded-xl border border-white/10 bg-[#080b14]/80 backdrop-blur-md p-4 sm:p-5 shadow-sm flex flex-col justify-between hover:border-[#d4af37]/30 transition-colors">
+                    <div className="flex items-center gap-3 mb-3">
+                        <div className="h-8 w-8 rounded flex items-center justify-center border border-[#d4af37]/30 bg-[#d4af37]/10">
+                            <CheckCircle2 size={14} className="text-[#16a34a]" />
+                        </div>
+                        <span className="text-[13px] text-[#e4e4e7]">Delivered</span>
+                    </div>
+                    <span className="text-[20px] font-semibold text-[#f8f9fa]">{deliveredOrders}</span>
+                </div>
+
+                <div className="rounded-xl border border-white/10 bg-[#080b14]/80 backdrop-blur-md p-4 sm:p-5 shadow-sm flex flex-col justify-between hover:border-[#d4af37]/30 transition-colors">
+                    <div className="flex items-center gap-3 mb-3">
+                        <div className="h-8 w-8 rounded flex items-center justify-center border border-[#d4af37]/30 bg-[#d4af37]/10">
+                            <Clock size={14} className="text-[#3b82f6]" />
+                        </div>
+                        <span className="text-[13px] text-[#e4e4e7]">Processing</span>
+                    </div>
+                    <span className="text-[20px] font-semibold text-[#f8f9fa]">{processingOrders}</span>
+                </div>
+            </div>
+
             {/* Header Section */}
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div className="flex flex-col xl:flex-row xl:items-center justify-between gap-4 bg-[#080b14]/80 backdrop-blur-md border border-white/10 p-4 sm:p-5 rounded-xl shadow-sm">
                 <div>
-                    <h2 className="text-2xl font-serif text-[#f8f9fa] mb-1">My Orders</h2>
+                    <h2 className="text-xl sm:text-2xl font-serif text-[#f8f9fa] mb-1">My Orders</h2>
                     <p className="text-[13px] text-[var(--color-text-secondary)]">Track, view and manage all your orders</p>
                 </div>
                 
-                {/* Search */}
-                <div className="relative w-full sm:w-[280px]">
-                    <Search size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#e4e4e7]/50" />
-                    <input 
-                        type="text" 
-                        placeholder="Search by Order ID, Product..." 
-                        className="w-full bg-[#0a0d14] border border-white/10 rounded-full py-2.5 pl-10 pr-4 text-[13px] text-[#f8f9fa] placeholder:text-[#e4e4e7]/40 focus:outline-none focus:border-[#d4af37]/50 transition-colors shadow-sm"
-                    />
+                {/* Search & Filters Row */}
+                <div className="flex flex-col sm:flex-row items-center gap-3 w-full xl:w-auto">
+                    {/* Search */}
+                    <div className="relative w-full sm:w-[260px]">
+                        <Search size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#e4e4e7]/50" />
+                        <input 
+                            type="text" 
+                            placeholder="Search by Order ID, Product..." 
+                            className="w-full bg-[#0a0d14] border border-white/10 rounded-lg py-2.5 pl-10 pr-4 text-[13px] text-[#f8f9fa] placeholder:text-[#e4e4e7]/40 focus:outline-none focus:border-[#d4af37]/50 transition-colors shadow-sm"
+                        />
+                    </div>
+                    
+                    <div className="flex items-center gap-3 w-full sm:w-auto">
+                        {/* Date Range */}
+                        <div className="relative w-full sm:w-[150px]">
+                            <CalendarIcon size={14} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#d4af37]" />
+                            <input 
+                                type="text" 
+                                placeholder="Date Range" 
+                                readOnly
+                                className="w-full bg-[#0a0d14] border border-white/10 rounded-lg py-2.5 pl-9 pr-3 text-[13px] text-[var(--color-text-secondary)] focus:outline-none cursor-pointer hover:border-white/20 transition-colors"
+                            />
+                        </div>
+
+                        {/* Sort By */}
+                        <div className="relative w-full sm:w-[150px]">
+                            <select className="w-full bg-[#0a0d14] border border-white/10 rounded-lg py-2.5 pl-3 pr-9 text-[13px] text-[#f8f9fa] focus:outline-none focus:border-[#d4af37]/50 appearance-none cursor-pointer hover:border-white/20 transition-colors">
+                                <option>Newest First</option>
+                                <option>Oldest First</option>
+                                <option>Price: High to Low</option>
+                                <option>Price: Low to High</option>
+                            </select>
+                            <ChevronDown size={14} className="absolute right-3.5 top-1/2 -translate-y-1/2 text-[#e4e4e7]/60 pointer-events-none" />
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -70,7 +146,8 @@ export default function OrderListMain() {
                     ) : filteredOrders.length > 0 ? (
                         filteredOrders.map((order, idx) => (
                             <OrderCard key={idx} order={{
-                                id: order.orderId || order._id,
+                                id: order._id,
+                                orderId: order.orderId || order._id,
                                 date: new Date(order.createdAt).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }),
                                 itemsCount: order.orderItems.length,
                                 price: order.totalPrice.toLocaleString('en-IN'),

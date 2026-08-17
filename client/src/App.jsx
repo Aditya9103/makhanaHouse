@@ -26,12 +26,18 @@ import AdminDashboard from './pages/admin/AdminDashboard'
 import AdminSettings from './pages/admin/AdminSettings'
 import AdminProducts from './pages/admin/AdminProducts'
 import AdminProductEdit from './pages/admin/AdminProductEdit'
+import AdminOrders from './pages/admin/AdminOrders'
+import AdminOrderDetails from './pages/admin/AdminOrderDetails'
+import AdminReviews from './pages/admin/AdminReviews'
+import AdminInquiries from './pages/admin/AdminInquiries'
+import AdminOffers from './pages/admin/AdminOffers'
 import AdminLayout from './components/admin/AdminLayout'
 
 
 
 import Profile from './pages/Profile'
 import Orders from './pages/Orders'
+import UserOrderDetails from './pages/UserOrderDetails'
 import Addresses from './pages/Addresses'
 import ExportInquiries from './pages/ExportInquiries'
 import Wishlist from './pages/Wishlist'
@@ -64,6 +70,7 @@ function App() {
                 <Route path="order-success/:id" element={<OrderSuccess />} />
                 <Route path="profile" element={<Profile />} />
                 <Route path="profile/orders" element={<Orders />} />
+                <Route path="profile/orders/:id" element={<UserOrderDetails />} />
                 <Route path="profile/addresses" element={<Addresses />} />
                 <Route path="profile/inquiries" element={<ExportInquiries />} />
                 <Route path="profile/wishlist" element={<Wishlist />} />
@@ -83,6 +90,11 @@ function App() {
                 <Route path="products" element={<AdminProducts />} />
                 <Route path="products/new" element={<AdminProductEdit />} />
                 <Route path="products/:id/edit" element={<AdminProductEdit />} />
+                <Route path="orders" element={<AdminOrders />} />
+                <Route path="orders/:id" element={<AdminOrderDetails />} />
+                <Route path="offers" element={<AdminOffers />} />
+                <Route path="reviews" element={<AdminReviews />} />
+                <Route path="export-inquiries" element={<AdminInquiries />} />
                 
                 {/* Fallback route for unimplemented admin pages so sidebar remains visible */}
                 <Route path="*" element={

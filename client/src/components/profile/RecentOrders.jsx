@@ -67,7 +67,7 @@ export default function RecentOrders() {
 
                                 {/* Action */}
                                 <div className="flex items-center justify-end w-24">
-                                    <Link to={`/profile/orders`} className="text-[11px] text-[#e4e4e7] hover:text-[#d4af37] transition-colors font-medium flex items-center gap-1">
+                                    <Link to={`/profile/orders/${order.id}`} className="text-[11px] text-[#e4e4e7] hover:text-[#d4af37] transition-colors font-medium flex items-center gap-1">
                                         View Details <span>→</span>
                                     </Link>
                                 </div>

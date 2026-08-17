@@ -1,10 +1,14 @@
 import { Clock, Users, ShieldCheck, Upload, ArrowRight, CheckCircle2, Loader2 } from "lucide-react";
-import { useState, useRef } from "react";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
 import { useCreateExportInquiryMutation } from "../../store/api/exportApiSlice";
 import { useUploadFileMutation } from "../../store/api/uploadApiSlice";
 import { toast } from "react-toastify";
 
 export default function ExportInquiryForm() {
+    const navigate = useNavigate();
+    const { userInfo } = useSelector((state) => state.auth);
     const [privateLabel, setPrivateLabel] = useState(false);
     const [formData, setFormData] = useState({
         fullName: '',
@@ -64,6 +68,10 @@ export default function ExportInquiryForm() {
             });
             setPrivateLabel(false);
             setFile(null);
+            
+            if (userInfo) {
+                navigate('/profile/inquiries');
+            }
         } catch (err) {
             toast.error(err?.data?.message || "Failed to submit inquiry");
             setIsUploading(false);

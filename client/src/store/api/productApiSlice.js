@@ -4,6 +4,12 @@ const PRODUCTS_URL = '/products';
 
 export const productApiSlice = apiSlice.injectEndpoints({
     endpoints: (builder) => ({
+        getProductFilters: builder.query({
+            query: () => ({
+                url: `${PRODUCTS_URL}/filters`,
+            }),
+            keepUnusedDataFor: 5,
+        }),
         getProducts: builder.query({
             query: (params) => ({
                 url: PRODUCTS_URL,
@@ -42,13 +48,47 @@ export const productApiSlice = apiSlice.injectEndpoints({
             }),
             invalidatesTags: ['Product'],
         }),
+        createReview: builder.mutation({
+            query: (data) => ({
+                url: `${PRODUCTS_URL}/${data.productId}/reviews`,
+                method: 'POST',
+                body: data,
+            }),
+            invalidatesTags: ['Product'],
+        }),
+        deleteReview: builder.mutation({
+            query: ({ productId, reviewId }) => ({
+                url: `${PRODUCTS_URL}/${productId}/reviews/${reviewId}`,
+                method: 'DELETE',
+            }),
+            invalidatesTags: ['Product'],
+        }),
+        approveReview: builder.mutation({
+            query: ({ productId, reviewId }) => ({
+                url: `${PRODUCTS_URL}/${productId}/reviews/${reviewId}/approve`,
+                method: 'PUT',
+            }),
+            invalidatesTags: ['Product'],
+        }),
+        getAllReviews: builder.query({
+            query: () => ({
+                url: `${PRODUCTS_URL}/reviews/all`,
+            }),
+            providesTags: ['Product'],
+            keepUnusedDataFor: 5,
+        }),
     }),
 });
 
 export const {
+    useGetProductFiltersQuery,
     useGetProductsQuery,
     useGetProductDetailsQuery,
     useCreateProductMutation,
     useUpdateProductMutation,
     useDeleteProductMutation,
+    useCreateReviewMutation,
+    useDeleteReviewMutation,
+    useApproveReviewMutation,
+    useGetAllReviewsQuery,
 } = productApiSlice;

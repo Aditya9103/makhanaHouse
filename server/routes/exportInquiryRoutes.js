@@ -3,6 +3,7 @@ import {
     createExportInquiry,
     getMyExportInquiries,
     getExportInquiries,
+    updateExportInquiryStatus,
 } from '../controllers/exportInquiryController.js';
 import { protect, admin } from '../middlewares/authMiddleware.js';
 
@@ -22,5 +23,8 @@ router.route('/')
 
 router.route('/myinquiries')
     .get(protect, getMyExportInquiries);
+
+router.route('/:id/status')
+    .put(protect, admin, updateExportInquiryStatus);
 
 export default router;

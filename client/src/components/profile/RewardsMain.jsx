@@ -1,6 +1,7 @@
-import { Gift, Copy, CheckCircle2 } from "lucide-react";
+import { Gift, Copy, CheckCircle2, Loader2 } from "lucide-react";
 import { useState } from "react";
 import { useSelector } from "react-redux";
+import { useGetActiveOffersQuery } from "../../store/api/rewardApiSlice";
 
 export default function RewardsMain() {
     const [copiedId, setCopiedId] = useState(null);
@@ -24,32 +25,7 @@ export default function RewardsMain() {
     const progressPercent = Math.min((points / nextTierPoints) * 100, 100);
     const pointsNeeded = nextTierPoints - points;
 
-    const coupons = [
-        {
-            id: 1,
-            code: "WELCOME10",
-            title: "10% Off on First Order",
-            expiry: "Valid till 31 Dec 2024",
-            minOrder: "₹999",
-            bg: "from-[#d4af37]/20 to-[#080b14]"
-        },
-        {
-            id: 2,
-            code: "FESTIVE20",
-            title: "Flat ₹200 Off",
-            expiry: "Valid till 30 Nov 2024",
-            minOrder: "₹1,499",
-            bg: "from-purple-500/20 to-[#080b14]"
-        },
-        {
-            id: 3,
-            code: "FREESHIP",
-            title: "Free Express Shipping",
-            expiry: "Valid for next 7 days",
-            minOrder: "₹500",
-            bg: "from-emerald-500/20 to-[#080b14]"
-        }
-    ];
+    const { data: activeOffers = [], isLoading: loadingOffers } = useGetActiveOffersQuery();
 
     const copyToClipboard = (code, id) => {
         navigator.clipboard.writeText(code);
@@ -123,47 +99,58 @@ export default function RewardsMain() {
                 </h3>
                 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    {coupons.map((coupon) => (
-                        <div key={coupon.id} className={`rounded-xl border border-white/10 bg-gradient-to-br ${coupon.bg} p-5 relative overflow-hidden flex flex-col`}>
-                            
-                            {/* Decorative dashed line */}
-                            <div className="absolute top-0 bottom-0 right-[30%] w-[1px] border-r-2 border-dashed border-white/10"></div>
-                            
-                            <div className="flex justify-between items-start mb-6">
-                                <div className="flex flex-col pr-4 z-10 w-[65%]">
-                                    <h4 className="text-[16px] font-medium text-[#f8f9fa] mb-1 leading-tight">{coupon.title}</h4>
-                                    <span className="text-[11px] text-[var(--color-text-secondary)]">Min. Order {coupon.minOrder}</span>
-                                </div>
-                                <div className="z-10 w-[30%] flex flex-col items-center">
-                                    <span className="text-[10px] text-[var(--color-text-secondary)] uppercase tracking-widest mb-1.5 text-center">Use Code</span>
-                                    <div className="bg-[#080b14]/50 border border-white/10 rounded px-2.5 py-1.5 text-[13px] font-bold text-[#f8f9fa] tracking-wider text-center w-full truncate">
-                                        {coupon.code}
+                    {loadingOffers ? (
+                        <div className="col-span-2 flex justify-center py-10"><Loader2 className="animate-spin text-[#d4af37]" /></div>
+                    ) : activeOffers.length === 0 ? (
+                        <div className="col-span-2 text-[13px] text-[var(--color-text-secondary)]">No active offers at the moment. Check back later!</div>
+                    ) : (
+                        activeOffers.map((coupon) => {
+                            const bg = coupon.colorTheme === 'Gold' ? 'from-[#d4af37]/20 to-[#080b14]' : 
+                                       coupon.colorTheme === 'Purple' ? 'from-purple-500/20 to-[#080b14]' : 
+                                       'from-emerald-500/20 to-[#080b14]';
+                            return (
+                                <div key={coupon._id} className={`rounded-xl border border-white/10 bg-gradient-to-br ${bg} p-5 relative overflow-hidden flex flex-col`}>
+                                    
+                                    {/* Decorative dashed line */}
+                                    <div className="absolute top-0 bottom-0 right-[30%] w-[1px] border-r-2 border-dashed border-white/10"></div>
+                                    
+                                    <div className="flex justify-between items-start mb-6">
+                                        <div className="flex flex-col pr-4 z-10 w-[65%]">
+                                            <h4 className="text-[16px] font-medium text-[#f8f9fa] mb-1 leading-tight">{coupon.title}</h4>
+                                            <span className="text-[11px] text-[var(--color-text-secondary)]">Min. Order {coupon.minOrderAmount}</span>
+                                        </div>
+                                        <div className="z-10 w-[30%] flex flex-col items-center">
+                                            <span className="text-[10px] text-[var(--color-text-secondary)] uppercase tracking-widest mb-1.5 text-center">Use Code</span>
+                                            <div className="bg-[#080b14]/50 border border-white/10 rounded px-2.5 py-1.5 text-[13px] font-bold text-[#f8f9fa] tracking-wider text-center w-full truncate">
+                                                {coupon.code}
+                                            </div>
+                                        </div>
                                     </div>
+                                    
+                                    <div className="mt-auto pt-4 border-t border-white/5 flex items-center justify-between z-10">
+                                        <span className="text-[11px] text-[#e4e4e7]">{coupon.expiryDate}</span>
+                                        <button 
+                                            onClick={() => copyToClipboard(coupon.code, coupon._id)}
+                                            className={`flex items-center gap-1.5 text-[12px] font-medium transition-colors ${copiedId === coupon._id ? 'text-[#16a34a]' : 'text-[#d4af37] hover:text-[#f8f9fa]'}`}
+                                        >
+                                            {copiedId === coupon._id ? (
+                                                <>
+                                                    <CheckCircle2 size={14} />
+                                                    Copied
+                                                </>
+                                            ) : (
+                                                <>
+                                                    <Copy size={14} />
+                                                    Copy Code
+                                                </>
+                                            )}
+                                        </button>
+                                    </div>
+                                    
                                 </div>
-                            </div>
-                            
-                            <div className="mt-auto pt-4 border-t border-white/5 flex items-center justify-between z-10">
-                                <span className="text-[11px] text-[#e4e4e7]">{coupon.expiry}</span>
-                                <button 
-                                    onClick={() => copyToClipboard(coupon.code, coupon.id)}
-                                    className={`flex items-center gap-1.5 text-[12px] font-medium transition-colors ${copiedId === coupon.id ? 'text-[#16a34a]' : 'text-[#d4af37] hover:text-[#f8f9fa]'}`}
-                                >
-                                    {copiedId === coupon.id ? (
-                                        <>
-                                            <CheckCircle2 size={14} />
-                                            Copied
-                                        </>
-                                    ) : (
-                                        <>
-                                            <Copy size={14} />
-                                            Copy Code
-                                        </>
-                                    )}
-                                </button>
-                            </div>
-                            
-                        </div>
-                    ))}
+                            );
+                        })
+                    )}
                 </div>
             </div>
             

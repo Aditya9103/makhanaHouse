@@ -1,6 +1,10 @@
 import { Globe, DollarSign, Mail, MessageSquare } from "lucide-react";
+import { useState } from "react";
 
 export default function ProfilePreferences() {
+    const [emailEnabled, setEmailEnabled] = useState(true);
+    const [smsEnabled, setSmsEnabled] = useState(false);
+
     return (
         <div className="rounded-xl border border-white/10 bg-[#080b14]/80 backdrop-blur-md p-5 lg:p-6 shadow-sm">
             <h3 className="text-[15px] font-serif text-[#f8f9fa] mb-5">Preferences</h3>
@@ -38,8 +42,11 @@ export default function ProfilePreferences() {
                         <span className="text-sm">Email Notifications</span>
                     </div>
                     {/* Custom Toggle Switch - Active */}
-                    <button className="relative w-9 h-5 rounded-full bg-[#d4af37] transition-colors overflow-hidden focus:outline-none">
-                        <div className="absolute top-0.5 left-[18px] w-4 h-4 rounded-full bg-[#080b14] shadow-sm transition-transform"></div>
+                    <button 
+                        onClick={() => setEmailEnabled(!emailEnabled)}
+                        className={`relative w-9 h-5 rounded-full transition-colors overflow-hidden focus:outline-none ${emailEnabled ? 'bg-[#d4af37]' : 'bg-white/20 hover:bg-white/30'}`}
+                    >
+                        <div className={`absolute top-0.5 w-4 h-4 rounded-full shadow-sm transition-all ${emailEnabled ? 'left-[18px] bg-[#080b14]' : 'left-0.5 bg-white'}`}></div>
                     </button>
                 </div>
 
@@ -50,8 +57,11 @@ export default function ProfilePreferences() {
                         <span className="text-sm">SMS Notifications</span>
                     </div>
                     {/* Custom Toggle Switch - Inactive */}
-                    <button className="relative w-9 h-5 rounded-full bg-white/20 transition-colors overflow-hidden focus:outline-none hover:bg-white/30">
-                        <div className="absolute top-0.5 left-0.5 w-4 h-4 rounded-full bg-white shadow-sm transition-transform"></div>
+                    <button 
+                        onClick={() => setSmsEnabled(!smsEnabled)}
+                        className={`relative w-9 h-5 rounded-full transition-colors overflow-hidden focus:outline-none ${smsEnabled ? 'bg-[#d4af37]' : 'bg-white/20 hover:bg-white/30'}`}
+                    >
+                        <div className={`absolute top-0.5 w-4 h-4 rounded-full shadow-sm transition-all ${smsEnabled ? 'left-[18px] bg-[#080b14]' : 'left-0.5 bg-white'}`}></div>
                     </button>
                 </div>
 

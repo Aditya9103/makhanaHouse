@@ -4,6 +4,13 @@ const USERS_URL = '/users';
 
 export const usersApiSlice = apiSlice.injectEndpoints({
     endpoints: (builder) => ({
+        getUsers: builder.query({
+            query: () => ({
+                url: `${USERS_URL}`,
+            }),
+            providesTags: ['Users'],
+            keepUnusedDataFor: 5,
+        }),
         getCart: builder.query({
             query: () => ({
                 url: `${USERS_URL}/profile/cart`,
@@ -53,6 +60,7 @@ export const usersApiSlice = apiSlice.injectEndpoints({
 });
 
 export const {
+    useGetUsersQuery,
     useGetCartQuery,
     useUpdateCartMutation,
     useGetWishlistQuery,

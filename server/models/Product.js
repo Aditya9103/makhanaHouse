@@ -1,5 +1,23 @@
 import mongoose from 'mongoose';
 
+const reviewSchema = mongoose.Schema(
+    {
+        name: { type: String, required: true },
+        rating: { type: Number, required: true },
+        comment: { type: String, required: true },
+        image: { type: String }, // Optional uploaded image
+        isApproved: { type: Boolean, default: false },
+        user: {
+            type: mongoose.Schema.Types.ObjectId,
+            required: true,
+            ref: 'User',
+        },
+    },
+    {
+        timestamps: true,
+    }
+);
+
 const variationSchema = mongoose.Schema({
     weight: { type: String, required: true }, // e.g., '250g', '500g', '1kg'
     price: { type: Number, required: true },
@@ -77,6 +95,7 @@ const productSchema = mongoose.Schema(
             type: Boolean,
             default: false,
         },
+        reviews: [reviewSchema],
         rating: {
             type: Number,
             required: true,

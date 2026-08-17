@@ -9,6 +9,7 @@ import productRoutes from './routes/productRoutes.js';
 import userRoutes from './routes/userRoutes.js';
 import orderRoutes from './routes/orderRoutes.js';
 import exportInquiryRoutes from './routes/exportInquiryRoutes.js';
+import rewardRoutes from './routes/rewardRoutes.js';
 import { notFound, errorHandler } from './middlewares/errorMiddleware.js';
 
 // Load env variables
@@ -38,6 +39,7 @@ app.use('/api/upload', uploadRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/orders', orderRoutes);
 app.use('/api/export', exportInquiryRoutes);
+app.use('/api/rewards', rewardRoutes);
 
 // Basic route for testing
 app.get('/', (req, res) => {

@@ -1,9 +1,11 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import ProfileSidebar from "../components/profile/ProfileSidebar";
 import ExportInquiriesMain from "../components/profile/ExportInquiriesMain";
 import ExportInquiriesSidebar from "../components/profile/ExportInquiriesSidebar";
 
 export default function ExportInquiries() {
+    const [selectedInquiry, setSelectedInquiry] = useState(null);
+
     useEffect(() => {
         window.scrollTo(0, 0);
     }, []);
@@ -22,12 +24,12 @@ export default function ExportInquiries() {
                     <div className="flex-1 flex flex-col-reverse xl:flex-row gap-6 w-full min-w-0">
                         {/* Main Inquiries area */}
                         <div className="flex-1 min-w-0">
-                            <ExportInquiriesMain />
+                            <ExportInquiriesMain selectedInquiry={selectedInquiry} setSelectedInquiry={setSelectedInquiry} />
                         </div>
 
                         {/* Right Tracking Sidebar */}
                         <div className="w-full xl:w-[320px] shrink-0 flex flex-col gap-6">
-                            <ExportInquiriesSidebar />
+                            <ExportInquiriesSidebar selectedInquiry={selectedInquiry} />
                         </div>
                     </div>
                     
