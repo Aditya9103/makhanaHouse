@@ -137,9 +137,9 @@ export default function CheckoutSummary({ selectedAddressId, paymentMethod }) {
                 {isLoading ? <Loader2 size={16} className="animate-spin" /> : <Lock size={16} />}
                 {isLoading ? "Processing..." : "Place Order"}
             </button>
-            <p className="text-center text-[10px] text-[var(--color-text-secondary)] mt-4 leading-relaxed px-4">
-                By placing this order, you agree to our <br/>
-                <a href="#" className="text-[#d4af37] hover:underline">Terms & Conditions</a> and <a href="#" className="text-[#d4af37] hover:underline">Privacy Policy</a>
+            <p className="mt-6 text-center text-[10px] text-[var(--color-text-secondary)]">
+                By placing your order, you agree to our <br />
+                <Link to="/terms" className="text-[#d4af37] hover:underline">Terms & Conditions</Link> and <Link to="/privacy" className="text-[#d4af37] hover:underline">Privacy Policy</Link>
             </p>
 
         </div>

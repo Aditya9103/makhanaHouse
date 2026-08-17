@@ -150,12 +150,12 @@ export default function AdminOffers() {
             {/* Modals */}
             {isOfferModalOpen && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
-                    <div className="bg-[#0a0d14] border border-white/10 rounded-xl w-full max-w-md overflow-hidden flex flex-col">
-                        <div className="p-5 border-b border-white/10 flex justify-between items-center bg-[#080b14]">
+                    <div className="bg-[#0a0d14] border border-white/10 rounded-xl w-full max-w-md overflow-hidden flex flex-col max-h-[80vh] md:max-h-[90vh]">
+                        <div className="p-5 border-b border-white/10 flex justify-between items-center bg-[#080b14] shrink-0">
                             <h3 className="text-[#f8f9fa] font-serif text-lg">Create New Offer</h3>
                             <button onClick={() => setIsOfferModalOpen(false)} className="text-[var(--color-text-secondary)] hover:text-white">&times;</button>
                         </div>
-                        <form onSubmit={handleCreateOffer} className="p-5 flex flex-col gap-4">
+                        <form onSubmit={handleCreateOffer} className="p-5 flex flex-col gap-4 overflow-y-auto no-scrollbar">
                             <div>
                                 <label className="text-[11px] text-[var(--color-text-secondary)] uppercase tracking-wider mb-1 block">Offer Title</label>
                                 <input required value={offerForm.title} onChange={e => setOfferForm({...offerForm, title: e.target.value})} type="text" placeholder="e.g. 10% Off on First Order" className="w-full bg-white/5 border border-white/10 rounded-lg p-2.5 text-[13px] text-white focus:outline-none focus:border-[#d4af37]/50" />
@@ -192,12 +192,12 @@ export default function AdminOffers() {
 
             {isPointsModalOpen && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
-                    <div className="bg-[#0a0d14] border border-white/10 rounded-xl w-full max-w-md overflow-hidden flex flex-col">
-                        <div className="p-5 border-b border-white/10 flex justify-between items-center bg-[#080b14]">
+                    <div className="bg-[#0a0d14] border border-white/10 rounded-xl w-full max-w-md overflow-hidden flex flex-col max-h-[80vh] md:max-h-[90vh]">
+                        <div className="p-5 border-b border-white/10 flex justify-between items-center bg-[#080b14] shrink-0">
                             <h3 className="text-[#f8f9fa] font-serif text-lg">Assign Points to User</h3>
                             <button onClick={() => setIsPointsModalOpen(false)} className="text-[var(--color-text-secondary)] hover:text-white">&times;</button>
                         </div>
-                        <form onSubmit={handleAssignPoints} className="p-5 flex flex-col gap-4">
+                        <form onSubmit={handleAssignPoints} className="p-5 flex flex-col gap-4 overflow-y-auto no-scrollbar">
                             <div>
                                 <label className="text-[11px] text-[var(--color-text-secondary)] uppercase tracking-wider mb-1 block">Select User</label>
                                 <select required value={pointsForm.userId} onChange={e => setPointsForm({...pointsForm, userId: e.target.value})} className="w-full bg-white/5 border border-white/10 rounded-lg p-2.5 text-[13px] text-white focus:outline-none focus:border-[#d4af37]/50">

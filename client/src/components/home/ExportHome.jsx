@@ -1,4 +1,5 @@
-import { CheckCircle2, ArrowRight } from "lucide-react";
+import { ArrowRight, CheckCircle2 } from "lucide-react";
+import { Link } from "react-router-dom";
 
 const benefits = [
     "Bulk Orders Welcome",
@@ -45,17 +46,17 @@ export default function ExportHome() {
                             </div>
 
                             <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
-                                <button className="group inline-flex w-full sm:w-auto justify-center items-center gap-2 rounded-md bg-[#d4af37] px-6 py-3.5 sm:py-3 text-[15px] sm:text-sm font-semibold text-[#080b14] transition hover:bg-[#c39d2e]">
+                                <Link to="/export/new" className="group inline-flex w-full sm:w-auto justify-center items-center gap-2 rounded-md bg-[#d4af37] px-6 py-3.5 sm:py-3 text-[15px] sm:text-sm font-semibold text-[#080b14] transition hover:bg-[#c39d2e]">
                                     Export Inquiry
                                     <ArrowRight
                                         size={16}
                                         className="transition-transform group-hover:translate-x-1"
                                     />
-                                </button>
-                                <button className="inline-flex w-full sm:w-auto justify-center items-center gap-2 rounded-md border border-[#d4af37]/30 bg-[#080b14]/50 px-6 py-3.5 sm:py-3 text-[15px] sm:text-sm font-semibold text-[#f8f9fa] backdrop-blur-sm transition hover:bg-[#d4af37]/10">
+                                </Link>
+                                <Link to="/export" className="inline-flex w-full sm:w-auto justify-center items-center gap-2 rounded-md border border-[#d4af37]/30 bg-[#080b14]/50 px-6 py-3.5 sm:py-3 text-[15px] sm:text-sm font-semibold text-[#f8f9fa] backdrop-blur-sm transition hover:bg-[#d4af37]/10">
                                     Learn More About Export
                                     <ArrowRight size={16} />
-                                </button>
+                                </Link>
                             </div>
                         </div>
 

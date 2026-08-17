@@ -65,7 +65,12 @@ export const addOrderItems = async (req, res) => {
 // @access  Private
 export const getOrderById = async (req, res) => {
     try {
-        const order = await Order.findById(req.params.id).populate('user', 'name email');
+        let order;
+        if (req.params.id.match(/^[0-9a-fA-F]{24}$/)) {
+            order = await Order.findById(req.params.id).populate('user', 'name email');
+        } else {
+            order = await Order.findOne({ orderId: req.params.id }).populate('user', 'name email');
+        }
 
         if (order) {
             // Check if the order belongs to the user or if the user is an admin
@@ -99,7 +104,12 @@ export const getMyOrders = async (req, res) => {
 // @access  Private
 export const updateOrderToPaid = async (req, res) => {
     try {
-        const order = await Order.findById(req.params.id);
+        let order;
+        if (req.params.id.match(/^[0-9a-fA-F]{24}$/)) {
+            order = await Order.findById(req.params.id);
+        } else {
+            order = await Order.findOne({ orderId: req.params.id });
+        }
 
         if (order) {
             order.isPaid = true;
@@ -146,7 +156,12 @@ export const getOrders = async (req, res) => {
 // @access  Private/Admin
 export const updateOrderStatus = async (req, res) => {
     try {
-        const order = await Order.findById(req.params.id).populate('user', 'name email');
+        let order;
+        if (req.params.id.match(/^[0-9a-fA-F]{24}$/)) {
+            order = await Order.findById(req.params.id).populate('user', 'name email');
+        } else {
+            order = await Order.findOne({ orderId: req.params.id }).populate('user', 'name email');
+        }
 
         if (order) {
             order.status = req.body.status || order.status;

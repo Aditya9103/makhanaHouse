@@ -1,4 +1,5 @@
-import { ArrowRight, Download, ShieldCheck, Leaf, Clock, Globe2 } from "lucide-react";
+import { ArrowRight, Download, ShieldCheck, Ship, Globe2 } from "lucide-react";
+import { Link } from "react-router-dom";
 
 export default function ExportHero() {
     return (
@@ -62,10 +63,10 @@ export default function ExportHero() {
 
                     {/* Buttons */}
                     <div className="flex flex-col sm:flex-row gap-3 mt-1">
-                        <button className="inline-flex w-full sm:w-auto justify-center items-center gap-2 rounded-md bg-[#d4af37] px-8 py-3 text-[14px] sm:text-[13px] font-semibold text-[#080b14] transition hover:bg-[#c39b2e]">
+                        <Link to="/export/new" className="inline-flex w-full sm:w-auto justify-center items-center gap-2 rounded-md bg-[#d4af37] px-8 py-3 text-[14px] sm:text-[13px] font-semibold text-[#080b14] transition hover:bg-[#c39b2e]">
                             Export Inquiry
                             <ArrowRight size={16} />
-                        </button>
+                        </Link>
                         <button className="inline-flex w-full sm:w-auto justify-center items-center gap-2 rounded-md border border-[#d4af37] bg-[#080b14]/50 sm:bg-transparent px-8 py-3 text-[14px] sm:text-[13px] font-semibold text-[#d4af37] backdrop-blur-sm sm:backdrop-blur-none transition hover:bg-[#d4af37] hover:text-[#080b14]">
                             Download Brochure
                             <Download size={16} />

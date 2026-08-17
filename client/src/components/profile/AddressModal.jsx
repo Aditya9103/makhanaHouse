@@ -95,7 +95,7 @@ export default function AddressModal({ isOpen, onClose, existingAddress, address
             ></div>
 
             {/* Modal Content */}
-            <div className="relative w-full max-w-[500px] bg-[#0a0d14] rounded-2xl border border-[#d4af37]/20 shadow-2xl flex flex-col overflow-hidden">
+            <div className="relative w-full max-w-[500px] bg-[#0a0d14] rounded-2xl border border-[#d4af37]/20 shadow-2xl flex flex-col overflow-hidden max-h-[80vh] md:max-h-[90vh]">
                 
                 {/* Header */}
                 <div className="flex items-center justify-between p-4 sm:p-5 border-b border-white/10 bg-[#080b14]/80">

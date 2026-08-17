@@ -159,10 +159,10 @@ export default function ShopHome() {
                             Shop Best Quality Makhana
                         </h2>
                     </div>
-                    <button className="inline-flex w-full sm:w-auto items-center justify-center gap-2 rounded-md border border-[#d4af37]/40 px-5 py-3 sm:py-2.5 text-sm font-medium text-[#f8f9fa] transition hover:border-[#d4af37] hover:bg-[#d4af37]/10">
+                    <Link to="/shop" className="inline-flex w-full sm:w-auto items-center justify-center gap-2 rounded-md border border-[#d4af37]/40 px-5 py-3 sm:py-2.5 text-sm font-medium text-[#f8f9fa] transition hover:border-[#d4af37] hover:bg-[#d4af37]/10">
                         View All Products
                         <ChevronRight size={15} />
-                    </button>
+                    </Link>
                 </div>
 
                 {/* Carousel */}

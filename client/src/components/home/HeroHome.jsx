@@ -1,4 +1,5 @@
 import { ArrowRight, Leaf, ShieldCheck, Wheat, MapPin, Globe2 } from "lucide-react";
+import { Link } from "react-router-dom";
 
 const trustPoints = [
     { icon: Leaf, title: "100% Natural", subtitle: "No Preservatives" },
@@ -41,17 +42,17 @@ export default function HeroHome() {
                     </p>
 
                     <div className="mt-8 flex flex-col sm:flex-row items-start sm:items-center gap-4">
-                        <button className="group inline-flex items-center justify-center gap-2 rounded-md bg-[#d4af37] px-6 py-3.5 sm:py-3 text-[15px] sm:text-sm font-semibold text-[#080b14] transition hover:bg-[#c39d2e] w-full sm:w-auto shadow-lg shadow-[#d4af37]/20">
+                        <Link to="/shop" className="group inline-flex items-center justify-center gap-2 rounded-md bg-[#d4af37] px-6 py-3.5 sm:py-3 text-[15px] sm:text-sm font-semibold text-[#080b14] transition hover:bg-[#c39d2e] w-full sm:w-auto shadow-lg shadow-[#d4af37]/20">
                             Shop Makhana
                             <ArrowRight
                                 size={16}
                                 className="transition-transform group-hover:translate-x-1"
                             />
-                        </button>
-                        <button className="inline-flex items-center justify-center gap-2 rounded-md border border-[#d4af37]/50 px-6 py-3.5 sm:py-3 text-[15px] sm:text-sm font-semibold text-[#f8f9fa] transition hover:border-[#d4af37] hover:bg-[#d4af37]/10 w-full sm:w-auto">
+                        </Link>
+                        <Link to="/export/new" className="inline-flex items-center justify-center gap-2 rounded-md border border-[#d4af37]/50 px-6 py-3.5 sm:py-3 text-[15px] sm:text-sm font-semibold text-[#f8f9fa] transition hover:border-[#d4af37] hover:bg-[#d4af37]/10 w-full sm:w-auto">
                             Bulk &amp; Export Inquiry
                             <ArrowRight size={16} />
-                        </button>
+                        </Link>
                     </div>
 
                     {/* Trust strip */}

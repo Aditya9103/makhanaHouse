@@ -1,21 +1,61 @@
 import { useEffect } from "react";
 import AdminSidebar from "../../components/admin/AdminSidebar";
 import { useSelector } from "react-redux";
-import { TrendingUp, Users, Package, FileText } from "lucide-react";
+import { TrendingUp, Users, Package, FileText, Loader2, ArrowRight } from "lucide-react";
+import { useGetOrdersQuery } from "../../store/api/orderApiSlice";
+import { useGetUsersQuery } from "../../store/api/usersApiSlice";
+import { useGetProductsQuery } from "../../store/api/productApiSlice";
+import { useGetExportInquiriesQuery } from "../../store/api/exportApiSlice";
+import { Link } from "react-router-dom";
 
 export default function AdminDashboard() {
     const { userInfo } = useSelector((state) => state.auth);
+
+    const { data: orders, isLoading: loadingOrders } = useGetOrdersQuery();
+    const { data: users, isLoading: loadingUsers } = useGetUsersQuery();
+    const { data: productsData, isLoading: loadingProducts } = useGetProductsQuery({});
+    const { data: inquiries, isLoading: loadingInquiries } = useGetExportInquiriesQuery();
 
     useEffect(() => {
         window.scrollTo(0, 0);
     }, []);
 
+    const isLoading = loadingOrders || loadingUsers || loadingProducts || loadingInquiries;
+
+    // Calculate metrics
+    const totalRevenue = orders 
+        ? orders.filter(o => o.isPaid).reduce((acc, order) => acc + order.totalPrice, 0) 
+        : 0;
+        
+    const activeUsers = users ? users.length : 0;
+    
+    // Handle paginated products response or flat array
+    const totalProducts = productsData 
+        ? (productsData.products ? productsData.products.length : productsData.length || 0) 
+        : 0;
+        
+    const pendingInquiriesCount = inquiries 
+        ? inquiries.filter(i => i.status === 'Pending').length 
+        : 0;
+
     const stats = [
-        { label: "Total Revenue", value: "₹45,200", trend: "+12.5%", icon: TrendingUp },
-        { label: "Active Users", value: "128", trend: "+5.2%", icon: Users },
-        { label: "Total Products", value: "24", trend: "0%", icon: Package },
-        { label: "Pending Inquiries", value: "7", trend: "+2", icon: FileText },
+        { label: "Total Revenue", value: `₹${totalRevenue.toLocaleString('en-IN')}`, trend: "+12.5%", icon: TrendingUp },
+        { label: "Active Users", value: activeUsers.toString(), trend: "+5.2%", icon: Users },
+        { label: "Total Products", value: totalProducts.toString(), trend: "0%", icon: Package },
+        { label: "Pending Inquiries", value: pendingInquiriesCount.toString(), trend: "+2", icon: FileText },
     ];
+
+    const recentInquiries = inquiries 
+        ? [...inquiries].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)).slice(0, 4)
+        : [];
+
+    if (isLoading) {
+        return (
+            <div className="flex-1 flex h-64 items-center justify-center">
+                <Loader2 size={32} className="animate-spin text-[#d4af37]" />
+            </div>
+        );
+    }
 
     return (
         <div className="flex-1 flex flex-col gap-6 min-w-0">
@@ -62,12 +102,44 @@ export default function AdminDashboard() {
                         {/* Main Panels */}
                         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 flex-1">
                             {/* Recent Activity */}
-                            <div className="lg:col-span-2 rounded-xl border border-white/10 bg-white/[0.02] backdrop-blur-md p-6">
-                                <h3 className="text-lg font-serif text-[#f8f9fa] mb-4">Recent Inquiries</h3>
-                                <div className="flex flex-col items-center justify-center h-[200px] text-center border border-dashed border-white/10 rounded-lg bg-white/[0.01]">
-                                    <FileText size={32} className="text-white/20 mb-3" />
-                                    <p className="text-sm text-[var(--color-text-secondary)]">No recent inquiries to display.</p>
+                            <div className="lg:col-span-2 rounded-xl border border-white/10 bg-white/[0.02] backdrop-blur-md p-6 flex flex-col">
+                                <div className="flex items-center justify-between mb-6">
+                                    <h3 className="text-lg font-serif text-[#f8f9fa]">Recent Inquiries</h3>
+                                    <Link to="/admin/export-inquiries" className="text-sm text-[#d4af37] hover:underline flex items-center gap-1">
+                                        View All <ArrowRight size={14} />
+                                    </Link>
                                 </div>
+                                
+                                {recentInquiries.length === 0 ? (
+                                    <div className="flex flex-col items-center justify-center flex-1 text-center border border-dashed border-white/10 rounded-lg bg-white/[0.01] p-10">
+                                        <FileText size={32} className="text-white/20 mb-3" />
+                                        <p className="text-sm text-[var(--color-text-secondary)]">No recent inquiries to display.</p>
+                                    </div>
+                                ) : (
+                                    <div className="space-y-3">
+                                        {recentInquiries.map((inquiry) => (
+                                            <div key={inquiry._id} className="flex items-center justify-between p-4 rounded-xl border border-white/5 bg-white/[0.01] hover:bg-white/[0.03] transition-colors">
+                                                <div className="flex items-center gap-4">
+                                                    <div className={`w-2 h-2 rounded-full ${inquiry.status === 'Pending' ? 'bg-purple-400' : inquiry.status === 'Reviewed' ? 'bg-blue-400' : inquiry.status === 'Contacted' ? 'bg-amber-500' : 'bg-gray-500'}`}></div>
+                                                    <div>
+                                                        <h4 className="text-sm font-medium text-[#f8f9fa]">{inquiry.companyName}</h4>
+                                                        <p className="text-[12px] text-[var(--color-text-secondary)]">
+                                                            {inquiry.productInterest} • {inquiry.estimatedQuantity}
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                                <div className="text-right flex flex-col items-end">
+                                                    <span className="text-xs text-[var(--color-text-secondary)]">
+                                                        {new Date(inquiry.createdAt).toLocaleDateString()}
+                                                    </span>
+                                                    <span className={`text-[10px] mt-1 px-2 py-0.5 rounded border uppercase tracking-wider ${inquiry.status === 'Pending' ? 'text-purple-400 border-purple-400/20' : inquiry.status === 'Reviewed' ? 'text-blue-400 border-blue-400/20' : inquiry.status === 'Contacted' ? 'text-amber-500 border-amber-500/20' : 'text-gray-400 border-gray-400/20'}`}>
+                                                        {inquiry.status}
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        ))}
+                                    </div>
+                                )}
                             </div>
                             
                             {/* Quick Actions */}

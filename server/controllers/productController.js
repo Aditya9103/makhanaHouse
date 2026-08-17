@@ -356,6 +356,54 @@ const createProductReview = async (req, res) => {
     }
 };
 
+// @desc    Update a review
+// @route   PUT /api/products/:id/reviews/:reviewId
+// @access  Private
+const updateProductReview = async (req, res) => {
+    try {
+        const { rating, comment, image } = req.body;
+        const product = await Product.findById(req.params.id);
+
+        if (product) {
+            const review = product.reviews.find(
+                (r) => r._id.toString() === req.params.reviewId.toString()
+            );
+
+            if (review) {
+                // Ensure only the review author can update it
+                if (review.user.toString() !== req.user._id.toString()) {
+                    res.status(401);
+                    throw new Error('User not authorized to update this review');
+                }
+
+                review.rating = Number(rating) || review.rating;
+                review.comment = comment || review.comment;
+                review.image = image !== undefined ? image : review.image;
+                
+                review.isApproved = false; // Require re-approval after edit
+
+                // Recalculate rating if it was approved
+                const approvedReviews = product.reviews.filter(r => r.isApproved);
+                product.numReviews = approvedReviews.length;
+                product.rating = approvedReviews.length > 0
+                    ? approvedReviews.reduce((acc, item) => item.rating + acc, 0) / approvedReviews.length
+                    : 0;
+
+                await product.save();
+                res.json({ message: 'Review updated and pending approval' });
+            } else {
+                res.status(404);
+                throw new Error('Review not found');
+            }
+        } else {
+            res.status(404);
+            throw new Error('Product not found');
+        }
+    } catch (error) {
+        res.status(error.statusCode || 500).json({ message: error.message || 'Server Error' });
+    }
+};
+
 // @desc    Approve a review
 // @route   PUT /api/products/:id/reviews/:reviewId/approve
 // @access  Private/Admin
@@ -436,6 +484,7 @@ export {
     updateProduct,
     deleteProduct,
     createProductReview,
+    updateProductReview,
     deleteProductReview,
     approveProductReview,
     getAllReviews,

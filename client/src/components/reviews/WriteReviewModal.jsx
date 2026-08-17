@@ -1,10 +1,18 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { X, Star, UploadCloud, Loader2 } from "lucide-react";
-import { useCreateReviewMutation } from "../../store/api/productApiSlice";
+import { useCreateReviewMutation, useUpdateReviewMutation, useGetProductDetailsQuery } from "../../store/api/productApiSlice";
 import { useUploadFileMutation } from "../../store/api/uploadApiSlice";
+import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
 
-export default function WriteReviewModal({ product, isOpen, onClose }) {
+export default function WriteReviewModal({ product, existingReview: propExistingReview, isOpen, onClose }) {
+    const { userInfo } = useSelector((state) => state.auth);
+    
+    // Fetch full product to guarantee we have reviews even if opened from Order Details
+    const { data: fullProduct } = useGetProductDetailsQuery(product?._id, { skip: !product?._id || !isOpen });
+    
+    const existingReview = propExistingReview || (fullProduct?.reviews?.find(r => r.user === userInfo?._id));
+
     const [rating, setRating] = useState(0);
     const [hover, setHover] = useState(0);
     const [comment, setComment] = useState("");
@@ -12,8 +20,23 @@ export default function WriteReviewModal({ product, isOpen, onClose }) {
     
     const fileInputRef = useRef(null);
     
-    const [createReview, { isLoading: isSubmitting }] = useCreateReviewMutation();
+    const [createReview, { isLoading: isCreating }] = useCreateReviewMutation();
+    const [updateReview, { isLoading: isUpdating }] = useUpdateReviewMutation();
     const [uploadFile, { isLoading: isUploading }] = useUploadFileMutation();
+
+    const isSubmitting = isCreating || isUpdating;
+
+    useEffect(() => {
+        if (existingReview && isOpen) {
+            setRating(existingReview.rating || 0);
+            setComment(existingReview.comment || "");
+            setImage(existingReview.image || "");
+        } else if (!existingReview && isOpen) {
+            setRating(0);
+            setComment("");
+            setImage("");
+        }
+    }, [existingReview, isOpen]);
 
     if (!isOpen) return null;
 
@@ -22,7 +45,7 @@ export default function WriteReviewModal({ product, isOpen, onClose }) {
         if (!file) return;
 
         const formData = new FormData();
-        formData.append("image", file);
+        formData.append("file", file);
 
         try {
             const res = await uploadFile(formData).unwrap();
@@ -47,19 +70,27 @@ export default function WriteReviewModal({ product, isOpen, onClose }) {
         }
 
         try {
-            await createReview({
-                productId: product._id,
-                rating,
-                comment,
-                image
-            }).unwrap();
+            if (existingReview) {
+                await updateReview({
+                    productId: product._id,
+                    reviewId: existingReview._id,
+                    rating,
+                    comment,
+                    image
+                }).unwrap();
+                toast.success("Review updated successfully! It is pending approval.");
+            } else {
+                await createReview({
+                    productId: product._id,
+                    rating,
+                    comment,
+                    image
+                }).unwrap();
+                toast.success("Review submitted successfully!");
+            }
             
-            toast.success("Review submitted successfully!");
             onClose();
-            // Reset state
-            setRating(0);
-            setComment("");
-            setImage("");
+            // Reset state is handled by useEffect when opening
         } catch (err) {
             toast.error(err?.data?.message || err.error || "Failed to submit review");
         }
@@ -69,7 +100,7 @@ export default function WriteReviewModal({ product, isOpen, onClose }) {
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
             <div className="absolute inset-0 bg-[#080b14]/80 backdrop-blur-sm" onClick={onClose}></div>
             
-            <div className="relative w-full max-w-lg rounded-2xl border border-white/10 bg-[#0c101b] p-6 shadow-2xl">
+            <div className="relative w-full max-w-lg rounded-2xl border border-white/10 bg-[#0c101b] p-6 shadow-2xl overflow-y-auto max-h-[80vh] md:max-h-[90vh] no-scrollbar">
                 <button 
                     onClick={onClose}
                     className="absolute right-4 top-4 text-white/40 hover:text-white"
@@ -77,9 +108,9 @@ export default function WriteReviewModal({ product, isOpen, onClose }) {
                     <X size={20} />
                 </button>
 
-                <h2 className="text-xl font-serif text-[#f8f9fa] mb-2">Write a Review</h2>
+                <h2 className="text-xl font-serif text-[#f8f9fa] mb-2">{existingReview ? "Edit Review" : "Write a Review"}</h2>
                 <p className="text-sm text-[var(--color-text-secondary)] mb-6">
-                    Share your experience with {product?.name}
+                    {existingReview ? `Update your experience with ${product?.name}` : `Share your experience with ${product?.name}`}
                 </p>
 
                 <form onSubmit={handleSubmit} className="flex flex-col gap-5">
@@ -165,7 +196,7 @@ export default function WriteReviewModal({ product, isOpen, onClose }) {
                             className="flex items-center gap-2 rounded-lg bg-[#d4af37] px-6 py-2 text-sm font-bold text-[#080b14] transition hover:bg-[#c39d2e] disabled:opacity-70 disabled:cursor-not-allowed"
                         >
                             {isSubmitting && <Loader2 size={16} className="animate-spin" />}
-                            Submit Review
+                            {existingReview ? "Update Review" : "Submit Review"}
                         </button>
                     </div>
                 </form>

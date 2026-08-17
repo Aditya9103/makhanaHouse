@@ -3,13 +3,16 @@ import { Star, BadgeCheck, Image as ImageIcon } from "lucide-react";
 import WriteReviewModal from "../reviews/WriteReviewModal";
 import { useSelector } from "react-redux";
 import { formatDistanceToNow } from "date-fns";
-
+import { useGetMyOrdersQuery } from "../../store/api/orderApiSlice";
+import { toast } from "react-toastify";
 export default function ProductReviews({ product }) {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const { userInfo } = useSelector((state) => state.auth);
+    const { data: orders } = useGetMyOrdersQuery(undefined, { skip: !userInfo });
 
     // Only show approved reviews on the frontend
     const reviews = product?.reviews?.filter(r => r.isApproved) || [];
+    const existingReview = userInfo ? product?.reviews?.find(r => r.user === userInfo._id) : null;
     const total = reviews.length;
     const average = product?.rating || 0;
 
@@ -74,10 +77,25 @@ export default function ProductReviews({ product }) {
                         <div className="absolute top-6 sm:top-8 right-6 sm:right-8">
                             {userInfo ? (
                                 <button 
-                                    onClick={() => setIsModalOpen(true)}
+                                    onClick={() => {
+                                        if (orders) {
+                                            const hasBoughtAndDelivered = orders.some(order => 
+                                                order.status === 'Delivered' && 
+                                                order.orderItems.some(item => 
+                                                    (item.product._id || item.product).toString() === product._id.toString()
+                                                )
+                                            );
+                                            
+                                            if (!existingReview && !hasBoughtAndDelivered) {
+                                                toast.error("You can only review products after they have been successfully delivered to you.");
+                                                return;
+                                            }
+                                        }
+                                        setIsModalOpen(true);
+                                    }}
                                     className="px-4 py-2 rounded border border-[#d4af37]/40 text-xs font-medium text-[#d4af37] transition hover:bg-[#d4af37] hover:text-[#080b14]"
                                 >
-                                    Write a Review
+                                    {existingReview ? "Edit Your Review" : "Write a Review"}
                                 </button>
                             ) : (
                                 <p className="text-xs text-[var(--color-text-secondary)] border border-white/10 px-4 py-2 rounded">
@@ -134,6 +152,7 @@ export default function ProductReviews({ product }) {
             {/* Write Review Modal */}
             <WriteReviewModal 
                 product={product} 
+                existingReview={existingReview}
                 isOpen={isModalOpen} 
                 onClose={() => setIsModalOpen(false)} 
             />

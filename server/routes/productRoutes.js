@@ -8,6 +8,7 @@ import {
     updateProduct,
     deleteProduct,
     createProductReview,
+    updateProductReview,
     deleteProductReview,
     approveProductReview,
     getAllReviews
@@ -35,6 +36,7 @@ router.route('/:id/reviews')
     .post(protect, createProductReview);
 
 router.route('/:id/reviews/:reviewId')
+    .put(protect, updateProductReview)
     .delete(protect, admin, deleteProductReview);
 
 router.route('/:id/reviews/:reviewId/approve')

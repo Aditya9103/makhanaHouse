@@ -234,7 +234,7 @@ export default function AdminInquiries() {
             {/* Status Update Modal */}
             {isUpdateModalOpen && selectedInquiry && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
-                    <div className="w-full max-w-md rounded-2xl border border-white/10 bg-[#0a0d14] p-6 shadow-2xl relative overflow-hidden">
+                    <div className="w-full max-w-md rounded-2xl border border-white/10 bg-[#0a0d14] p-6 shadow-2xl relative overflow-y-auto max-h-[80vh] md:max-h-[90vh] no-scrollbar">
                         <button 
                             onClick={() => setIsUpdateModalOpen(false)}
                             className="absolute right-4 top-4 text-white/40 hover:text-white transition-colors"
@@ -288,7 +288,7 @@ export default function AdminInquiries() {
             {/* View Details Modal */}
             {viewingInquiry && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
-                    <div className="w-full max-w-2xl rounded-2xl border border-white/10 bg-[#0a0d14] p-6 shadow-2xl relative overflow-y-auto max-h-[90vh]">
+                    <div className="w-full max-w-2xl rounded-2xl border border-white/10 bg-[#0a0d14] p-6 shadow-2xl relative overflow-y-auto max-h-[80vh] md:max-h-[90vh] no-scrollbar">
                         <button 
                             onClick={() => setViewingInquiry(null)}
                             className="absolute right-4 top-4 text-white/40 hover:text-white transition-colors"
