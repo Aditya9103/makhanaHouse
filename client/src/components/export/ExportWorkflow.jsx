@@ -14,7 +14,7 @@ export default function ExportWorkflow() {
     ];
 
     return (
-        <section className="bg-[#080b14] py-12 pb-24">
+        <section className="bg-[#080b14] py-8 lg:py-12">
             <div className="mx-auto max-w-[1400px] px-6 lg:px-10">
                 <h3 className="mb-8 font-serif text-xl text-[#f8f9fa]">Export Workflow</h3>
                 

@@ -11,7 +11,7 @@ const benefits = [
 
 export default function ExportHome() {
     return (
-        <section className="py-10 lg:py-16">
+        <section className="py-8 lg:py-12">
             <div className="mx-auto max-w-[1400px] px-6 lg:px-10">
                 <div 
                     className="relative w-full overflow-hidden rounded-2xl border border-[#d4af37]/20 bg-[length:auto_100%] sm:bg-cover bg-right lg:bg-center shadow-2xl"

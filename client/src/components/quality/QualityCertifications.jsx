@@ -14,7 +14,7 @@ export default function QualityCertifications() {
     const fallbackIcons = [ShieldCheck, Award, FileCheck, BadgeCheck, CheckCircle, FileBadge2, Globe];
 
     return (
-        <section className="py-16 lg:py-24 bg-[#0a0d18] border-t border-white/5 relative overflow-hidden">
+        <section className="py-8 lg:py-12 bg-[#0a0d18] border-t border-white/5 relative overflow-hidden">
             <div className="mx-auto max-w-[1400px] px-6 lg:px-10">
 
                 <div className="text-center mb-16">

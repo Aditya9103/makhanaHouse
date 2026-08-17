@@ -8,7 +8,7 @@ export default function ExportPackaging() {
     ];
 
     return (
-        <section className="bg-[#0a0d18] py-16 lg:py-24 border-y border-white/5">
+        <section className="bg-[#0a0d18] py-8 lg:py-12 border-y border-white/5">
             <div className="mx-auto max-w-[1400px] px-6 lg:px-10">
                 <div className="flex flex-col gap-12 lg:flex-row lg:items-center">
                     

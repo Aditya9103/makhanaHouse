@@ -19,7 +19,7 @@ export default function ExportCertifications() {
     ];
 
     return (
-        <section className="py-16 lg:py-24 border-b border-white/5">
+        <section className="py-8 lg:py-12 border-b border-white/5">
             <div className="mx-auto max-w-[1400px] px-6 lg:px-10">
                 <div className="grid grid-cols-1 gap-8 lg:grid-cols-2 lg:gap-12">
 

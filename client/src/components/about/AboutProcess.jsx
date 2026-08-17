@@ -33,7 +33,7 @@ const steps = [
 
 export default function AboutProcess() {
     return (
-        <section className="py-16 lg:py-24 border-t border-white/10 bg-[linear-gradient(135deg,rgba(8,11,20,0.4),rgba(212,175,55,0.02))]">
+        <section className="py-8 lg:py-12 border-t border-white/10 bg-[linear-gradient(135deg,rgba(8,11,20,0.4),rgba(212,175,55,0.02))]">
             <div className="mx-auto max-w-[1400px] px-6 lg:px-10">
                 <div className="relative overflow-hidden rounded-xl border border-[#d4af37]/30 bg-[#080b14] p-8 lg:p-12 shadow-2xl">
                     <div className="flex flex-col gap-12 xl:flex-row xl:items-center">

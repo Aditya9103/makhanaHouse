@@ -9,7 +9,7 @@ const features = [
 
 export default function ShopFeatures() {
     return (
-        <section className="mx-auto max-w-[1400px] px-6 pb-12 lg:px-10">
+        <section className="mx-auto max-w-[1400px] px-6 pb-8 lg:pb-12 lg:px-10">
             <div className="grid grid-cols-1 gap-6 rounded-xl border border-white/10 bg-white/5 p-6 backdrop-blur-sm sm:grid-cols-2 lg:grid-cols-4 lg:p-8">
                 {features.map(({ icon: Icon, title, subtitle }) => (
                     <div key={title} className="flex items-center gap-4">

@@ -10,7 +10,7 @@ const stats = [
 
 export default function AboutStats() {
     return (
-        <section className="pb-16 lg:pb-24">
+        <section className="pb-8 lg:pb-12">
             <div className="mx-auto max-w-[1400px] px-6 lg:px-10">
                 <div className="grid grid-cols-2 gap-y-10 sm:grid-cols-3 lg:grid-cols-5 items-center justify-between rounded-2xl border border-white/10 bg-white/5 px-4 py-10 shadow-lg lg:px-8 lg:py-12">
                     {stats.map(({ icon: Icon, value, label }, idx) => (

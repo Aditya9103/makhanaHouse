@@ -30,7 +30,7 @@ const features = [
 
 export default function WhyChooseHome() {
     return (
-        <section className="py-16 lg:py-24 bg-transparent">
+        <section className="py-8 lg:py-12 bg-transparent">
             <div className="mx-auto max-w-[1400px] px-6 lg:px-10">
                 <div
                     className="relative flex flex-col items-center overflow-hidden rounded-2xl border border-[#d4af37]/20 bg-[#080b14] bg-[length:150%_auto] bg-bottom sm:bg-cover lg:bg-[length:50%_auto] lg:bg-right-bottom bg-no-repeat shadow-2xl lg:flex-row lg:items-stretch lg:p-0"
@@ -51,7 +51,7 @@ export default function WhyChooseHome() {
                     {/* Middle - Main Content */}
                     <div className="relative z-10 flex flex-1 flex-col justify-center px-6 py-6 lg:px-12 lg:py-16 text-center lg:text-left items-center lg:items-start">
                         <p className="mb-2 text-[11px] font-semibold tracking-[0.18em] text-[#d4af37]">
-                            WHY CHOOSE MAKHANA HOUSE
+                            HEALTH BENEFITS
                         </p>
                         <h2 className="mb-4 font-serif text-2xl leading-tight text-[#f8f9fa] sm:text-3xl lg:text-4xl">
                             Good for You, Good for Life.

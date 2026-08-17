@@ -9,7 +9,7 @@ const stats = [
 
 export default function StatsHome() {
     return (
-        <section className="border-t border-white/10 py-12">
+        <section className="border-t border-white/10 py-8 lg:py-12">
             <div className="mx-auto max-w-[1400px] px-6 lg:px-10">
                 <div className="grid grid-cols-2 gap-8 md:grid-cols-4">
                     {stats.map(({ icon: Icon, value, label }, idx) => (

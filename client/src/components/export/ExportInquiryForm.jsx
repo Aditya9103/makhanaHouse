@@ -5,7 +5,7 @@ export default function ExportInquiryForm() {
     const [privateLabel, setPrivateLabel] = useState(false);
 
     return (
-        <section id="inquiry" className="scroll-mt-20 py-12 lg:py-20 relative overflow-hidden">
+        <section id="inquiry" className="scroll-mt-20 py-8 lg:py-12 relative overflow-hidden">
             <div className="mx-auto max-w-[1300px] px-4 sm:px-6 lg:px-8">
                 
                 {/* Main Glass Container */}

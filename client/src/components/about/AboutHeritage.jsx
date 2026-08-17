@@ -3,9 +3,9 @@ import { Link } from "react-router-dom";
 
 export default function AboutHeritage() {
     return (
-        <section className="py-16 lg:py-24">
+        <section className="py-8 lg:py-12">
             <div className="mx-auto max-w-[1400px] px-6 lg:px-10">
-                <div className="relative overflow-hidden rounded-xl border border-[#d4af37]/30 bg-[#080b14] p-6 sm:p-10 lg:p-12 shadow-2xl">
+                <div className="relative overflow-hidden rounded-xl border border-[#d4af37]/30  p-6 sm:p-10 lg:p-12 shadow-2xl">
                     {/* Right-side lotus background art */}
                     <div className="absolute inset-y-0 right-0 w-full lg:w-[70%] pointer-events-none opacity-50 mix-blend-screen">
                         <img
@@ -40,7 +40,7 @@ export default function AboutHeritage() {
                             <h2 className="mb-4 font-serif text-[1.75rem] leading-tight text-[#f8f9fa] sm:text-4xl lg:text-[2.75rem] text-center lg:text-left">
                                 A Heritage of<br /><span className="text-[#d4af37]">Purity and Trust</span>
                             </h2>
-                            
+
                             {/* Decorative Divider */}
                             <div className="mb-8 flex items-center justify-center lg:justify-start gap-3">
                                 <div className="h-[1px] w-10 bg-[#d4af37]/40"></div>
@@ -51,7 +51,7 @@ export default function AboutHeritage() {
                                 </svg>
                                 <div className="h-[1px] w-10 bg-[#d4af37]/40"></div>
                             </div>
-                            
+
                             <div className="space-y-5 text-[14px] sm:text-[15px] leading-relaxed text-[#e4e4e7] text-center lg:text-left">
                                 <p>
                                     Rooted in the fertile wetlands of Bihar, Makhana (Fox Nut) has been a

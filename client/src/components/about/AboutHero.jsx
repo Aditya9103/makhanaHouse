@@ -7,13 +7,13 @@ export default function AboutHero() {
             className="relative flex w-full items-center justify-center bg-[#080b14] bg-cover bg-right lg:bg-[length:100%_auto] lg:bg-center bg-no-repeat"
             style={{
                 backgroundImage: 'url(/homeherobg.png)',
-                minHeight: 'clamp(500px, 45vw, 800px)'
+                minHeight: 'clamp(400px, 35vw, 600px)'
             }}
         >
             {/* Dark gradient overlay for text readability, fading completely to transparent on the right */}
             <div className="absolute inset-0 bg-gradient-to-b from-[#080b14]/90 via-[#080b14]/80 to-[#080b14]/30 lg:bg-gradient-to-r lg:from-[#080b14] lg:via-[#080b14]/80 lg:via-40% lg:to-transparent"></div>
 
-            <div className="relative z-10 mx-auto w-full max-w-[1400px] px-6 pt-12 pb-20 lg:px-10 lg:pt-20 lg:pb-32">
+            <div className="relative z-10 mx-auto w-full max-w-[1400px] px-6 pt-6 pb-16 lg:px-10 lg:pt-8 lg:pb-24">
                 <div className="max-w-2xl">
                     <h2 className="mb-4 font-serif italic text-3xl text-[#d4af37] md:text-4xl lg:text-5xl">
                         About Us

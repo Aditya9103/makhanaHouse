@@ -2,7 +2,7 @@ import { Leaf, ShieldCheck, Heart, Globe2 } from "lucide-react";
 
 export default function QualityCommitment() {
     return (
-        <section className="py-16 lg:py-24 bg-[#0a0d18]">
+        <section className="py-8 lg:py-12 bg-[#0a0d18]">
             <div className="mx-auto max-w-[1400px] px-6 lg:px-10">
                 <div className="flex flex-col lg:flex-row gap-12 lg:gap-16 items-center">
                     

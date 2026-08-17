@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 
 export default function AboutCTA() {
     return (
-        <section className="pt-2 pb-16 lg:pt-6 lg:pb-24">
+        <section className="pt-2 pb-8 lg:pt-6 lg:pb-12">
             <div className="mx-auto max-w-[1400px] px-6 lg:px-10">
                 <div className="relative flex flex-col items-center justify-between gap-8 overflow-hidden rounded-2xl border border-[#d4af37]/30 bg-[linear-gradient(to_right,rgba(8,11,20,1),rgba(212,175,55,0.05))] px-8 py-10 shadow-[0_0_40px_rgba(212,175,55,0.05)] sm:px-16 lg:flex-row lg:py-14">
 

@@ -30,7 +30,7 @@ export default function ExportWhyChoose() {
     ];
 
     return (
-        <section className="py-8 lg:py-10">
+        <section className="py-8 lg:py-12">
             <div className="mx-auto max-w-[1400px] px-6 lg:px-10">
                 {/* Header */}
                 <div className="mb-1 text-center">

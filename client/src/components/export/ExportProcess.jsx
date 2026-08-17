@@ -11,7 +11,7 @@ export default function ExportProcess() {
     ];
 
     return (
-        <section className="py-16 lg:py-24">
+        <section className="py-8 lg:py-12">
             <div className="mx-auto max-w-[1400px] px-6 lg:px-10">
                 {/* Header */}
                 <div className="mb-16 text-center">

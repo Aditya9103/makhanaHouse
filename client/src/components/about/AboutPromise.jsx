@@ -33,7 +33,7 @@ const promises = [
 
 export default function AboutPromise() {
     return (
-        <section className="py-16 lg:py-24">
+        <section className="pt-4 pb-8 lg:pt-8 lg:pb-12">
             <div className="mx-auto max-w-[1400px] px-6 lg:px-10">
                 
                 {/* Header */}
@@ -60,7 +60,7 @@ export default function AboutPromise() {
                             key={idx} 
                             className="group flex flex-col items-center rounded-2xl border border-white/5 bg-white/[0.02] p-8 text-center transition hover:border-[#d4af37]/30 hover:bg-white/[0.04]"
                         >
-                            <div className="relative mb-6 h-32 w-32 overflow-hidden rounded-full border-2 border-[#d4af37]/40 p-1 shadow-[0_0_20px_rgba(212,175,55,0.1)] transition-transform duration-500 group-hover:scale-105">
+                            <div className="relative mb-6 h-48 w-48 overflow-hidden rounded-full border-2 border-[#d4af37]/40 p-1 shadow-[0_0_20px_rgba(212,175,55,0.1)] transition-transform duration-500 group-hover:scale-105">
                                 <div className="h-full w-full overflow-hidden rounded-full">
                                     <img 
                                         src={item.img} 

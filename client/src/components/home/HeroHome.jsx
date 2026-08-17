@@ -10,14 +10,17 @@ const trustPoints = [
 export default function HeroHome() {
     return (
         <section
-            className="relative flex items-center overflow-hidden bg-cover bg-[position:70%_center] lg:bg-center pt-10 pb-12 lg:py-0 lg:min-h-[90vh] bg-[#080b14]"
-            style={{ backgroundImage: 'url(/homeherobg.png)' }}
+            className="relative flex w-full items-center justify-center bg-[#080b14] bg-cover bg-right lg:bg-[length:100%_auto] lg:bg-center bg-no-repeat"
+            style={{
+                backgroundImage: 'url(/homeherobg.png)',
+                minHeight: 'clamp(450px, 42vw, 750px)'
+            }}
         >
             {/* Dark overlay to ensure text remains readable against the background */}
             <div className="absolute inset-0 bg-gradient-to-r from-[#080b14]/90 via-[#080b14]/70 to-transparent"></div>
             <div className="absolute inset-0 bg-[#080b14]/40 lg:hidden"></div>
 
-            <div className="relative z-10 mx-auto grid w-full max-w-[1400px] grid-cols-1 gap-8 px-6 py-4 lg:grid-cols-[1.2fr_1fr] lg:gap-8 lg:px-10 lg:py-20 xl:grid-cols-[1.05fr_1fr]">
+            <div className="relative z-10 mx-auto grid w-full max-w-[1400px] grid-cols-1 gap-8 px-6 py-2 lg:grid-cols-[1.2fr_1fr] lg:gap-8 lg:px-10 lg:pt-8 lg:pb-24 xl:grid-cols-[1.05fr_1fr]">
                 {/* Left column — copy */}
                 <div className="flex flex-col justify-center mt-4 lg:mt-0">
                     <p className="mb-4 flex items-center gap-2 font-serif text-sm sm:text-base italic tracking-wide text-[#d4af37]">

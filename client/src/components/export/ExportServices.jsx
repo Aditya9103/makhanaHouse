@@ -2,7 +2,7 @@ import { CheckCircle2, PackageOpen, BadgeCheck } from "lucide-react";
 
 export default function ExportServices() {
     return (
-        <section className="py-16 lg:py-24">
+        <section className="py-8 lg:py-12">
             <div className="mx-auto max-w-[1400px] px-6 lg:px-10">
                 <div className="grid grid-cols-1 gap-6 lg:grid-cols-2 lg:gap-8">
                     

@@ -134,7 +134,7 @@ export default function ShopHome() {
     };
 
     return (
-        <section className=" py-16 lg:py-20">
+        <section className="py-8 lg:py-12">
             <div className="mx-auto max-w-[1400px] px-6 lg:px-10">
                 {/* Header row */}
                 <div className="mb-8 flex flex-col sm:flex-row sm:items-end justify-between gap-4 sm:gap-6">
