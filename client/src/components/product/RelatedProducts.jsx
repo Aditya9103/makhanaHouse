@@ -1,12 +1,31 @@
 import { Star, Heart } from "lucide-react";
 import { Link } from "react-router-dom";
-import { productsData } from "../../data/productDetailData";
+import { useGetProductsQuery } from "../../store/api/productApiSlice";
 import { useWishlist } from "../../hooks/useWishlist";
+import { useCart } from "../../hooks/useCart";
 
-export default function RelatedProducts({ className = "mx-auto max-w-[1400px] px-4 sm:px-6 lg:px-10", compact = false, title = "You May Also Like" }) {
+export default function RelatedProducts({ 
+    className = "mx-auto max-w-[1400px] px-4 sm:px-6 lg:px-10", 
+    compact = false, 
+    title = "You May Also Like",
+    excludeProductIds = [],
+    currentCategory = null
+}) {
     const { isInWishlist, toggleWishlist } = useWishlist();
-    // Show 6 random or sequential products as related
-    const relatedProducts = productsData.slice(0, 6);
+    const { addToCart } = useCart();
+    
+    // Fetch products based on category if provided, otherwise fallback to highest rated
+    const queryParams = currentCategory ? { categories: currentCategory, sort: 'rating' } : { sort: 'rating' };
+    const { data: products } = useGetProductsQuery(queryParams);
+    
+    // Filter out excluded products and out-of-stock products, then limit to 6
+    const relatedProducts = products 
+        ? products.filter(p => {
+            const isExcluded = excludeProductIds.includes(p._id);
+            const hasStock = p.variations && p.variations.some(v => v.countInStock > 0);
+            return !isExcluded && hasStock;
+        }).slice(0, 6)
+        : [];
 
     const gridCols = "grid grid-cols-4 sm:grid-cols-5 xl:grid-cols-6 gap-2 sm:gap-4";
 
@@ -17,6 +36,8 @@ export default function RelatedProducts({ className = "mx-auto max-w-[1400px] px
         return "flex";
     };
 
+    if (!products || products.length === 0) return null;
+
     return (
         <section className={className}>
             <div className="flex items-center justify-center gap-4 mb-10">
@@ -26,18 +47,23 @@ export default function RelatedProducts({ className = "mx-auto max-w-[1400px] px
             </div>
 
             <div className={gridCols}>
-                {relatedProducts.slice(0, 6).map((product, index) => (
-                    <div key={product.id} className={`${getVisibilityClass(index)} flex-col overflow-hidden rounded-xl border border-white/10 bg-[#080b14]/50 backdrop-blur-md transition hover:border-[#d4af37]/40`}>
+                {relatedProducts.map((product, index) => {
+                    const defaultVariation = product.variations && product.variations.length > 0 ? product.variations[0] : null;
+                    const defaultPrice = defaultVariation ? defaultVariation.price : 0;
+                    const defaultWeight = defaultVariation ? defaultVariation.weight : '';
+                    
+                    return (
+                    <div key={product._id} className={`${getVisibilityClass(index)} flex-col overflow-hidden rounded-xl border border-white/10 bg-[#080b14]/50 backdrop-blur-md transition hover:border-[#d4af37]/40`}>
                         <div className="relative aspect-[4/3] w-full bg-[linear-gradient(135deg,rgba(255,255,255,0.05),rgba(255,255,255,0.01))] overflow-hidden group p-2 flex items-center justify-center">
                             <button 
-                                onClick={() => toggleWishlist(product)}
-                                className={`absolute top-2 right-2 transition-colors z-10 ${isInWishlist(product.id) ? 'text-[#d4af37]' : 'text-white/30 hover:text-[#d4af37]'}`}
+                                onClick={() => toggleWishlist({ ...product, id: product._id })}
+                                className={`absolute top-2 right-2 transition-colors z-10 ${isInWishlist(product._id) ? 'text-[#d4af37]' : 'text-white/30 hover:text-[#d4af37]'}`}
                             >
-                                <Heart size={14} className={isInWishlist(product.id) ? 'fill-[#d4af37]' : ''} />
+                                <Heart size={14} className={isInWishlist(product._id) ? 'fill-[#d4af37]' : ''} />
                             </button>
                             <Link to={`/product/${product.slug}`} className="block w-full h-full">
                                 <img 
-                                    src="/makhanabowl.png" 
+                                    src={product.images && product.images.length > 0 ? product.images[0] : "/makhanabowl.png"} 
                                     alt={product.name}
                                     className="h-full w-full object-contain drop-shadow-xl transition-transform duration-500 group-hover:scale-110"
                                 />
@@ -55,23 +81,32 @@ export default function RelatedProducts({ className = "mx-auto max-w-[1400px] px
                                         <Star 
                                             key={i} 
                                             size={10} 
-                                            className={i < Math.floor(product.rating) ? "fill-[#d4af37] text-[#d4af37]" : "text-white/20"} 
+                                            className={i < Math.floor(product.rating || 5) ? "fill-[#d4af37] text-[#d4af37]" : "text-white/20"} 
                                         />
                                     ))}
                                 </div>
                                 <span className="text-[10px] text-[var(--color-text-secondary)]">
-                                    ({product.reviews})
+                                    ({product.numReviews || 0})
                                 </span>
                             </div>
 
                             <div className="mt-auto flex flex-col gap-3">
                                 <p className="text-base font-semibold text-[#f8f9fa]">
-                                    ₹{product.price}
-                                    <span className="ml-1 text-[10px] font-normal text-[var(--color-text-secondary)]">
-                                        / {product.weight}
-                                    </span>
+                                    ₹{defaultPrice}
+                                    {defaultWeight && (
+                                        <span className="ml-1 text-[10px] font-normal text-[var(--color-text-secondary)]">
+                                            / {defaultWeight}
+                                        </span>
+                                    )}
                                 </p>
                                 <button
+                                    onClick={() => addToCart({
+                                        id: product._id,
+                                        name: product.name,
+                                        price: defaultPrice,
+                                        weight: defaultWeight,
+                                        image: product.images && product.images.length > 0 ? product.images[0] : "/makhanabowl.png"
+                                    }, 1, defaultWeight)}
                                     className="w-full rounded border border-[#d4af37]/40 py-2 text-[11px] font-medium text-[#d4af37] transition hover:bg-[#d4af37] hover:text-[#080b14]"
                                 >
                                     Add to Cart
@@ -79,7 +114,7 @@ export default function RelatedProducts({ className = "mx-auto max-w-[1400px] px
                             </div>
                         </div>
                     </div>
-                ))}
+                )})}
             </div>
         </section>
     );

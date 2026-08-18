@@ -29,11 +29,10 @@ const utilityItems = [
 
 const navLinks = [
     { label: "Home", href: "/" },
-    { label: "Shop", dropdown: true, href: "/shop" },
-    { label: "About Us", href: "/about" },
+    { label: "Shop", href: "/shop" },
+    { label: "About", href: "/about" },
     { label: "Export", href: "/export" },
     { label: "Quality", href: "/quality" },
-    { label: "Blog", href: "#" },
     { label: "Contact", href: "/contact" },
 ];
 
@@ -137,7 +136,7 @@ export default function Navbar() {
                         ) : (
                             <Link
                                 to="/login"
-                                className="hidden text-[13px] font-medium text-[#e4e4e7] hover:text-[#d4af37] sm:block"
+                                className="hidden text-[13px] font-medium whitespace-nowrap text-[#e4e4e7] hover:text-[#d4af37] sm:block"
                             >
                                 Sign In
                             </Link>
@@ -209,14 +208,14 @@ export default function Navbar() {
                                     <span className="text-[10px]">Profile</span>
                                 </Link>
                             ) : (
-                            <Link
-                                to="/login"
-                                className="flex flex-col items-center gap-1 text-[#e4e4e7] hover:text-[#d4af37]"
-                                onClick={() => setMenuOpen(false)}
-                            >
-                                <User size={20} />
-                                <span className="text-[10px]">Sign In</span>
-                            </Link>
+                                <Link
+                                    to="/login"
+                                    className="flex flex-col items-center gap-1 text-[#e4e4e7] hover:text-[#d4af37]"
+                                    onClick={() => setMenuOpen(false)}
+                                >
+                                    <User size={20} />
+                                    <span className="text-[10px]">Sign In</span>
+                                </Link>
                             )}
                             <Link
                                 to="/profile/wishlist"

@@ -31,9 +31,14 @@ import AdminOrderDetails from './pages/admin/AdminOrderDetails'
 import AdminReviews from './pages/admin/AdminReviews'
 import AdminInquiries from './pages/admin/AdminInquiries'
 import AdminOffers from './pages/admin/AdminOffers'
+import AdminMessages from './pages/admin/AdminMessages'
+import AdminNewsletter from './pages/admin/AdminNewsletter'
+import AdminDocuments from './pages/admin/AdminDocuments'
 import AdminLayout from './components/admin/AdminLayout'
 
-
+import FAQ from './pages/FAQ'
+import Shipping from './pages/Shipping'
+import Returns from './pages/Returns'
 
 import Profile from './pages/Profile'
 import Orders from './pages/Orders'
@@ -54,6 +59,10 @@ function App() {
               <Route index element={<Home />} />
               <Route path="shop" element={<Shop />} />
               <Route path="about" element={<About />} />
+              <Route path="rewards" element={<Rewards />} />
+              <Route path="faq" element={<FAQ />} />
+              <Route path="shipping" element={<Shipping />} />
+              <Route path="returns" element={<Returns />} />
               <Route path="export" element={<Export />} />
               <Route path="export/new" element={<NewExportInquiry />} />
               <Route path="quality" element={<Quality />} />
@@ -95,6 +104,9 @@ function App() {
                 <Route path="offers" element={<AdminOffers />} />
                 <Route path="reviews" element={<AdminReviews />} />
                 <Route path="export-inquiries" element={<AdminInquiries />} />
+                <Route path="messages" element={<AdminMessages />} />
+                <Route path="newsletter" element={<AdminNewsletter />} />
+                <Route path="documents" element={<AdminDocuments />} />
                 
                 {/* Fallback route for unimplemented admin pages so sidebar remains visible */}
                 <Route path="*" element={

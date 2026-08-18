@@ -1,17 +1,22 @@
 import { ArrowRight, Star, ShoppingCart } from "lucide-react";
 import { Link } from "react-router-dom";
-import { productsData } from "../../data/productDetailData";
 import { useWishlist } from "../../hooks/useWishlist";
 import { useCart } from "../../hooks/useCart";
+import { useGetProductsQuery } from "../../store/api/productApiSlice";
 
 export default function WishlistSidebar() {
     const { wishlistItems } = useWishlist();
     const { addToCart } = useCart();
+    const { data: products } = useGetProductsQuery({ sort: 'rating' });
     
-    // Get up to 2 products that are not in the wishlist
-    const recommendedProducts = productsData
-        .filter(p => !wishlistItems.some(w => w.id === p.id))
-        .slice(0, 2);
+    // Filter out excluded products and out-of-stock products, then limit to 2
+    const recommendedProducts = products 
+        ? products.filter(p => {
+            const isExcluded = wishlistItems.some(w => w._id === p._id || w.id === p._id);
+            const hasStock = p.variations && p.variations.some(v => v.countInStock > 0);
+            return !isExcluded && hasStock;
+        }).slice(0, 2)
+        : [];
 
     return (
         <div className="flex flex-col gap-6">
@@ -23,11 +28,16 @@ export default function WishlistSidebar() {
                 </div>
 
                 <div className="flex flex-col">
-                    {recommendedProducts.map((product, index) => (
-                        <div key={product.id} className={`p-5 flex flex-col items-center text-center ${index !== 0 ? 'border-t border-white/5' : ''}`}>
+                    {recommendedProducts.map((product, index) => {
+                        const defaultVariation = product.variations && product.variations.length > 0 ? product.variations[0] : null;
+                        const defaultPrice = defaultVariation ? defaultVariation.price : 0;
+                        const defaultWeight = defaultVariation ? defaultVariation.weight : '';
+                        
+                        return (
+                        <div key={product._id} className={`p-5 flex flex-col items-center text-center ${index !== 0 ? 'border-t border-white/5' : ''}`}>
                             <Link to={`/product/${product.slug}`} className="w-24 h-24 mb-4 relative block group">
                                 <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(212,175,55,0.15)_0%,transparent_70%)] pointer-events-none rounded-full"></div>
-                                <img src="/homehero2.png" alt={product.name} className="w-full h-full object-cover relative z-10 drop-shadow-[0_0_15px_rgba(255,255,255,0.05)] transition-transform duration-500 group-hover:scale-110" />
+                                <img src={product.images && product.images[0] ? product.images[0] : "/homehero2.png"} alt={product.name} className="w-full h-full object-cover relative z-10 drop-shadow-[0_0_15px_rgba(255,255,255,0.05)] transition-transform duration-500 group-hover:scale-110" />
                             </Link>
                             
                             <Link to={`/product/${product.slug}`} className="text-[14px] font-medium text-[#f8f9fa] hover:text-[#d4af37] transition-colors mb-1 truncate w-full">
@@ -39,25 +49,25 @@ export default function WishlistSidebar() {
                                     <Star 
                                         key={i} 
                                         size={12} 
-                                        className={i < Math.floor(product.rating) ? "fill-current" : "text-white/20"} 
+                                        className={i < Math.floor(product.rating || 0) ? "fill-current" : "text-white/20"} 
                                     />
                                 ))}
-                                <span className="text-[11px] text-[var(--color-text-secondary)] ml-1">({product.reviews})</span>
+                                <span className="text-[11px] text-[var(--color-text-secondary)] ml-1">({product.numReviews || 0})</span>
                             </div>
 
                             <div className="flex items-center gap-2 mb-4">
-                                <span className="text-[14px] font-medium text-[#d4af37]">₹{product.price}</span>
+                                <span className="text-[14px] font-medium text-[#d4af37]">₹{defaultPrice}</span>
                             </div>
 
                             <button 
-                                onClick={() => addToCart(product, 1, product.weight)}
+                                onClick={() => addToCart({ ...product, id: product._id }, 1, defaultWeight)}
                                 className="w-full py-2 rounded-lg border border-[#d4af37]/40 text-[#d4af37] text-[12px] font-medium hover:bg-[#d4af37] hover:text-[#080b14] transition-all flex items-center justify-center gap-2"
                             >
                                 <ShoppingCart size={14} />
                                 Add to Cart
                             </button>
                         </div>
-                    ))}
+                    )})}
                 </div>
             </div>
 

@@ -1,4 +1,4 @@
-import { LayoutDashboard, Package, ShoppingCart, ShoppingBag, Gift, BarChart3, Users, FileText, Settings, LogOut, ChevronRight, Star, Globe } from "lucide-react";
+import { LayoutDashboard, Package, ShoppingCart, ShoppingBag, Gift, BarChart3, Users, FileText, Settings, LogOut, ChevronRight, Star, Globe, Mail, FolderOpen } from "lucide-react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { logout } from "../../store/slices/authSlice";
@@ -17,10 +17,11 @@ export default function AdminSidebar() {
         { name: "Dashboard", icon: LayoutDashboard, path: "/admin/dashboard" },
         { name: "Products", icon: Package, path: "/admin/products" },
         { path: "/admin/orders", icon: ShoppingBag, name: "Orders" },
-        { path: "/admin/customers", icon: Users, name: "Customers" },
         { path: "/admin/offers", icon: Gift, name: "Rewards & Offers" },
         { name: "Export Inquiries", icon: Globe, path: "/admin/export-inquiries" },
-        { path: "/admin/reports", icon: BarChart3, name: "Reports" },
+        { name: "Messages", icon: FileText, path: "/admin/messages" },
+        { name: "Newsletter", icon: Mail, path: "/admin/newsletter" },
+        { name: "Documents", icon: FolderOpen, path: "/admin/documents" },
         { name: "Reviews", icon: Star, path: "/admin/reviews" },
         { name: "Settings", icon: Settings, path: "/admin/settings" },
     ];
@@ -42,8 +43,8 @@ export default function AdminSidebar() {
                                 key={item.name}
                                 to={item.path}
                                 className={`flex flex-col md:flex-row items-center justify-center md:justify-start gap-1.5 md:gap-3.5 p-2 md:px-6 md:py-4 text-[10px] md:text-[14px] font-medium transition-all duration-200 shrink-0 md:shrink-auto w-1/4 md:w-auto snap-start border-transparent md:border-l-[3px] group ${isActive
-                                        ? "md:border-[#d4af37] text-[#080b14] md:text-[#d4af37] bg-[#d4af37] md:bg-[#d4af37]/[0.05]"
-                                        : "border-transparent text-[#e4e4e7] hover:text-[#f8f9fa] bg-transparent hover:bg-white/[0.05]"
+                                    ? "md:border-[#d4af37] text-[#080b14] md:text-[#d4af37] bg-[#d4af37] md:bg-[#d4af37]/[0.05]"
+                                    : "border-transparent text-[#e4e4e7] hover:text-[#f8f9fa] bg-transparent hover:bg-white/[0.05]"
                                     }`}
                             >
                                 <Icon size={18} className={`md:w-[20px] md:h-[20px] ${isActive ? "text-[#080b14] md:text-[#d4af37]" : "text-[#e4e4e7]/60 group-hover:text-[#d4af37]"}`} />
@@ -55,7 +56,7 @@ export default function AdminSidebar() {
 
                     <div className="hidden md:block mt-auto mb-2 mx-6 h-[1px] bg-white/5"></div>
 
-                    <button 
+                    <button
                         onClick={logoutHandler}
                         className="flex flex-col md:flex-row items-center justify-center md:justify-start gap-1.5 md:gap-3.5 p-2 md:px-6 md:py-4 text-[10px] md:text-[14px] font-medium text-[#e4e4e7] hover:bg-white/[0.02] hover:text-red-400 transition-all duration-200 shrink-0 md:shrink-auto w-1/4 md:w-auto snap-start border-transparent md:border-l-[3px] bg-transparent group"
                     >

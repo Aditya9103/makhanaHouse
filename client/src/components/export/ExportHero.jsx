@@ -1,7 +1,21 @@
-import { ArrowRight, Download, ShieldCheck, Ship, Globe2 } from "lucide-react";
+import { ArrowRight, Download, ShieldCheck, Ship, Globe2, Leaf, Clock, Loader2 } from "lucide-react";
 import { Link } from "react-router-dom";
+import { useGetDocumentsQuery } from "../../store/api/documentApiSlice";
+import { toast } from "react-toastify";
 
 export default function ExportHero() {
+    const { data: documents, isLoading } = useGetDocumentsQuery();
+
+    const handleDownloadBrochure = () => {
+        if (!documents) return toast.error("Documents not loaded yet");
+        const brochure = documents.find(d => d.type === 'brochure');
+        if (brochure && brochure.url) {
+            window.open(brochure.url, '_blank');
+        } else {
+            toast.info("Brochure is not available at the moment.");
+        }
+    };
+
     return (
         <section className="relative min-h-[100dvh] lg:min-h-[calc(100vh-80px)] w-full flex items-start lg:items-center overflow-hidden bg-[#080b14] pt-4 lg:pt-8 pb-16 lg:pb-20">
             {/* Background Image - Bottom half on mobile, Right side on desktop */}
@@ -67,9 +81,13 @@ export default function ExportHero() {
                             Export Inquiry
                             <ArrowRight size={16} />
                         </Link>
-                        <button className="inline-flex w-full sm:w-auto justify-center items-center gap-2 rounded-md border border-[#d4af37] bg-[#080b14]/50 sm:bg-transparent px-8 py-3 text-[14px] sm:text-[13px] font-semibold text-[#d4af37] backdrop-blur-sm sm:backdrop-blur-none transition hover:bg-[#d4af37] hover:text-[#080b14]">
-                            Download Brochure
-                            <Download size={16} />
+                        <button 
+                            onClick={handleDownloadBrochure}
+                            disabled={isLoading}
+                            className="inline-flex w-full sm:w-auto justify-center items-center gap-2 rounded-md border border-[#d4af37] bg-[#080b14]/50 sm:bg-transparent px-8 py-3 text-[14px] sm:text-[13px] font-semibold text-[#d4af37] backdrop-blur-sm sm:backdrop-blur-none transition hover:bg-[#d4af37] hover:text-[#080b14] disabled:opacity-50"
+                        >
+                            {isLoading ? "Loading..." : "Download Brochure"}
+                            {isLoading ? <Loader2 size={16} className="animate-spin" /> : <Download size={16} />}
                         </button>
                     </div>
                 </div>

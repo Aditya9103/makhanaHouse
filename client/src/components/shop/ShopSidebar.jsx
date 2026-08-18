@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import { Plus, Minus, Filter, Star, Loader2 } from "lucide-react";
 import { useGetProductFiltersQuery } from "../../store/api/productApiSlice";
 
@@ -23,16 +24,16 @@ export default function ShopSidebar({ appliedFilters, setAppliedFilters }) {
     };
 
     const handleClearFilters = () => {
-        const defaultFilters = { 
-            categories: [], 
-            flavors: [], 
-            dietary: [], 
-            packSizes: [], 
-            minPrice: 0, 
-            maxPrice: 5000, 
-            rating: 0, 
+        const defaultFilters = {
+            categories: [],
+            flavors: [],
+            dietary: [],
+            packSizes: [],
+            minPrice: 0,
+            maxPrice: 5000,
+            rating: 0,
             availability: false,
-            sort: "newest" 
+            sort: "newest"
         };
         setDraftFilters(defaultFilters);
         setAppliedFilters(defaultFilters);
@@ -61,7 +62,7 @@ export default function ShopSidebar({ appliedFilters, setAppliedFilters }) {
         <aside className="w-full shrink-0 lg:w-[280px]">
             {/* Apply Button (Mobile/Sticky) */}
             <div className="mb-4 lg:hidden sticky top-[80px] z-20">
-                <button 
+                <button
                     onClick={handleApplyFilters}
                     className="w-full flex items-center justify-center gap-2 rounded-xl bg-[#d4af37] py-3 text-sm font-bold text-[#080b14] shadow-lg shadow-[#d4af37]/20"
                 >
@@ -77,20 +78,45 @@ export default function ShopSidebar({ appliedFilters, setAppliedFilters }) {
 
                 {/* Price Range */}
                 <div className="mb-8">
-                    <div className="flex justify-between mb-2">
+                    <div className="flex justify-between mb-4">
                         <p className="text-sm font-medium text-[#f8f9fa]">Price Range</p>
-                        <span className="text-xs text-[#d4af37]">₹{draftFilters.maxPrice}</span>
+                        <span className="text-xs text-[#d4af37]">₹{draftFilters.minPrice} - ₹{draftFilters.maxPrice}</span>
                     </div>
-                    <input 
-                        type="range" 
-                        min="0" 
-                        max="5000" 
-                        step="100"
-                        value={draftFilters.maxPrice}
-                        onChange={(e) => setDraftFilters({ ...draftFilters, maxPrice: Number(e.target.value) })}
-                        className="w-full h-1 bg-white/10 rounded-lg appearance-none cursor-pointer accent-[#d4af37]"
-                    />
-                    <div className="mt-2 flex items-center justify-between text-xs text-[var(--color-text-secondary)]">
+                    <div className="relative w-full h-1 flex items-center">
+                        <div className="absolute w-full h-1 bg-white/10 rounded-sm"></div>
+                        <div
+                            className="absolute h-1 bg-[#d4af37] rounded-sm"
+                            style={{
+                                left: `${(draftFilters.minPrice / 5000) * 100}%`,
+                                right: `${100 - (draftFilters.maxPrice / 5000) * 100}%`
+                            }}
+                        ></div>
+                        <input
+                            type="range"
+                            min="0"
+                            max="5000"
+                            step="100"
+                            value={draftFilters.minPrice}
+                            onChange={(e) => {
+                                const value = Math.min(Number(e.target.value), draftFilters.maxPrice - 100);
+                                setDraftFilters({ ...draftFilters, minPrice: value });
+                            }}
+                            className="absolute w-full h-1 appearance-none bg-transparent pointer-events-none [&::-webkit-slider-thumb]:pointer-events-auto [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-[15px] [&::-webkit-slider-thumb]:h-[15px] [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-[#d4af37] [&::-webkit-slider-thumb]:cursor-pointer [&::-moz-range-thumb]:pointer-events-auto [&::-moz-range-thumb]:w-[15px] [&::-moz-range-thumb]:h-[15px] [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:bg-[#d4af37] [&::-moz-range-thumb]:cursor-pointer [&::-moz-range-thumb]:border-none"
+                        />
+                        <input
+                            type="range"
+                            min="0"
+                            max="5000"
+                            step="100"
+                            value={draftFilters.maxPrice}
+                            onChange={(e) => {
+                                const value = Math.max(Number(e.target.value), draftFilters.minPrice + 100);
+                                setDraftFilters({ ...draftFilters, maxPrice: value });
+                            }}
+                            className="absolute w-full h-1 appearance-none bg-transparent pointer-events-none [&::-webkit-slider-thumb]:pointer-events-auto [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-[15px] [&::-webkit-slider-thumb]:h-[15px] [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-[#d4af37] [&::-webkit-slider-thumb]:cursor-pointer [&::-moz-range-thumb]:pointer-events-auto [&::-moz-range-thumb]:w-[15px] [&::-moz-range-thumb]:h-[15px] [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:bg-[#d4af37] [&::-moz-range-thumb]:cursor-pointer [&::-moz-range-thumb]:border-none"
+                        />
+                    </div>
+                    <div className="mt-4 flex items-center justify-between text-xs text-[var(--color-text-secondary)]">
                         <span>₹0</span>
                         <span>₹5000</span>
                     </div>
@@ -105,10 +131,12 @@ export default function ShopSidebar({ appliedFilters, setAppliedFilters }) {
                         </button>
                         {openPanels.categories && (
                             <div className="mt-3 flex flex-col gap-2.5">
-                                {filterOptions.categories.map((cat) => (
+                                {filterOptions.categories
+                                    .filter(cat => !/^[0-9a-fA-F]{24}$/.test(cat))
+                                    .map((cat) => (
                                     <label key={cat} className="flex items-center gap-3 cursor-pointer group">
-                                        <input 
-                                            type="checkbox" 
+                                        <input
+                                            type="checkbox"
                                             className="hidden"
                                             checked={draftFilters.categories?.includes(cat) || false}
                                             onChange={() => toggleArrayFilter('categories', cat)}
@@ -124,6 +152,7 @@ export default function ShopSidebar({ appliedFilters, setAppliedFilters }) {
                     </div>
                 )}
 
+
                 {/* Flavors */}
                 {filterOptions?.flavors?.length > 0 && (
                     <div className="border-t border-white/10 py-4">
@@ -135,8 +164,8 @@ export default function ShopSidebar({ appliedFilters, setAppliedFilters }) {
                             <div className="mt-3 flex flex-col gap-2.5">
                                 {filterOptions.flavors.map((flavor) => (
                                     <label key={flavor} className="flex items-center gap-3 cursor-pointer group">
-                                        <input 
-                                            type="checkbox" 
+                                        <input
+                                            type="checkbox"
                                             className="hidden"
                                             checked={draftFilters.flavors?.includes(flavor) || false}
                                             onChange={() => toggleArrayFilter('flavors', flavor)}
@@ -163,8 +192,8 @@ export default function ShopSidebar({ appliedFilters, setAppliedFilters }) {
                             <div className="mt-3 flex flex-col gap-2.5">
                                 {filterOptions.dietary.map((diet) => (
                                     <label key={diet} className="flex items-center gap-3 cursor-pointer group">
-                                        <input 
-                                            type="checkbox" 
+                                        <input
+                                            type="checkbox"
                                             className="hidden"
                                             checked={draftFilters.dietary?.includes(diet) || false}
                                             onChange={() => toggleArrayFilter('dietary', diet)}
@@ -191,8 +220,8 @@ export default function ShopSidebar({ appliedFilters, setAppliedFilters }) {
                             <div className="mt-3 flex flex-col gap-2.5">
                                 {filterOptions.packSizes.map((size) => (
                                     <label key={size} className="flex items-center gap-3 cursor-pointer group">
-                                        <input 
-                                            type="checkbox" 
+                                        <input
+                                            type="checkbox"
                                             className="hidden"
                                             checked={draftFilters.packSizes?.includes(size) || false}
                                             onChange={() => toggleArrayFilter('packSizes', size)}
@@ -217,8 +246,8 @@ export default function ShopSidebar({ appliedFilters, setAppliedFilters }) {
                     {openPanels.availability && (
                         <div className="mt-3 flex flex-col gap-2.5">
                             <label className="flex items-center gap-3 cursor-pointer group">
-                                <input 
-                                    type="checkbox" 
+                                <input
+                                    type="checkbox"
                                     className="hidden"
                                     checked={draftFilters.availability}
                                     onChange={() => setDraftFilters(prev => ({ ...prev, availability: !prev.availability }))}
@@ -242,8 +271,8 @@ export default function ShopSidebar({ appliedFilters, setAppliedFilters }) {
                         <div className="mt-3 flex flex-col gap-2.5">
                             {[4, 3, 2, 1].map((num) => (
                                 <label key={num} className="flex items-center gap-3 cursor-pointer group">
-                                    <input 
-                                        type="checkbox" 
+                                    <input
+                                        type="checkbox"
                                         className="hidden"
                                         checked={draftFilters.rating === num}
                                         onChange={() => setDraftFilters(prev => ({ ...prev, rating: prev.rating === num ? 0 : num }))}
@@ -263,7 +292,7 @@ export default function ShopSidebar({ appliedFilters, setAppliedFilters }) {
                     )}
                 </div>
 
-                <button 
+                <button
                     onClick={handleApplyFilters}
                     className="w-full mt-4 flex items-center justify-center gap-2 rounded-lg bg-[#d4af37] py-2.5 text-sm font-bold text-[#080b14] transition hover:bg-[#c39d2e]"
                 >
@@ -279,9 +308,11 @@ export default function ShopSidebar({ appliedFilters, setAppliedFilters }) {
                 <p className="mb-6 text-xs leading-relaxed text-[var(--color-text-secondary)]">
                     Get custom pricing for bulk orders and private labeling.
                 </p>
-                <button className="w-full rounded-md bg-[#d4af37] py-2.5 text-sm font-semibold text-[#080b14] transition hover:bg-[#c39d2e]">
-                    Bulk Inquiry
-                </button>
+                <Link to="/export/new">
+                    <button className="w-full rounded-md bg-[#d4af37] py-2.5 cursor-pointer text-sm font-semibold text-[#080b14] transition hover:bg-[#c39d2e]">
+                        Bulk Inquiry
+                    </button>
+                </Link>
             </div>
         </aside>
     );

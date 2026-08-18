@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 const steps = [
     {
         num: "1",
@@ -37,17 +38,17 @@ export default function AboutProcess() {
             <div className="mx-auto max-w-[1400px] px-6 lg:px-10">
                 <div className="relative overflow-hidden rounded-xl border border-[#d4af37]/30 bg-[#080b14] p-8 lg:p-12 shadow-2xl">
                     <div className="flex flex-col gap-12 xl:flex-row xl:items-center">
-                        
+
                         {/* Left - Content */}
                         <div className="flex-shrink-0 xl:w-[32%]">
                             <div className="mb-4 flex items-center gap-2 text-[#d4af37]">
                                 <span className="font-serif italic text-xl">Our Process</span>
                             </div>
-                            
+
                             <h2 className="mb-4 font-serif text-3xl leading-tight text-[#f8f9fa] sm:text-4xl lg:text-[2.5rem]">
                                 Purity in Every Step
                             </h2>
-                            
+
                             {/* Decorative Divider */}
                             <div className="mb-6 flex items-center gap-3">
                                 <div className="h-[1px] w-8 bg-[#d4af37]/40"></div>
@@ -58,18 +59,18 @@ export default function AboutProcess() {
                                 </svg>
                                 <div className="h-[1px] w-8 bg-[#d4af37]/40"></div>
                             </div>
-                            
+
                             <p className="mb-8 max-w-xl text-[13px] sm:text-[14px] leading-relaxed text-[#e4e4e7] text-center xl:text-left">
                                 From harvesting in the pristine wetlands to hygienic processing and packaging, we ensure quality and purity at every step.
                             </p>
-                            
+
                             <div className="flex justify-center xl:justify-start">
-                                <button className="inline-flex w-full sm:w-auto justify-center items-center gap-3 rounded-md bg-[#d4af37] px-6 py-3.5 sm:py-2.5 text-[14px] sm:text-[13px] font-medium text-[#080b14] transition hover:bg-[#c39b2e]">
+                                <Link to="/quality" className="inline-flex w-full sm:w-auto justify-center items-center gap-3 rounded-md bg-[#d4af37] px-6 py-3.5 sm:py-2.5 text-[14px] sm:text-[13px] font-medium text-[#080b14] transition hover:bg-[#c39b2e]">
                                     Explore Our Quality
                                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                         <path d="M5 12H19M19 12L12 5M19 12L12 19" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
                                     </svg>
-                                </button>
+                                </Link>
                             </div>
                         </div>
 

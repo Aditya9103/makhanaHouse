@@ -76,21 +76,30 @@ export default function AdminProductEdit() {
     };
 
     const handleImageUpload = async (e) => {
-        const file = e.target.files[0];
-        if (!file) return;
+        const files = Array.from(e.target.files);
+        if (files.length === 0) return;
 
         try {
             setIsUploading(true);
-            const formData = new FormData();
-            formData.append('file', file);
-            formData.append('folder', 'products');
+            const uploadedUrls = [];
+            
+            for (const file of files) {
+                const formData = new FormData();
+                formData.append('file', file);
+                formData.append('folder', 'products');
 
-            const res = await uploadFile(formData).unwrap();
-            setImages([...images, res.url]);
+                const res = await uploadFile(formData).unwrap();
+                uploadedUrls.push(res.url);
+            }
+            
+            setImages(prev => [...prev, ...uploadedUrls]);
         } catch (err) {
             alert(err?.data?.message || 'Image upload failed');
         } finally {
             setIsUploading(false);
+            if (fileInputRef.current) {
+                fileInputRef.current.value = '';
+            }
         }
     };
 
@@ -396,7 +405,7 @@ export default function AdminProductEdit() {
                                 </div>
                             )}
                             
-                            <input type="file" ref={fileInputRef} onChange={handleImageUpload} className="hidden" accept="image/*" />
+                            <input type="file" ref={fileInputRef} onChange={handleImageUpload} className="hidden" accept="image/*" multiple />
                             <button 
                                 type="button"
                                 onClick={() => fileInputRef.current?.click()}

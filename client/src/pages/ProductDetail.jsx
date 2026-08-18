@@ -67,7 +67,7 @@ export default function ProductDetail() {
             <ProductReviews product={product} />
 
             {/* Related Products */}
-            <RelatedProducts />
+            <RelatedProducts excludeProductIds={[product._id]} currentCategory={product.category} />
         </div>
     );
 }

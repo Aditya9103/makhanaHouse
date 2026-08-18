@@ -1,7 +1,24 @@
 import { Wheat, MessageCircle, Share2, Send, Globe, ArrowRight } from "lucide-react";
 import { Link } from "react-router-dom";
+import { useState } from "react";
+import { useSubscribeNewsletterMutation } from "../../store/api/newsletterApiSlice";
+import { toast } from "react-toastify";
 
 export default function Footer() {
+    const [email, setEmail] = useState("");
+    const [subscribe, { isLoading }] = useSubscribeNewsletterMutation();
+
+    const handleSubscribe = async (e) => {
+        e.preventDefault();
+        if (!email) return toast.error("Please enter an email address");
+        try {
+            const res = await subscribe({ email }).unwrap();
+            toast.success(res.message || "Successfully subscribed!");
+            setEmail("");
+        } catch (err) {
+            toast.error(err?.data?.message || "Failed to subscribe");
+        }
+    };
     return (
         <footer className="border-t border-white/10 bg-transparent pt-16">
             <div className="mx-auto max-w-[1400px] px-6 lg:px-10">
@@ -104,14 +121,17 @@ export default function Footer() {
                         <p className="mb-4 text-xs text-[var(--color-text-secondary)]">
                             Subscribe to get updates on new products, offers & more.
                         </p>
-                        <form className="flex border border-white/10 rounded-md overflow-hidden focus-within:border-[#d4af37]">
+                        <form onSubmit={handleSubscribe} className="flex border border-white/10 rounded-md overflow-hidden focus-within:border-[#d4af37]">
                             <input
                                 type="email"
+                                value={email}
+                                onChange={(e) => setEmail(e.target.value)}
                                 placeholder="Enter your email"
                                 className="w-full bg-white/5 px-4 py-2 text-sm text-[#f8f9fa] outline-none"
+                                disabled={isLoading}
                             />
-                            <button type="submit" className="bg-[#d4af37] px-4 py-2 text-[#080b14] hover:bg-[#c39d2e]">
-                                <ArrowRight size={16} />
+                            <button type="submit" disabled={isLoading} className="bg-[#d4af37] px-4 py-2 text-[#080b14] hover:bg-[#c39d2e] disabled:opacity-50">
+                                {isLoading ? <span className="animate-spin inline-block w-4 h-4 border-2 border-[#080b14] border-t-transparent rounded-full"></span> : <ArrowRight size={16} />}
                             </button>
                         </form>
                     </div>

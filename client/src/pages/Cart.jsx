@@ -35,7 +35,7 @@ export default function Cart() {
                         
                         {/* Related Products */}
                         <div>
-                            <RelatedProducts className="w-full" compact={true} />
+                            <RelatedProducts className="w-full" compact={true} excludeProductIds={cartItems.map(item => item.id)} />
                         </div>
                     </div>
 
