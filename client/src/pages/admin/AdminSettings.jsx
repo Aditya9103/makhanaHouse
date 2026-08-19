@@ -3,6 +3,7 @@ import { useState, useEffect, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useUpdateUserMutation } from "../../store/api/authApiSlice";
 import { useUploadFileMutation } from "../../store/api/uploadApiSlice";
+import { useGetStoreConfigQuery, useUpdateStoreConfigMutation } from "../../store/api/configApiSlice";
 import { setCredentials } from "../../store/slices/authSlice";
 
 export default function AdminSettings() {
@@ -13,6 +14,8 @@ export default function AdminSettings() {
 
     const [updateUser, { isLoading: isUpdating }] = useUpdateUserMutation();
     const [uploadFile] = useUploadFileMutation();
+    const { data: serverConfig, isLoading: isConfigLoading } = useGetStoreConfigQuery();
+    const [updateConfig, { isLoading: isConfigUpdating }] = useUpdateStoreConfigMutation();
     
     const [isUploading, setIsUploading] = useState(false);
     
@@ -26,11 +29,22 @@ export default function AdminSettings() {
 
     // Admin Specific Settings State
     const [storeConfig, setStoreConfig] = useState({
-        storeName: "Makhana House",
-        supportEmail: "support@makhanahouse.com",
-        taxRate: "18",
-        currency: "INR (₹)",
+        freeShippingThreshold: 999,
+        standardShippingCharge: 50,
+        expressShippingChargeBase: 149,
+        expressShippingChargeDiscounted: 99,
     });
+
+    useEffect(() => {
+        if (serverConfig) {
+            setStoreConfig({
+                freeShippingThreshold: serverConfig.freeShippingThreshold,
+                standardShippingCharge: serverConfig.standardShippingCharge,
+                expressShippingChargeBase: serverConfig.expressShippingChargeBase,
+                expressShippingChargeDiscounted: serverConfig.expressShippingChargeDiscounted,
+            });
+        }
+    }, [serverConfig]);
 
     useEffect(() => {
         window.scrollTo(0, 0);
@@ -86,8 +100,13 @@ export default function AdminSettings() {
         }
         
         if (activeTab === "store") {
-            // Here you would typically dispatch an action to save store config
-            return alert("Store configuration saved successfully!");
+            try {
+                await updateConfig(storeConfig).unwrap();
+                alert("Store configuration saved successfully!");
+            } catch (error) {
+                alert(error?.data?.message || "Failed to update store configuration");
+            }
+            return;
         }
 
         try {
@@ -118,11 +137,11 @@ export default function AdminSettings() {
                     
                     <button 
                         onClick={handleSave}
-                        disabled={isUpdating}
+                        disabled={isUpdating || isConfigUpdating || isUploading}
                         className="flex items-center justify-center gap-2 px-5 py-2.5 rounded-md bg-[#d4af37] text-[#080b14] text-[13px] font-medium hover:bg-[#c39d2e] transition-colors shadow-[0_0_15px_rgba(212,175,55,0.2)] shrink-0 disabled:opacity-70"
                     >
-                        {isUpdating ? <Loader2 size={16} className="animate-spin" /> : <Save size={16} />}
-                        {isUpdating ? 'Saving...' : 'Save Changes'}
+                        {(isUpdating || isConfigUpdating || isUploading) ? <Loader2 size={16} className="animate-spin" /> : <Save size={16} />}
+                        {(isUpdating || isConfigUpdating) ? 'Saving...' : 'Save Changes'}
                     </button>
                 </div>
 
@@ -224,25 +243,21 @@ export default function AdminSettings() {
                             </div>
                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                                 <div className="space-y-2">
-                                    <label className="text-[12px] font-medium text-[#f8f9fa]">Store Name</label>
-                                    <input type="text" name="storeName" value={storeConfig.storeName} onChange={handleConfigChange} className="w-full rounded-md border border-white/10 bg-white/5 px-4 py-2.5 text-[13px] text-[#f8f9fa] focus:border-[#d4af37]/50 focus:bg-white/10 outline-none transition-all" />
+                                    <label className="text-[12px] font-medium text-[#f8f9fa]">Free Shipping Threshold (₹)</label>
+                                    <input type="number" name="freeShippingThreshold" value={storeConfig.freeShippingThreshold} onChange={handleConfigChange} className="w-full rounded-md border border-white/10 bg-white/5 px-4 py-2.5 text-[13px] text-[#f8f9fa] focus:border-[#d4af37]/50 focus:bg-white/10 outline-none transition-all" />
                                 </div>
                                 <div className="space-y-2">
-                                    <label className="text-[12px] font-medium text-[#f8f9fa]">Support Email</label>
-                                    <input type="email" name="supportEmail" value={storeConfig.supportEmail} onChange={handleConfigChange} className="w-full rounded-md border border-white/10 bg-white/5 px-4 py-2.5 text-[13px] text-[#f8f9fa] focus:border-[#d4af37]/50 focus:bg-white/10 outline-none transition-all" />
+                                    <label className="text-[12px] font-medium text-[#f8f9fa]">Standard Shipping Charge (₹)</label>
+                                    <input type="number" name="standardShippingCharge" value={storeConfig.standardShippingCharge} onChange={handleConfigChange} className="w-full rounded-md border border-white/10 bg-white/5 px-4 py-2.5 text-[13px] text-[#f8f9fa] focus:border-[#d4af37]/50 focus:bg-white/10 outline-none transition-all" />
                                 </div>
                                 <div className="space-y-2">
-                                    <label className="text-[12px] font-medium text-[#f8f9fa]">Base Tax Rate (%)</label>
-                                    <input type="number" name="taxRate" value={storeConfig.taxRate} onChange={handleConfigChange} className="w-full rounded-md border border-white/10 bg-white/5 px-4 py-2.5 text-[13px] text-[#f8f9fa] focus:border-[#d4af37]/50 focus:bg-white/10 outline-none transition-all" />
+                                    <label className="text-[12px] font-medium text-[#f8f9fa]">Express Shipping Base Charge (₹)</label>
+                                    <input type="number" name="expressShippingChargeBase" value={storeConfig.expressShippingChargeBase} onChange={handleConfigChange} className="w-full rounded-md border border-white/10 bg-white/5 px-4 py-2.5 text-[13px] text-[#f8f9fa] focus:border-[#d4af37]/50 focus:bg-white/10 outline-none transition-all" />
                                 </div>
                                 <div className="space-y-2">
-                                    <label className="text-[12px] font-medium text-[#f8f9fa]">Store Currency</label>
-                                    <select name="currency" value={storeConfig.currency} onChange={handleConfigChange} className="w-full rounded-md border border-white/10 bg-white/5 px-4 py-2.5 text-[13px] text-[#f8f9fa] focus:border-[#d4af37]/50 focus:bg-white/10 outline-none transition-all appearance-none">
-                                        <option value="INR (₹)" className="bg-[#080b14]">INR (₹)</option>
-                                        <option value="USD ($)" className="bg-[#080b14]">USD ($)</option>
-                                        <option value="EUR (€)" className="bg-[#080b14]">EUR (€)</option>
-                                        <option value="GBP (£)" className="bg-[#080b14]">GBP (£)</option>
-                                    </select>
+                                    <label className="text-[12px] font-medium text-[#f8f9fa]">Express Shipping Discounted Charge (₹)</label>
+                                    <input type="number" name="expressShippingChargeDiscounted" value={storeConfig.expressShippingChargeDiscounted} onChange={handleConfigChange} className="w-full rounded-md border border-white/10 bg-white/5 px-4 py-2.5 text-[13px] text-[#f8f9fa] focus:border-[#d4af37]/50 focus:bg-white/10 outline-none transition-all" />
+                                    <p className="text-[10px] text-[#e4e4e7]/60 mt-1">Applies when Free Shipping Threshold is met.</p>
                                 </div>
                             </div>
                         </form>

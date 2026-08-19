@@ -6,14 +6,27 @@ import CheckoutShipping from "../components/checkout/CheckoutShipping";
 import CheckoutPayment from "../components/checkout/CheckoutPayment";
 import CheckoutSummary from "../components/checkout/CheckoutSummary";
 import CheckoutTrust from "../components/checkout/CheckoutTrust";
+import { useGetStoreConfigQuery } from "../store/api/configApiSlice";
+import { Loader2 } from "lucide-react";
 
 export default function Checkout() {
     const [selectedAddressId, setSelectedAddressId] = useState(null);
     const [paymentMethod, setPaymentMethod] = useState("cod");
+    const [selectedShipping, setSelectedShipping] = useState("standard");
+    
+    const { data: config, isLoading: isConfigLoading } = useGetStoreConfigQuery();
 
     useEffect(() => {
         window.scrollTo(0, 0);
     }, []);
+
+    if (isConfigLoading) {
+        return (
+            <div className="w-full min-h-screen bg-[#080b14] flex items-center justify-center">
+                <Loader2 size={32} className="animate-spin text-[#d4af37]" />
+            </div>
+        );
+    }
 
     return (
         <div className="w-full pb-10 bg-[#080b14] min-h-screen">
@@ -43,7 +56,11 @@ export default function Checkout() {
                             selectedAddressId={selectedAddressId} 
                             setSelectedAddressId={setSelectedAddressId} 
                         />
-                        <CheckoutShipping />
+                        <CheckoutShipping 
+                            selectedShipping={selectedShipping}
+                            setSelectedShipping={setSelectedShipping}
+                            config={config}
+                        />
                         <CheckoutPayment 
                             paymentMethod={paymentMethod} 
                             setPaymentMethod={setPaymentMethod} 
@@ -55,6 +72,8 @@ export default function Checkout() {
                         <CheckoutSummary 
                             selectedAddressId={selectedAddressId} 
                             paymentMethod={paymentMethod} 
+                            selectedShipping={selectedShipping}
+                            config={config}
                         />
                         <CheckoutTrust />
                     </div>

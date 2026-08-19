@@ -79,10 +79,12 @@ export default function OrderCard({ order }) {
                     <Link to={`/profile/orders/${order.id}`} className="w-full sm:w-auto px-4 py-1.5 rounded-md border border-[#d4af37]/40 text-[#d4af37] text-[11px] font-medium hover:bg-[#d4af37] hover:text-[#080b14] transition-all text-center whitespace-nowrap block">
                         View Details
                     </Link>
-                    <button className="w-full sm:w-auto flex items-center justify-center sm:justify-end gap-1.5 text-[var(--color-text-secondary)] text-[11px] hover:text-[#f8f9fa] transition-colors group whitespace-nowrap">
-                        <Download size={12} className="text-[#d4af37] group-hover:text-[#f3e5ab] transition-colors" />
-                        Download Invoice
-                    </button>
+                    {order.status.toLowerCase() !== 'cancelled' && (
+                        <a href={`/profile/orders/${order.id}/invoice`} target="_blank" rel="noopener noreferrer" className="w-full sm:w-auto flex items-center justify-center sm:justify-end gap-1.5 text-[var(--color-text-secondary)] text-[11px] hover:text-[#f8f9fa] transition-colors group whitespace-nowrap">
+                            <Download size={12} className="text-[#d4af37] group-hover:text-[#f3e5ab] transition-colors" />
+                            Download Invoice
+                        </a>
+                    )}
                 </div>
             </div>
 

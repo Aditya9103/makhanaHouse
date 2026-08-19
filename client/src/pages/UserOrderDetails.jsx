@@ -1,6 +1,6 @@
 import { useParams, useNavigate, Link } from "react-router-dom";
 import { useGetOrderDetailsQuery } from "../store/api/orderApiSlice";
-import { Package, Truck, CheckCircle, Clock, MapPin, ArrowLeft, Loader2, Star } from "lucide-react";
+import { Package, Truck, CheckCircle, Clock, MapPin, ArrowLeft, Loader2, Star, Download, XCircle } from "lucide-react";
 import { useState } from "react";
 import WriteReviewModal from "../components/reviews/WriteReviewModal";
 
@@ -54,14 +54,28 @@ export default function UserOrderDetails() {
             <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 pt-4 lg:pt-8">
                 
                 {/* Header */}
-                <div className="flex items-center gap-4 mb-6">
-                    <button onClick={() => navigate('/profile/orders')} className="p-2 bg-white/5 hover:bg-[#d4af37]/20 text-[var(--color-text-secondary)] hover:text-[#d4af37] rounded-lg transition-colors">
-                        <ArrowLeft size={20} />
-                    </button>
-                    <div>
-                        <h1 className="text-2xl font-serif text-[#f8f9fa]">Order Details</h1>
-                        <p className="text-sm text-[var(--color-text-secondary)]">#{order.orderId || order._id.substring(0,8)} • Placed on {new Date(order.createdAt).toLocaleDateString()}</p>
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+                    <div className="flex items-center gap-4">
+                        <button onClick={() => navigate('/profile/orders')} className="p-2 bg-white/5 hover:bg-[#d4af37]/20 text-[var(--color-text-secondary)] hover:text-[#d4af37] rounded-lg transition-colors">
+                            <ArrowLeft size={20} />
+                        </button>
+                        <div>
+                            <h1 className="text-2xl font-serif text-[#f8f9fa]">Order Details</h1>
+                            <p className="text-sm text-[var(--color-text-secondary)]">#{order.orderId || order._id.substring(0,8)} • Placed on {new Date(order.createdAt).toLocaleDateString()}</p>
+                        </div>
                     </div>
+                    
+                    {order.status !== 'Cancelled' && (
+                        <a 
+                            href={`/profile/orders/${order._id}/invoice`} 
+                            target="_blank" 
+                            rel="noopener noreferrer"
+                            className="flex items-center justify-center gap-2 px-4 py-2 bg-[#d4af37] text-[#080b14] hover:bg-[#f1c40f] font-medium rounded-lg transition-colors text-sm"
+                        >
+                            <Download size={16} />
+                            Download Invoice
+                        </a>
+                    )}
                 </div>
 
                 <div className="flex flex-col gap-6">

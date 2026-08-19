@@ -5,7 +5,7 @@ export default function QuickActions() {
     const actions = [
         { name: "Track Your Order", icon: Package, path: "/profile/orders" },
         { name: "Download Invoices", icon: Download, path: "/profile/orders" },
-        { name: "Return / Replace Items", icon: RefreshCcw, path: "/profile/returns" },
+        { name: "Return / Replace Items", icon: RefreshCcw, path: "/returns" },
         { name: "Export Inquiries", icon: FileText, path: "/profile/inquiries" },
     ];
 

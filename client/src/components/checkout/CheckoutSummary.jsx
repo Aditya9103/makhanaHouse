@@ -1,20 +1,34 @@
 import { useCart } from "../../hooks/useCart";
-import { Lock, Tag, Loader2 } from "lucide-react";
+import { Lock, Tag, Loader2, X } from "lucide-react";
+import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useCreateOrderMutation } from "../../store/api/orderApiSlice";
 import { useGetAddressesQuery } from "../../store/api/usersApiSlice";
 import { toast } from "react-toastify";
 import { usePromoCode } from "../../hooks/usePromoCode";
 
-export default function CheckoutSummary({ selectedAddressId, paymentMethod }) {
+export default function CheckoutSummary({ selectedAddressId, paymentMethod, selectedShipping, config }) {
     const { cartItems } = useCart();
     const { data: addresses = [] } = useGetAddressesQuery();
     const [createOrder, { isLoading }] = useCreateOrderMutation();
     const { promoCode, removePromo } = usePromoCode();
     const navigate = useNavigate();
+    const [showConfirm, setShowConfirm] = useState(false);
     
     const subtotal = cartItems.reduce((total, item) => total + (item.price * item.quantity), 0);
-    const shipping = subtotal > 999 ? 0 : (subtotal > 0 ? 50 : 0);
+    
+    // Dynamic Shipping
+    const threshold = config?.freeShippingThreshold || 999;
+    const stdCharge = config?.standardShippingCharge || 50;
+    const expBase = config?.expressShippingChargeBase || 149;
+    const expDisc = config?.expressShippingChargeDiscounted || 99;
+
+    let shipping = 0;
+    if (selectedShipping === "express") {
+        shipping = subtotal > threshold ? expDisc : expBase;
+    } else {
+        shipping = subtotal > threshold ? 0 : stdCharge;
+    }
     
     let appliedDiscount = 0;
     if (promoCode) {
@@ -28,12 +42,16 @@ export default function CheckoutSummary({ selectedAddressId, paymentMethod }) {
     
     const total = subtotal - appliedDiscount + shipping;
 
-    const placeOrderHandler = async () => {
+    const handleConfirmClick = () => {
         if (!selectedAddressId) {
             toast.error("Please select a shipping address.");
             return;
         }
+        setShowConfirm(true);
+    };
 
+    const placeOrderHandler = async () => {
+        setShowConfirm(false);
         const address = addresses.find(a => a._id === selectedAddressId);
         
         try {
@@ -126,7 +144,7 @@ export default function CheckoutSummary({ selectedAddressId, paymentMethod }) {
                         )}
 
                         <div className="flex justify-between items-center text-[13px]">
-                            <span className="text-[var(--color-text-secondary)]">Shipping</span>
+                            <span className="text-[var(--color-text-secondary)]">Shipping ({selectedShipping === 'express' ? 'Express' : 'Standard'})</span>
                             <span className="text-white">{shipping === 0 ? 'Free' : `₹${shipping}`}</span>
                         </div>
                     </div>
@@ -150,7 +168,7 @@ export default function CheckoutSummary({ selectedAddressId, paymentMethod }) {
 
             {/* Place Order Button */}
             <button 
-                onClick={placeOrderHandler}
+                onClick={handleConfirmClick}
                 disabled={cartItems.length === 0 || isLoading}
                 className="w-full h-[52px] rounded-xl bg-[#d4af37] text-[#080b14] font-bold text-[14px] flex items-center justify-center gap-2 hover:bg-[#f3e5ab] transition shadow-[0_0_20px_rgba(212,175,55,0.2)] hover:shadow-[0_0_30px_rgba(212,175,55,0.4)] disabled:opacity-50 disabled:cursor-not-allowed"
             >
@@ -162,6 +180,43 @@ export default function CheckoutSummary({ selectedAddressId, paymentMethod }) {
                 <Link to="/terms" className="text-[#d4af37] hover:underline">Terms & Conditions</Link> and <Link to="/privacy" className="text-[#d4af37] hover:underline">Privacy Policy</Link>
             </p>
 
+            {/* Confirmation Modal */}
+            {showConfirm && (
+                <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
+                    <div className="bg-[#0a0d14] border border-white/10 rounded-2xl p-6 w-full max-w-sm relative shadow-2xl animate-fade-in-up">
+                        <button 
+                            onClick={() => setShowConfirm(false)}
+                            className="absolute top-4 right-4 text-white/50 hover:text-white transition-colors"
+                        >
+                            <X size={20} />
+                        </button>
+                        
+                        <div className="w-12 h-12 rounded-full bg-[#d4af37]/20 flex items-center justify-center text-[#d4af37] mb-4 mx-auto border border-[#d4af37]/30">
+                            <Lock size={24} />
+                        </div>
+                        
+                        <h3 className="text-lg font-medium text-white text-center mb-2">Confirm Your Order</h3>
+                        <p className="text-[13px] text-[var(--color-text-secondary)] text-center mb-6">
+                            You are about to place an order for <strong className="text-white">₹{total}</strong> using <strong className="text-white">{paymentMethod === 'cod' ? 'Cash on Delivery' : 'Prepaid'}</strong>. Do you want to proceed?
+                        </p>
+                        
+                        <div className="flex gap-3">
+                            <button 
+                                onClick={() => setShowConfirm(false)}
+                                className="flex-1 px-4 py-2.5 rounded-lg border border-white/10 text-white text-[13px] font-medium hover:bg-white/5 transition-colors"
+                            >
+                                Cancel
+                            </button>
+                            <button 
+                                onClick={placeOrderHandler}
+                                className="flex-1 px-4 py-2.5 rounded-lg bg-[#d4af37] text-[#080b14] text-[13px] font-bold hover:bg-[#f1c40f] transition-colors"
+                            >
+                                Confirm & Pay
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 }

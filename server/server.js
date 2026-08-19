@@ -11,6 +11,7 @@ import orderRoutes from './routes/orderRoutes.js';
 import exportInquiryRoutes from './routes/exportInquiryRoutes.js';
 import rewardRoutes from './routes/rewardRoutes.js';
 import contactRoutes from './routes/contactRoutes.js';
+import configRoutes from './routes/configRoutes.js';
 import newsletterRoutes from './routes/newsletterRoutes.js';
 import documentRoutes from './routes/documentRoutes.js';
 import { notFound, errorHandler } from './middlewares/errorMiddleware.js';
@@ -44,6 +45,7 @@ app.use('/api/orders', orderRoutes);
 app.use('/api/export', exportInquiryRoutes);
 app.use('/api/rewards', rewardRoutes);
 app.use('/api/contact', contactRoutes);
+app.use('/api/config', configRoutes);
 app.use('/api/newsletter', newsletterRoutes);
 app.use('/api/documents', documentRoutes);
 

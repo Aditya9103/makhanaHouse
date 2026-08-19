@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useGetOrderDetailsQuery, useUpdateOrderStatusMutation } from "../../store/api/orderApiSlice";
-import { Package, Truck, CheckCircle, Clock, XCircle, ArrowLeft, Loader2, MapPin, CreditCard } from "lucide-react";
+import { Package, Truck, CheckCircle, Clock, XCircle, ArrowLeft, Loader2, MapPin, CreditCard, Download } from "lucide-react";
 import { toast } from "react-toastify";
 
 export default function AdminOrderDetails() {
@@ -47,15 +47,26 @@ export default function AdminOrderDetails() {
     return (
         <div className="flex flex-col gap-6 max-w-5xl mx-auto">
             {/* Header */}
-            <div className="flex items-center justify-between gap-4">
-                <button onClick={() => navigate('/admin/orders')} className="flex items-center gap-2 text-[var(--color-text-secondary)] hover:text-[#d4af37] transition-colors text-sm font-medium">
+            <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
+                <button onClick={() => navigate('/admin/orders')} className="flex items-center gap-2 text-[var(--color-text-secondary)] hover:text-[#d4af37] transition-colors text-sm font-medium self-start sm:self-auto">
                     <ArrowLeft size={16} />
                     Back to Orders
                 </button>
-                <div className="flex gap-2">
+                <div className="flex gap-4 items-center w-full sm:w-auto justify-between sm:justify-end">
                     <span className={`inline-flex px-3 py-1 rounded-md text-xs font-medium border ${order.isPaid ? 'text-[#16a34a] bg-[#16a34a]/10 border-[#16a34a]/20' : 'text-amber-500 bg-amber-500/10 border-amber-500/20'}`}>
                         {order.isPaid ? 'Paid' : 'Unpaid'}
                     </span>
+                    {order.status !== 'Cancelled' && (
+                        <a 
+                            href={`/profile/orders/${order._id}/invoice`} 
+                            target="_blank" 
+                            rel="noopener noreferrer"
+                            className="flex items-center justify-center gap-2 px-3 py-1.5 bg-[#d4af37] text-[#080b14] hover:bg-[#f1c40f] font-medium rounded-lg transition-colors text-xs"
+                        >
+                            <Download size={14} />
+                            Download Invoice
+                        </a>
+                    )}
                 </div>
             </div>
 

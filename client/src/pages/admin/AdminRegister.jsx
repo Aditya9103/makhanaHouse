@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { useAdminRegisterMutation } from '../../store/api/authApiSlice';
-import { setCredentials } from '../../store/slices/authSlice';
+import { setCredentials, logout } from '../../store/slices/authSlice';
 import { User, Mail, Lock, ArrowRight, Loader2, ShieldCheck, Key } from 'lucide-react';
 
 export default function AdminRegister() {
@@ -26,9 +26,9 @@ export default function AdminRegister() {
         if (userInfo && userInfo.role === 'admin') {
             navigate(redirect);
         } else if (userInfo && userInfo.role !== 'admin') {
-            navigate('/');
+            dispatch(logout());
         }
-    }, [navigate, redirect, userInfo]);
+    }, [navigate, redirect, userInfo, dispatch]);
 
     const submitHandler = async (e) => {
         e.preventDefault();

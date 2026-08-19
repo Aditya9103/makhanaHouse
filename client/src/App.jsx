@@ -46,6 +46,7 @@ import TermsConditions from './pages/TermsConditions'
 import Profile from './pages/Profile'
 import Orders from './pages/Orders'
 import UserOrderDetails from './pages/UserOrderDetails'
+import Invoice from './pages/Invoice'
 import Addresses from './pages/Addresses'
 import ExportInquiries from './pages/ExportInquiries'
 import Wishlist from './pages/Wishlist'
@@ -97,6 +98,11 @@ function App() {
             {/* Admin Routes - Rendered OUTSIDE MainLayout so they have full screen without consumer Navbar/Footer */}
             <Route path="/admin/login" element={<AdminLogin />} />
             <Route path="/admin/register" element={<AdminRegister />} />
+
+            {/* Print/Standalone Routes */}
+            <Route path="" element={<PrivateRoute />}>
+              <Route path="/profile/orders/:id/invoice" element={<Invoice />} />
+            </Route>
 
             <Route path="" element={<AdminRoute />}>
               <Route path="/admin" element={<AdminLayout />}>
