@@ -100,17 +100,20 @@ export default function AdminProducts() {
                                             </span>
                                         </td>
                                         <td className="px-6 py-4">
-                                            {product.variations?.some(v => v.countInStock > 0) ? (
-                                                <span className="inline-flex items-center gap-1.5 text-green-400 text-[12px] font-medium">
-                                                    <div className="w-1.5 h-1.5 rounded-full bg-green-500"></div>
-                                                    In Stock
-                                                </span>
-                                            ) : (
-                                                <span className="inline-flex items-center gap-1.5 text-red-400 text-[12px] font-medium">
-                                                    <div className="w-1.5 h-1.5 rounded-full bg-red-500"></div>
-                                                    Out of Stock
-                                                </span>
-                                            )}
+                                            {(() => {
+                                                const totalStock = product.variations?.reduce((acc, v) => acc + v.countInStock, 0) || 0;
+                                                return totalStock > 0 ? (
+                                                    <span className="inline-flex items-center gap-1.5 text-green-400 text-[12px] font-medium" title={product.variations.map(v => `${v.weight}: ${v.countInStock}`).join('\n')}>
+                                                        <div className="w-1.5 h-1.5 rounded-full bg-green-500"></div>
+                                                        In Stock ({totalStock})
+                                                    </span>
+                                                ) : (
+                                                    <span className="inline-flex items-center gap-1.5 text-red-400 text-[12px] font-medium">
+                                                        <div className="w-1.5 h-1.5 rounded-full bg-red-500"></div>
+                                                        Out of Stock
+                                                    </span>
+                                                );
+                                            })()}
                                         </td>
                                         <td className="px-6 py-4 text-right">
                                             <div className="flex justify-end gap-3">

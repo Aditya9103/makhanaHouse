@@ -1,4 +1,5 @@
 import Order from '../models/Order.js';
+import Product from '../models/Product.js';
 import RewardHistory from '../models/RewardHistory.js';
 import sendEmail from '../utils/emailService.js';
 import { getOrderStatusEmailTemplate } from '../utils/emailTemplates.js';
@@ -37,6 +38,18 @@ export const addOrderItems = async (req, res) => {
             });
 
             const createdOrder = await order.save();
+
+            // Decrease product stock
+            for (const item of orderItems) {
+                const product = await Product.findById(item.product);
+                if (product) {
+                    const variationIndex = product.variations.findIndex(v => v.weight === item.size);
+                    if (variationIndex !== -1) {
+                        product.variations[variationIndex].countInStock = Math.max(0, product.variations[variationIndex].countInStock - item.quantity);
+                        await product.save();
+                    }
+                }
+            }
 
             // Clear the user's cart after successful order creation
             req.user.cart = [];
