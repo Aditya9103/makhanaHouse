@@ -3,6 +3,7 @@ import { Gift, Plus, Trash2, Loader2, Coins } from "lucide-react";
 import { 
     useGetAllOffersQuery, 
     useCreateOfferMutation, 
+    useUpdateOfferMutation,
     useDeleteOfferMutation,
     useAssignPointsMutation 
 } from "../../store/api/rewardApiSlice";
@@ -14,16 +15,20 @@ export default function AdminOffers() {
     const { data: users = [], isLoading: loadingUsers } = useGetUsersQuery();
     
     const [createOffer, { isLoading: creatingOffer }] = useCreateOfferMutation();
+    const [updateOffer, { isLoading: updatingOffer }] = useUpdateOfferMutation();
     const [deleteOffer] = useDeleteOfferMutation();
     const [assignPoints, { isLoading: assigningPoints }] = useAssignPointsMutation();
 
     // Offer Form State
     const [isOfferModalOpen, setIsOfferModalOpen] = useState(false);
+    const [editingOfferId, setEditingOfferId] = useState(null);
     const [offerForm, setOfferForm] = useState({
         code: "",
         title: "",
         expiryDate: "",
-        minOrderAmount: "",
+        minOrderValue: "",
+        discountType: "percentage",
+        discountValue: "",
         colorTheme: "Gold"
     });
 
@@ -36,17 +41,53 @@ export default function AdminOffers() {
         type: "earned"
     });
 
-    const handleCreateOffer = async (e) => {
+    const handleCreateOrUpdateOffer = async (e) => {
         e.preventDefault();
         try {
-            await createOffer(offerForm).unwrap();
-            toast.success("Offer created successfully");
+            const payload = {
+                ...offerForm,
+                minOrderValue: Number(offerForm.minOrderValue),
+                discountValue: Number(offerForm.discountValue),
+                isActive: true
+            };
+            
+            if (editingOfferId) {
+                await updateOffer({ id: editingOfferId, ...payload }).unwrap();
+                toast.success("Offer updated successfully");
+            } else {
+                await createOffer(payload).unwrap();
+                toast.success("Offer created successfully");
+            }
+            
             setIsOfferModalOpen(false);
-            setOfferForm({ code: "", title: "", expiryDate: "", minOrderAmount: "", colorTheme: "Gold" });
+            setEditingOfferId(null);
+            setOfferForm({
+                code: "",
+                title: "",
+                expiryDate: "",
+                minOrderValue: "",
+                discountType: "percentage",
+                discountValue: "",
+                colorTheme: "Gold"
+            });
             refetchOffers();
         } catch (err) {
             toast.error(err?.data?.message || err.error);
         }
+    };
+
+    const handleEditClick = (offer) => {
+        setEditingOfferId(offer._id);
+        setOfferForm({
+            code: offer.code,
+            title: offer.title,
+            expiryDate: offer.expiryDate,
+            minOrderValue: offer.minOrderValue || "",
+            discountType: offer.discountType || "percentage",
+            discountValue: offer.discountValue || "",
+            colorTheme: offer.colorTheme
+        });
+        setIsOfferModalOpen(true);
     };
 
     const handleDeleteOffer = async (id) => {
@@ -121,7 +162,7 @@ export default function AdminOffers() {
                                 <div className="flex justify-between items-start mb-6">
                                     <div className="flex flex-col pr-4 z-10 w-[65%]">
                                         <h4 className="text-[16px] font-medium text-[#f8f9fa] mb-1 leading-tight">{offer.title}</h4>
-                                        <span className="text-[11px] text-[var(--color-text-secondary)]">Min. Order {offer.minOrderAmount}</span>
+                                        <span className="text-[11px] text-[var(--color-text-secondary)]">Min. Order ₹{offer.minOrderValue}</span>
                                     </div>
                                     <div className="z-10 w-[30%] flex flex-col items-center">
                                         <span className="text-[10px] text-[var(--color-text-secondary)] uppercase tracking-widest mb-1.5 text-center">Use Code</span>
@@ -133,13 +174,22 @@ export default function AdminOffers() {
                                 
                                 <div className="mt-auto pt-4 border-t border-white/5 flex items-center justify-between z-10">
                                     <span className="text-[11px] text-[#e4e4e7]">{offer.expiryDate}</span>
-                                    <button 
-                                        onClick={() => handleDeleteOffer(offer._id)}
-                                        className="text-red-400 hover:text-red-300 transition-colors p-1"
-                                        title="Delete Offer"
-                                    >
-                                        <Trash2 size={16} />
-                                    </button>
+                                    <div className="flex gap-2">
+                                        <button 
+                                            onClick={() => handleEditClick(offer)}
+                                            className="text-blue-400 hover:text-blue-300 transition-colors p-1"
+                                            title="Edit Offer"
+                                        >
+                                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
+                                        </button>
+                                        <button 
+                                            onClick={() => handleDeleteOffer(offer._id)}
+                                            className="text-red-400 hover:text-red-300 transition-colors p-1"
+                                            title="Delete Offer"
+                                        >
+                                            <Trash2 size={16} />
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
                         )
@@ -152,10 +202,10 @@ export default function AdminOffers() {
                 <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
                     <div className="bg-[#0a0d14] border border-white/10 rounded-xl w-full max-w-md overflow-hidden flex flex-col max-h-[80vh] md:max-h-[90vh]">
                         <div className="p-5 border-b border-white/10 flex justify-between items-center bg-[#080b14] shrink-0">
-                            <h3 className="text-[#f8f9fa] font-serif text-lg">Create New Offer</h3>
-                            <button onClick={() => setIsOfferModalOpen(false)} className="text-[var(--color-text-secondary)] hover:text-white">&times;</button>
+                            <h3 className="text-[#f8f9fa] font-serif text-lg">{editingOfferId ? 'Edit Offer' : 'Create New Offer'}</h3>
+                            <button onClick={() => { setIsOfferModalOpen(false); setEditingOfferId(null); }} className="text-[var(--color-text-secondary)] hover:text-white">&times;</button>
                         </div>
-                        <form onSubmit={handleCreateOffer} className="p-5 flex flex-col gap-4 overflow-y-auto no-scrollbar">
+                        <form onSubmit={handleCreateOrUpdateOffer} className="p-5 flex flex-col gap-4 overflow-y-auto no-scrollbar">
                             <div>
                                 <label className="text-[11px] text-[var(--color-text-secondary)] uppercase tracking-wider mb-1 block">Offer Title</label>
                                 <input required value={offerForm.title} onChange={e => setOfferForm({...offerForm, title: e.target.value})} type="text" placeholder="e.g. 10% Off on First Order" className="w-full bg-white/5 border border-white/10 rounded-lg p-2.5 text-[13px] text-white focus:outline-none focus:border-[#d4af37]/50" />
@@ -170,8 +220,22 @@ export default function AdminOffers() {
                                     <input required value={offerForm.expiryDate} onChange={e => setOfferForm({...offerForm, expiryDate: e.target.value})} type="text" placeholder="e.g. Valid till 31 Dec" className="w-full bg-white/5 border border-white/10 rounded-lg p-2.5 text-[13px] text-white focus:outline-none focus:border-[#d4af37]/50" />
                                 </div>
                                 <div>
-                                    <label className="text-[11px] text-[var(--color-text-secondary)] uppercase tracking-wider mb-1 block">Min. Order</label>
-                                    <input required value={offerForm.minOrderAmount} onChange={e => setOfferForm({...offerForm, minOrderAmount: e.target.value})} type="text" placeholder="e.g. ₹999" className="w-full bg-white/5 border border-white/10 rounded-lg p-2.5 text-[13px] text-white focus:outline-none focus:border-[#d4af37]/50" />
+                                    <label className="text-[11px] text-[var(--color-text-secondary)] uppercase tracking-wider mb-1 block">Min. Order (₹)</label>
+                                    <input required value={offerForm.minOrderValue} onChange={e => setOfferForm({...offerForm, minOrderValue: e.target.value})} type="number" min="0" placeholder="e.g. 999" className="w-full bg-white/5 border border-white/10 rounded-lg p-2.5 text-[13px] text-white focus:outline-none focus:border-[#d4af37]/50" />
+                                </div>
+                            </div>
+                            <div className="grid grid-cols-2 gap-4">
+                                <div>
+                                    <label className="text-[11px] text-[var(--color-text-secondary)] uppercase tracking-wider mb-1 block">Discount Type</label>
+                                    <select value={offerForm.discountType} onChange={e => setOfferForm({...offerForm, discountType: e.target.value})} className="w-full bg-white/5 border border-white/10 rounded-lg p-2.5 text-[13px] text-white focus:outline-none focus:border-[#d4af37]/50 appearance-none">
+                                        <option value="percentage">Percentage (%)</option>
+                                        <option value="flat">Flat Amount (₹)</option>
+                                        <option value="fixed">Fixed Amount (₹)</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label className="text-[11px] text-[var(--color-text-secondary)] uppercase tracking-wider mb-1 block">Discount Value</label>
+                                    <input required value={offerForm.discountValue} onChange={e => setOfferForm({...offerForm, discountValue: e.target.value})} type="number" min="1" placeholder="e.g. 20" className="w-full bg-white/5 border border-white/10 rounded-lg p-2.5 text-[13px] text-white focus:outline-none focus:border-[#d4af37]/50" />
                                 </div>
                             </div>
                             <div>
@@ -182,8 +246,8 @@ export default function AdminOffers() {
                                     <option value="Emerald">Emerald Theme</option>
                                 </select>
                             </div>
-                            <button type="submit" disabled={creatingOffer} className="w-full bg-[#d4af37] text-[#080b14] font-medium py-2.5 rounded-lg mt-2 flex items-center justify-center">
-                                {creatingOffer ? <Loader2 className="animate-spin" size={16} /> : "Create Offer"}
+                            <button type="submit" disabled={creatingOffer || updatingOffer} className="w-full bg-[#d4af37] text-[#080b14] font-medium py-2.5 rounded-lg mt-2 flex items-center justify-center">
+                                {(creatingOffer || updatingOffer) ? <Loader2 className="animate-spin" size={16} /> : (editingOfferId ? "Update Offer" : "Create Offer")}
                             </button>
                         </form>
                     </div>

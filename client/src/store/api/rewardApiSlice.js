@@ -18,6 +18,14 @@ export const rewardApiSlice = apiSlice.injectEndpoints({
             }),
             invalidatesTags: ['Offer'],
         }),
+        updateOffer: builder.mutation({
+            query: ({ id, ...data }) => ({
+                url: `/rewards/offers/${id}`,
+                method: 'PUT',
+                body: data,
+            }),
+            invalidatesTags: ['Offer'],
+        }),
         deleteOffer: builder.mutation({
             query: (id) => ({
                 url: `/rewards/offers/${id}`,
@@ -37,6 +45,13 @@ export const rewardApiSlice = apiSlice.injectEndpoints({
             }),
             invalidatesTags: ['RewardHistory', 'User'],
         }),
+        validateOffer: builder.mutation({
+            query: (data) => ({
+                url: '/rewards/offers/validate',
+                method: 'POST',
+                body: data,
+            }),
+        }),
     }),
 });
 
@@ -44,7 +59,9 @@ export const {
     useGetActiveOffersQuery,
     useGetAllOffersQuery,
     useCreateOfferMutation,
+    useUpdateOfferMutation,
     useDeleteOfferMutation,
     useGetMyRewardHistoryQuery,
     useAssignPointsMutation,
+    useValidateOfferMutation,
 } = rewardApiSlice;

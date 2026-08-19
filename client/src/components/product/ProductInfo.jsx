@@ -46,11 +46,11 @@ export default function ProductInfo({ product }) {
                 <h1 className="font-serif text-3xl sm:text-4xl lg:text-[2.5rem] leading-tight text-[#f8f9fa]">
                     {product.name}
                 </h1>
-                <button 
+                <button
                     onClick={() => toggleWishlist(product)}
-                    className={`shrink-0 p-2 rounded-full border transition-colors mt-1 ${isInWishlist(product.id) ? 'border-[#d4af37] bg-[#d4af37]/10 text-[#d4af37]' : 'border-white/10 bg-white/5 text-white/30 hover:text-[#d4af37] hover:border-white/30'}`}
+                    className={`shrink-0 p-2 rounded-full border transition-colors mt-1 ${isInWishlist(product._id || product.id) ? 'border-[#d4af37] bg-[#d4af37]/10 text-[#d4af37]' : 'border-white/10 bg-white/5 text-white/30 hover:text-[#d4af37] hover:border-white/30'}`}
                 >
-                    <Heart size={20} className={isInWishlist(product.id) ? 'fill-[#d4af37]' : ''} />
+                    <Heart size={20} className={isInWishlist(product._id || product.id) ? 'fill-[#d4af37]' : ''} />
                 </button>
             </div>
 
@@ -58,10 +58,10 @@ export default function ProductInfo({ product }) {
             <div className="flex items-center gap-3 mb-4">
                 <div className="flex items-center gap-1">
                     {[...Array(5)].map((_, i) => (
-                        <Star 
-                            key={i} 
-                            size={14} 
-                            className={i < Math.floor(product.rating || 5) ? "fill-[#d4af37] text-[#d4af37]" : "text-white/20"} 
+                        <Star
+                            key={i}
+                            size={14}
+                            className={i < Math.floor(product.rating || 5) ? "fill-[#d4af37] text-[#d4af37]" : "text-white/20"}
                         />
                     ))}
                 </div>
@@ -111,11 +111,10 @@ export default function ProductInfo({ product }) {
                             <button
                                 key={size}
                                 onClick={() => setSelectedSize(size)}
-                                className={`flex-1 min-w-[70px] rounded-md border px-4 py-2 text-sm font-medium transition-all duration-200 ${
-                                    selectedSize === size
-                                        ? "border-[#d4af37] bg-[#d4af37]/10 text-[#d4af37]"
-                                        : "border-white/10 bg-white/5 text-[var(--color-text-secondary)] hover:border-white/30 hover:bg-white/10 hover:text-[#f8f9fa]"
-                                }`}
+                                className={`flex-1 min-w-[70px] rounded-md border px-4 py-2 text-sm font-medium transition-all duration-200 ${selectedSize === size
+                                    ? "border-[#d4af37] bg-[#d4af37]/10 text-[#d4af37]"
+                                    : "border-white/10 bg-white/5 text-[var(--color-text-secondary)] hover:border-white/30 hover:bg-white/10 hover:text-[#f8f9fa]"
+                                    }`}
                             >
                                 {size}
                             </button>
@@ -148,20 +147,20 @@ export default function ProductInfo({ product }) {
 
             {/* Action Buttons */}
             <div className="flex flex-col sm:flex-row gap-4 mt-auto">
-                <button 
-                    onClick={handleAddToCart} 
+                <button
+                    onClick={handleAddToCart}
                     disabled={countInStock === 0}
-                    className="flex-1 flex items-center justify-center gap-2 py-3.5 px-6 rounded-md border border-[#d4af37] text-[#d4af37] font-semibold transition hover:bg-[#d4af37] hover:text-[#080b14] disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="flex-1 flex items-center justify-center gap-2 py-3.5 px-6 rounded-md border border-[#d4af37] text-[#d4af37] font-semibold transition cursor-pointer hover:bg-[#d4af37] hover:text-[#080b14] disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                     Add to Cart
                     <ShoppingCart size={18} />
                 </button>
-                <button 
+                <button
                     onClick={() => {
                         handleAddToCart();
                         navigate('/checkout');
                     }}
-                    className="flex-1 flex items-center justify-center py-3.5 px-6 rounded-md bg-[#d4af37] text-[#080b14] font-semibold transition hover:bg-[#c29b2b]"
+                    className="flex-1 flex items-center justify-center cursor-pointer py-3.5 px-6 rounded-md bg-[#d4af37] text-[#080b14] font-semibold transition hover:bg-[#c29b2b]"
                 >
                     Buy Now
                 </button>

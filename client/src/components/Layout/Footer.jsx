@@ -72,7 +72,6 @@ export default function Footer() {
                             <li><Link to="/" className="hover:text-[#d4af37]">Home</Link></li>
                             <li><Link to="/shop" className="hover:text-[#d4af37]">Shop</Link></li>
                             <li><Link to="/about" className="hover:text-[#d4af37]">About Us</Link></li>
-                            <li><Link to="/blog" className="hover:text-[#d4af37]">Blog</Link></li>
                             <li><Link to="/contact" className="hover:text-[#d4af37]">Contact Us</Link></li>
                         </ul>
                     </div>
@@ -113,6 +112,7 @@ export default function Footer() {
                             <li><Link to="/shipping" className="hover:text-[#d4af37]">Shipping & Delivery</Link></li>
                             <li><Link to="/returns" className="hover:text-[#d4af37]">Returns & Refunds</Link></li>
                             <li><Link to="/profile/orders" className="hover:text-[#d4af37]">Track Order</Link></li>
+                            <li><Link to="/profile/inquiries" className="hover:text-[#d4af37]">Track Inquiry</Link></li>
                         </ul>
 
                         <h4 className="mb-4 text-xs font-semibold tracking-[0.1em] text-[#e4e4e7]">
@@ -140,9 +140,9 @@ export default function Footer() {
                 <div className="mt-16 flex flex-col items-center justify-between border-t border-white/10 py-6 text-xs text-[var(--color-text-secondary)] sm:flex-row">
                     <p>© 2024 Makhana House. All Rights Reserved.</p>
                     <div className="mt-4 flex gap-4 sm:mt-0">
-                        <Link to="/privacy" className="hover:text-[#d4af37]">Privacy Policy</Link>
+                        <Link to="/privacy-policy" className="hover:text-[#d4af37]">Privacy Policy</Link>
                         <span>|</span>
-                        <Link to="/terms" className="hover:text-[#d4af37]">Terms & Conditions</Link>
+                        <Link to="/terms-conditions" className="hover:text-[#d4af37]">Terms & Conditions</Link>
                     </div>
                 </div>
             </div>

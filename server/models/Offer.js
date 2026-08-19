@@ -15,9 +15,18 @@ const offerSchema = new mongoose.Schema({
         type: String, // e.g. "Valid till 31 Dec 2024" or a real Date
         required: [true, 'Please provide an expiry text'],
     },
-    minOrderAmount: {
-        type: String, // e.g. "₹999"
-        required: [true, 'Please provide a minimum order text'],
+    minOrderValue: {
+        type: Number, // strict mathematical minimum order value
+        default: 0,
+    },
+    discountType: {
+        type: String,
+        enum: ['percentage', 'flat', 'fixed'],
+        default: 'percentage',
+    },
+    discountValue: {
+        type: Number,
+        default: 0,
     },
     isActive: {
         type: Boolean,

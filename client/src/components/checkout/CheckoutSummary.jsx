@@ -4,17 +4,29 @@ import { Link, useNavigate } from "react-router-dom";
 import { useCreateOrderMutation } from "../../store/api/orderApiSlice";
 import { useGetAddressesQuery } from "../../store/api/usersApiSlice";
 import { toast } from "react-toastify";
+import { usePromoCode } from "../../hooks/usePromoCode";
 
 export default function CheckoutSummary({ selectedAddressId, paymentMethod }) {
     const { cartItems } = useCart();
     const { data: addresses = [] } = useGetAddressesQuery();
     const [createOrder, { isLoading }] = useCreateOrderMutation();
+    const { promoCode, removePromo } = usePromoCode();
     const navigate = useNavigate();
     
     const subtotal = cartItems.reduce((total, item) => total + (item.price * item.quantity), 0);
-    const discount = subtotal > 0 ? 50 : 0; // Mock discount like the image
-    const shipping = subtotal > 999 ? 0 : (subtotal > 0 ? 99 : 0);
-    const total = subtotal - discount + shipping;
+    const shipping = subtotal > 999 ? 0 : (subtotal > 0 ? 50 : 0);
+    
+    let appliedDiscount = 0;
+    if (promoCode) {
+        if (promoCode.discountType === 'flat') {
+            appliedDiscount = promoCode.discountValue;
+        } else if (promoCode.discountType === 'percentage') {
+            appliedDiscount = Math.round((subtotal * promoCode.discountValue) / 100);
+        }
+        if (appliedDiscount > subtotal) appliedDiscount = subtotal;
+    }
+    
+    const total = subtotal - appliedDiscount + shipping;
 
     const placeOrderHandler = async () => {
         if (!selectedAddressId) {
@@ -46,7 +58,12 @@ export default function CheckoutSummary({ selectedAddressId, paymentMethod }) {
                 taxPrice: 0,
                 shippingPrice: shipping,
                 totalPrice: total,
+                discountAmount: appliedDiscount,
+                promoCode: promoCode ? promoCode.code : '',
             }).unwrap();
+            
+            // Clear promo code upon successful order
+            removePromo();
             
             navigate(`/order-success/${res.orderId || res._id}`);
         } catch (err) {
@@ -97,17 +114,20 @@ export default function CheckoutSummary({ selectedAddressId, paymentMethod }) {
                             <span className="text-[var(--color-text-secondary)]">Subtotal ({cartItems.length} items)</span>
                             <span className="text-white">₹{subtotal}</span>
                         </div>
+                        
+                        {promoCode && (
+                            <div className="flex justify-between items-center text-[13px]">
+                                <span className="text-[#16a34a] flex items-center gap-1">
+                                    <Tag size={12} />
+                                    Discount ({promoCode.code})
+                                </span>
+                                <span className="text-[#16a34a]">-₹{appliedDiscount}</span>
+                            </div>
+                        )}
+
                         <div className="flex justify-between items-center text-[13px]">
                             <span className="text-[var(--color-text-secondary)]">Shipping</span>
-                            {shipping === 0 ? (
-                                <span className="text-green-500 font-medium">Free</span>
-                            ) : (
-                                <span className="text-white">₹{shipping}</span>
-                            )}
-                        </div>
-                        <div className="flex justify-between items-center text-[13px]">
-                            <span className="text-[var(--color-text-secondary)]">Discount</span>
-                            <span className="text-green-500 font-medium">- ₹{discount}</span>
+                            <span className="text-white">{shipping === 0 ? 'Free' : `₹${shipping}`}</span>
                         </div>
                     </div>
 
@@ -119,10 +139,10 @@ export default function CheckoutSummary({ selectedAddressId, paymentMethod }) {
                         <span className="text-[24px] font-bold text-white leading-none">₹{total}</span>
                     </div>
 
-                    {discount > 0 && (
+                    {appliedDiscount > 0 && (
                         <div className="bg-[#1b251b]/40 border border-[#2e522e] rounded-lg p-3 flex items-center gap-2 mb-6">
                             <Tag size={14} className="text-green-500" />
-                            <span className="text-[12px] text-green-400 font-medium">You will save ₹{discount} on this order</span>
+                            <span className="text-[12px] text-green-400 font-medium">You will save ₹{appliedDiscount} on this order</span>
                         </div>
                     )}
                 </>

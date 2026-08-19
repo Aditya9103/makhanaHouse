@@ -1,8 +1,9 @@
 import { useState } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { useCart } from "../../hooks/useCart";
 import { useWishlist } from "../../hooks/useWishlist";
+import { useGetProductsQuery } from "../../store/api/productApiSlice";
 import {
     Wheat,
     Mail,
@@ -42,6 +43,23 @@ export default function Navbar() {
     const { cartItems } = useCart();
     const { wishlistItems } = useWishlist();
     const { userInfo } = useSelector((state) => state.auth);
+    const navigate = useNavigate();
+
+    // Search state
+    const [isSearchOpen, setIsSearchOpen] = useState(false);
+    const [searchQuery, setSearchQuery] = useState("");
+    const { data: searchResults, isLoading: isSearching } = useGetProductsQuery(
+        { keyword: searchQuery },
+        { skip: !isSearchOpen || searchQuery.length < 2 }
+    );
+
+    const handleSearchSubmit = (e) => {
+        e.preventDefault();
+        if (searchQuery.trim()) {
+            setIsSearchOpen(false);
+            navigate(`/shop?keyword=${encodeURIComponent(searchQuery.trim())}`);
+        }
+    };
 
     return (
         <>
@@ -74,6 +92,75 @@ export default function Navbar() {
 
             {/* Main nav */}
             <header className="sticky top-0 z-40 border-b border-white/10 bg-[#080b14]/80 backdrop-blur-md">
+                {/* Full Screen Backdrop when Search is Open */}
+                {isSearchOpen && (
+                    <div className="fixed inset-0 top-full bg-black/60 backdrop-blur-sm z-40" onClick={() => setIsSearchOpen(false)} />
+                )}
+
+                {/* Search Dropdown Overlay */}
+                {isSearchOpen && (
+                    <div className="absolute top-full left-0 w-full bg-[#0d111a] border-b border-white/10 shadow-[0_20px_40px_rgba(0,0,0,0.7)] z-50 animate-in slide-in-from-top-2">
+                        <div className="mx-auto max-w-[800px] p-6 relative">
+                            <form onSubmit={handleSearchSubmit} className="relative flex items-center">
+                                <Search className="absolute left-4 text-[var(--color-text-secondary)]" size={20} />
+                                <input
+                                    type="text"
+                                    autoFocus
+                                    placeholder="Search for premium makhana, flavors, or categories..."
+                                    value={searchQuery}
+                                    onChange={(e) => setSearchQuery(e.target.value)}
+                                    className="w-full bg-white/5 border border-white/10 rounded-xl py-4 pl-12 pr-12 text-[#f8f9fa] placeholder:text-[var(--color-text-secondary)] focus:outline-none focus:border-[#d4af37]/50 focus:ring-1 focus:ring-[#d4af37]/50 transition-all text-lg"
+                                />
+                                <button type="button" onClick={() => setIsSearchOpen(false)} className="absolute right-4 text-[var(--color-text-secondary)] hover:text-[#d4af37]">
+                                    <X size={20} />
+                                </button>
+                            </form>
+
+                            {/* Search Results */}
+                            {searchQuery.length >= 2 && (
+                                <div className="mt-6 max-h-[60vh] overflow-y-auto no-scrollbar">
+                                    {isSearching ? (
+                                        <div className="flex justify-center p-8">
+                                            <div className="animate-spin text-[#d4af37] h-6 w-6 border-2 border-current border-t-transparent rounded-full" />
+                                        </div>
+                                    ) : searchResults?.length > 0 ? (
+                                        <div className="flex flex-col gap-2">
+                                            <p className="text-[11px] font-medium text-[var(--color-text-secondary)] uppercase tracking-wider mb-2">Products</p>
+                                            {searchResults.slice(0, 5).map(product => (
+                                                <Link 
+                                                    key={product._id} 
+                                                    to={`/product/${product._id}`}
+                                                    onClick={() => setIsSearchOpen(false)}
+                                                    className="flex items-center gap-4 p-3 rounded-xl hover:bg-white/[0.03] transition-colors border border-transparent hover:border-white/5 group"
+                                                >
+                                                    <div className="h-14 w-14 rounded-lg bg-white/5 overflow-hidden shrink-0 border border-white/5">
+                                                        <img src={product.images[0]} alt={product.name} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
+                                                    </div>
+                                                    <div className="flex flex-col min-w-0 flex-1">
+                                                        <h4 className="text-[14px] font-medium text-[#f8f9fa] truncate group-hover:text-[#d4af37] transition-colors">{product.name}</h4>
+                                                        <span className="text-[12px] text-[var(--color-text-secondary)] truncate">{product.category}</span>
+                                                    </div>
+                                                    <div className="text-right shrink-0">
+                                                        <span className="text-[14px] font-bold text-[#f8f9fa]">₹{product.price}</span>
+                                                    </div>
+                                                </Link>
+                                            ))}
+                                            {searchResults.length > 5 && (
+                                                <button onClick={handleSearchSubmit} className="mt-2 w-full py-3 rounded-xl bg-white/5 hover:bg-white/10 text-[13px] font-medium text-[#d4af37] transition-colors">
+                                                    View all {searchResults.length} results
+                                                </button>
+                                            )}
+                                        </div>
+                                    ) : (
+                                        <div className="text-center p-8 text-[var(--color-text-secondary)] text-[14px]">
+                                            No products found matching "{searchQuery}"
+                                        </div>
+                                    )}
+                                </div>
+                            )}
+                        </div>
+                    </div>
+                )}
                 <div className="mx-auto flex max-w-[1400px] items-center justify-between px-6 py-4 lg:px-10">
                     {/* Logo */}
                     <Link to="/" className="flex items-center gap-3">
@@ -117,7 +204,8 @@ export default function Navbar() {
                     <div className="flex items-center gap-4">
                         <button
                             aria-label="Search"
-                            className="hidden text-[#e4e4e7] hover:text-[#d4af37] sm:block"
+                            onClick={() => setIsSearchOpen(true)}
+                            className="text-[#e4e4e7] hover:text-[#d4af37] transition-colors"
                         >
                             <Search size={18} />
                         </button>

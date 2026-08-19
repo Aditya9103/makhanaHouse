@@ -16,6 +16,8 @@ export const addOrderItems = async (req, res) => {
             taxPrice,
             shippingPrice,
             totalPrice,
+            discountAmount,
+            promoCode,
         } = req.body;
 
         if (orderItems && orderItems.length === 0) {
@@ -30,6 +32,8 @@ export const addOrderItems = async (req, res) => {
                 taxPrice,
                 shippingPrice,
                 totalPrice,
+                discountAmount: discountAmount || 0,
+                promoCode: promoCode || '',
             });
 
             const createdOrder = await order.save();

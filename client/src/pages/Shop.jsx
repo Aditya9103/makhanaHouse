@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useSearchParams } from "react-router-dom";
 import ShopHero from "../components/shop/ShopHero";
 import ShopFeatures from "../components/shop/ShopFeatures";
 import ShopSidebar from "../components/shop/ShopSidebar";
@@ -6,6 +7,9 @@ import ShopProductGrid from "../components/shop/ShopProductGrid";
 import ShopStats from "../components/shop/ShopStats";
 
 export default function Shop() {
+    const [searchParams] = useSearchParams();
+    const keywordFromUrl = searchParams.get("keyword") || "";
+
     const [appliedFilters, setAppliedFilters] = useState({
         categories: [],
         flavors: [],
@@ -15,8 +19,15 @@ export default function Shop() {
         maxPrice: 5000,
         rating: 0,
         availability: false,
-        sort: "newest"
+        sort: "newest",
+        keyword: keywordFromUrl
     });
+
+    useEffect(() => {
+        if (keywordFromUrl !== appliedFilters.keyword) {
+            setAppliedFilters(prev => ({ ...prev, keyword: keywordFromUrl }));
+        }
+    }, [keywordFromUrl]);
 
     return (
         <div className="w-full">

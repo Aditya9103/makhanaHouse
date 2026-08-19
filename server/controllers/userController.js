@@ -6,14 +6,25 @@ import Product from '../models/Product.js';
 // @access  Private
 export const getUserCart = async (req, res) => {
     try {
-        const user = await User.findById(req.user._id).populate('cart.product', 'name variations images slug');
+        const user = await User.findById(req.user._id)
+            .populate(
+                'cart.product',
+                'name variations images slug'
+            );
+
         if (user) {
-            res.json(user.cart);
+            res.json(user.cart || []);
         } else {
-            res.status(404).json({ message: 'User not found' });
+            res.status(404).json({
+                message: 'User not found'
+            });
         }
     } catch (error) {
-        res.status(500).json({ message: error.message });
+        console.error('Get user cart error:', error);
+
+        res.status(500).json({
+            message: error.message
+        });
     }
 };
 
@@ -23,16 +34,32 @@ export const getUserCart = async (req, res) => {
 export const updateUserCart = async (req, res) => {
     try {
         const user = await User.findById(req.user._id);
+
         if (user) {
-            user.cart = req.body.cart; // Expecting an array of {product: id, quantity, size}
+            // Expecting an array of:
+            // { product: id, quantity, size }
+            user.cart = req.body.cart || [];
+
             await user.save();
-            const updatedUser = await User.findById(req.user._id).populate('cart.product', 'name variations images slug');
-            res.json(updatedUser.cart);
+
+            const updatedUser = await User.findById(req.user._id)
+                .populate(
+                    'cart.product',
+                    'name variations images slug'
+                );
+
+            res.json(updatedUser.cart || []);
         } else {
-            res.status(404).json({ message: 'User not found' });
+            res.status(404).json({
+                message: 'User not found'
+            });
         }
     } catch (error) {
-        res.status(500).json({ message: error.message });
+        console.error('Update user cart error:', error);
+
+        res.status(500).json({
+            message: error.message
+        });
     }
 };
 
@@ -41,14 +68,31 @@ export const updateUserCart = async (req, res) => {
 // @access  Private
 export const getUserWishlist = async (req, res) => {
     try {
-        const user = await User.findById(req.user._id).populate('wishlist', 'name variations images slug');
+        const user = await User.findById(req.user._id)
+            .populate(
+                'wishlist',
+                'name variations images slug'
+            );
+
         if (user) {
-            res.json(user.wishlist);
+            // Remove any null products that may exist
+            // because the referenced product was deleted.
+            const wishlist = (user.wishlist || []).filter(
+                item => item != null
+            );
+
+            res.json(wishlist);
         } else {
-            res.status(404).json({ message: 'User not found' });
+            res.status(404).json({
+                message: 'User not found'
+            });
         }
     } catch (error) {
-        res.status(500).json({ message: error.message });
+        console.error('Get user wishlist error:', error);
+
+        res.status(500).json({
+            message: error.message
+        });
     }
 };
 
@@ -58,23 +102,67 @@ export const getUserWishlist = async (req, res) => {
 export const toggleWishlistItem = async (req, res) => {
     try {
         const { productId } = req.body;
+
+        // Validate productId
+        if (!productId) {
+            return res.status(400).json({
+                message: 'Product ID is required'
+            });
+        }
+
         const user = await User.findById(req.user._id);
 
-        if (user) {
-            const alreadyInWishlist = user.wishlist.find(id => id.toString() === productId);
-            if (alreadyInWishlist) {
-                user.wishlist = user.wishlist.filter(id => id.toString() !== productId);
-            } else {
-                user.wishlist.push(productId);
-            }
-            await user.save();
-            const updatedUser = await User.findById(req.user._id).populate('wishlist', 'name variations images slug');
-            res.json(updatedUser.wishlist);
-        } else {
-            res.status(404).json({ message: 'User not found' });
+        if (!user) {
+            return res.status(404).json({
+                message: 'User not found'
+            });
         }
+
+        // IMPORTANT:
+        // Remove null/undefined values before using .toString()
+        // This fixes:
+        // "Cannot read properties of null (reading 'toString')"
+        user.wishlist = (user.wishlist || []).filter(
+            id => id != null
+        );
+
+        // Check whether product is already in wishlist
+        const alreadyInWishlist = user.wishlist.find(
+            id => id.toString() === productId
+        );
+
+        if (alreadyInWishlist) {
+            // Product already exists -> REMOVE it
+            user.wishlist = user.wishlist.filter(
+                id => id.toString() !== productId
+            );
+        } else {
+            // Product doesn't exist -> ADD it
+            user.wishlist.push(productId);
+        }
+
+        await user.save();
+
+        // Get updated wishlist with product details
+        const updatedUser = await User.findById(req.user._id)
+            .populate(
+                'wishlist',
+                'name variations images slug'
+            );
+
+        // Remove any null populated products
+        const updatedWishlist = (
+            updatedUser.wishlist || []
+        ).filter(item => item != null);
+
+        res.json(updatedWishlist);
+
     } catch (error) {
-        res.status(500).json({ message: error.message });
+        console.error('Toggle wishlist error:', error);
+
+        res.status(500).json({
+            message: error.message
+        });
     }
 };
 
@@ -84,30 +172,47 @@ export const toggleWishlistItem = async (req, res) => {
 export const getUserAddresses = async (req, res) => {
     try {
         const user = await User.findById(req.user._id);
+
         if (user) {
-            res.json(user.addresses);
+            res.json(user.addresses || []);
         } else {
-            res.status(404).json({ message: 'User not found' });
+            res.status(404).json({
+                message: 'User not found'
+            });
         }
     } catch (error) {
-        res.status(500).json({ message: error.message });
+        console.error('Get user addresses error:', error);
+
+        res.status(500).json({
+            message: error.message
+        });
     }
 };
 
-// @desc    Update user addresses (add, edit, remove handled client-side then synced)
+// @desc    Update user addresses
 // @route   PUT /api/users/profile/addresses
 // @access  Private
 export const updateUserAddresses = async (req, res) => {
     try {
         const user = await User.findById(req.user._id);
+
         if (user) {
-            user.addresses = req.body.addresses;
+            // Expecting an array of address objects
+            user.addresses = req.body.addresses || [];
+
             await user.save();
+
             res.json(user.addresses);
         } else {
-            res.status(404).json({ message: 'User not found' });
+            res.status(404).json({
+                message: 'User not found'
+            });
         }
     } catch (error) {
-        res.status(500).json({ message: error.message });
+        console.error('Update user addresses error:', error);
+
+        res.status(500).json({
+            message: error.message
+        });
     }
 };

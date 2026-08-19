@@ -1,10 +1,12 @@
-import { Plus, Calendar, Eye, ChevronLeft, ChevronRight, Loader2 } from "lucide-react";
+import { Plus, Calendar, Eye, ChevronLeft, ChevronRight, Loader2, X } from "lucide-react";
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useGetMyExportInquiriesQuery } from "../../store/api/exportApiSlice";
+import ExportInquiriesSidebar from "./ExportInquiriesSidebar";
 
 export default function ExportInquiriesMain({ selectedInquiry, setSelectedInquiry }) {
     const [activeTab, setActiveTab] = useState("all");
+    const [isModalOpen, setIsModalOpen] = useState(false);
     const { data: inquiriesData, isLoading, error } = useGetMyExportInquiriesQuery();
 
     const inquiries = inquiriesData || [];
@@ -127,11 +129,11 @@ export default function ExportInquiriesMain({ selectedInquiry, setSelectedInquir
                                 {/* Mobile View Details Button */}
                                 <div className="flex items-center justify-end mt-4 pt-4 border-t border-white/5 lg:hidden">
                                     <button 
-                                        onClick={() => setSelectedInquiry(inquiry)}
+                                        onClick={() => { setSelectedInquiry(inquiry); setIsModalOpen(true); }}
                                         className={`w-full flex items-center justify-center gap-1.5 px-4 py-2 rounded-lg border text-[12px] font-medium transition-all whitespace-nowrap ${selectedInquiry?._id === inquiry._id ? 'bg-[#d4af37] text-[#080b14] border-[#d4af37]' : 'border-[#d4af37]/40 text-[#d4af37] hover:bg-[#d4af37] hover:text-[#080b14]'}`}
                                     >
                                         <Eye size={14} />
-                                        {selectedInquiry?._id === inquiry._id ? 'Viewing' : 'View Details'}
+                                        View Details
                                     </button>
                                 </div>
                             </div>
@@ -139,11 +141,11 @@ export default function ExportInquiriesMain({ selectedInquiry, setSelectedInquir
                             {/* Right side Desktop Actions */}
                             <div className="hidden lg:flex shrink-0 w-[140px] pl-6 border-l border-white/10 h-full items-center justify-center">
                                 <button 
-                                    onClick={() => setSelectedInquiry(inquiry)}
+                                    onClick={() => { setSelectedInquiry(inquiry); setIsModalOpen(true); }}
                                     className={`w-full flex items-center justify-center gap-1.5 px-4 py-2.5 rounded-lg border text-[12px] font-medium transition-all ${selectedInquiry?._id === inquiry._id ? 'bg-[#d4af37] text-[#080b14] border-[#d4af37]' : 'border-[#d4af37]/40 text-[#d4af37] hover:bg-[#d4af37] hover:text-[#080b14]'}`}
                                 >
                                     <Eye size={14} />
-                                    {selectedInquiry?._id === inquiry._id ? 'Viewing' : 'View Details'}
+                                    View Details
                                 </button>
                             </div>
 
@@ -169,6 +171,23 @@ export default function ExportInquiriesMain({ selectedInquiry, setSelectedInquir
                     </button>
                 </div>
             </div>
+
+            {/* Modal for viewing details */}
+            {isModalOpen && selectedInquiry && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
+                    <div className="bg-[#0a0d14] w-full max-w-md rounded-2xl overflow-hidden shadow-2xl relative border border-white/10 max-h-[90vh] flex flex-col">
+                        <div className="flex justify-between items-center p-4 border-b border-white/10 bg-[#080b14]">
+                            <h3 className="text-[#f8f9fa] font-medium">Inquiry Details</h3>
+                            <button onClick={() => setIsModalOpen(false)} className="text-[var(--color-text-secondary)] hover:text-white p-1">
+                                <X size={20} />
+                            </button>
+                        </div>
+                        <div className="overflow-y-auto p-4 no-scrollbar flex-1 min-h-0">
+                            <ExportInquiriesSidebar selectedInquiry={selectedInquiry} />
+                        </div>
+                    </div>
+                </div>
+            )}
 
         </div>
     );

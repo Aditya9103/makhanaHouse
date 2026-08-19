@@ -1,6 +1,7 @@
 import { useGetWishlistQuery, useToggleWishlistMutation } from '../store/api/usersApiSlice';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
 export const useWishlist = () => {
     const { userInfo } = useSelector((state) => state.auth);
@@ -13,7 +14,19 @@ export const useWishlist = () => {
             navigate('/login?redirect=' + window.location.pathname);
             return;
         }
-        await toggleWishlistMutation(product.id);
+        try {
+            await toggleWishlistMutation(product._id || product.id).unwrap();
+            
+            // Assuming the UI will check isInWishlist to show Add/Remove
+            const currentlyIn = isInWishlist(product._id || product.id);
+            if (currentlyIn) {
+                toast.success('Removed from wishlist');
+            } else {
+                toast.success('Added to wishlist');
+            }
+        } catch (error) {
+            toast.error('Failed to update wishlist');
+        }
     };
 
     const removeFromWishlist = async (id) => {

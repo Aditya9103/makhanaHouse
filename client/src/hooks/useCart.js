@@ -1,6 +1,7 @@
 import { useGetCartQuery, useUpdateCartMutation } from '../store/api/usersApiSlice';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
 export const useCart = () => {
     const { userInfo } = useSelector((state) => state.auth);
@@ -29,7 +30,12 @@ export const useCart = () => {
             newCart.push({ product: product.id, quantity, size });
         }
         
-        await updateCart(newCart);
+        try {
+            await updateCart(newCart).unwrap();
+            toast.success(`Added ${quantity} to cart`);
+        } catch (error) {
+            toast.error('Failed to add to cart');
+        }
     };
 
     const removeFromCart = async (id, size) => {

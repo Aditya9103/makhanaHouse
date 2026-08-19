@@ -19,6 +19,7 @@ import Login from './pages/Login'
 import Register from './pages/Register'
 import PrivateRoute from './components/Routing/PrivateRoute'
 import AdminRoute from './components/Routing/AdminRoute'
+import ScrollToTop from './components/Routing/ScrollToTop'
 
 import AdminLogin from './pages/admin/AdminLogin'
 import AdminRegister from './pages/admin/AdminRegister'
@@ -39,6 +40,8 @@ import AdminLayout from './components/admin/AdminLayout'
 import FAQ from './pages/FAQ'
 import Shipping from './pages/Shipping'
 import Returns from './pages/Returns'
+import PrivacyPolicy from './pages/PrivacyPolicy'
+import TermsConditions from './pages/TermsConditions'
 
 import Profile from './pages/Profile'
 import Orders from './pages/Orders'
@@ -53,6 +56,7 @@ import Settings from './pages/Settings'
 function App() {
   return (
         <BrowserRouter>
+          <ScrollToTop />
           <ToastContainer position="bottom-right" theme="dark" />
           <Routes>
             <Route path="/" element={<MainLayout />}>
@@ -63,6 +67,8 @@ function App() {
               <Route path="faq" element={<FAQ />} />
               <Route path="shipping" element={<Shipping />} />
               <Route path="returns" element={<Returns />} />
+              <Route path="privacy-policy" element={<PrivacyPolicy />} />
+              <Route path="terms-conditions" element={<TermsConditions />} />
               <Route path="export" element={<Export />} />
               <Route path="export/new" element={<NewExportInquiry />} />
               <Route path="quality" element={<Quality />} />
