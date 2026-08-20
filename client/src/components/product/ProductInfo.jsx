@@ -3,6 +3,7 @@ import { Star, Leaf, WheatOff, Drumstick, Flame, Sprout, Minus, Plus, ShoppingCa
 import { useCart } from "../../hooks/useCart";
 import { useNavigate } from "react-router-dom";
 import { useWishlist } from "../../hooks/useWishlist";
+import { useSelector } from "react-redux";
 
 const getIcon = (name) => {
     const icons = {
@@ -24,6 +25,7 @@ export default function ProductInfo({ product }) {
     const { addToCart } = useCart();
     const navigate = useNavigate();
     const { isInWishlist, toggleWishlist } = useWishlist();
+    const { userInfo } = useSelector((state) => state.auth);
 
     const currentVariation = product.variations?.find(v => v.weight === selectedSize) || product.variations?.[0];
     const price = currentVariation ? currentVariation.price : 0;
@@ -158,7 +160,11 @@ export default function ProductInfo({ product }) {
                 <button
                     onClick={() => {
                         handleAddToCart();
-                        navigate('/checkout');
+                        if (!userInfo) {
+                            navigate('/login?redirect=/cart');
+                        } else {
+                            navigate('/cart');
+                        }
                     }}
                     className="flex-1 flex items-center justify-center cursor-pointer py-3.5 px-6 rounded-md bg-[#d4af37] text-[#080b14] font-semibold transition hover:bg-[#c29b2b]"
                 >

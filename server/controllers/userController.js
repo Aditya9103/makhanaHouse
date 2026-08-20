@@ -38,9 +38,10 @@ export const updateUserCart = async (req, res) => {
         if (user) {
             // Expecting an array of:
             // { product: id, quantity, size }
-            user.cart = req.body.cart || [];
-
-            await user.save();
+            await User.updateOne(
+                { _id: req.user._id },
+                { $set: { cart: req.body.cart || [] } }
+            );
 
             const updatedUser = await User.findById(req.user._id)
                 .populate(
@@ -141,7 +142,10 @@ export const toggleWishlistItem = async (req, res) => {
             user.wishlist.push(productId);
         }
 
-        await user.save();
+        await User.updateOne(
+            { _id: req.user._id },
+            { $set: { wishlist: user.wishlist } }
+        );
 
         // Get updated wishlist with product details
         const updatedUser = await User.findById(req.user._id)
