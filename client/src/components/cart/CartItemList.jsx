@@ -63,8 +63,14 @@ export default function CartItemList() {
                                     <span className="text-[10px] px-1.5 py-0.5 rounded bg-[#16a34a]/10 text-[#16a34a]">In Stock</span>
                                 </div>
                                 {/* Mobile Price Details */}
-                                <div className="sm:hidden mt-2 flex items-center justify-between">
+                                <div className="sm:hidden mt-2 flex flex-col">
                                     <span className="text-sm font-semibold text-[#f8f9fa]">₹{item.price}</span>
+                                    {item.originalPrice && item.originalPrice > item.price && (
+                                        <div className="flex items-center gap-2">
+                                            <span className="text-[10px] text-[var(--color-text-secondary)] line-through">₹{item.originalPrice}</span>
+                                            <span className="text-[10px] text-green-400 font-medium">Save ₹{item.originalPrice - item.price}</span>
+                                        </div>
+                                    )}
                                 </div>
                             </div>
                         </div>
@@ -73,6 +79,12 @@ export default function CartItemList() {
                         <div className="hidden sm:block text-sm font-semibold text-[#f8f9fa]">
                             ₹{item.price}
                             <span className="block text-[10px] text-[var(--color-text-secondary)] font-normal">/{item.size}</span>
+                            {item.originalPrice && item.originalPrice > item.price && (
+                                <div className="mt-1 flex flex-col">
+                                    <span className="text-[10px] text-[var(--color-text-secondary)] line-through">₹{item.originalPrice}</span>
+                                    <span className="text-[10px] text-green-400 font-medium">Save ₹{item.originalPrice - item.price}</span>
+                                </div>
+                            )}
                         </div>
 
                         {/* Quantity Stepper & Mobile Actions */}
@@ -105,8 +117,13 @@ export default function CartItemList() {
                         </div>
 
                         {/* Subtotal (Desktop) */}
-                        <div className="hidden sm:block text-right text-sm font-semibold text-[#f8f9fa]">
-                            ₹{item.price * item.quantity}
+                        <div className="hidden sm:flex flex-col items-end text-sm font-semibold text-[#f8f9fa]">
+                            <span>₹{item.price * item.quantity}</span>
+                            {item.originalPrice && item.originalPrice > item.price && (
+                                <span className="text-[11px] text-[var(--color-text-secondary)] line-through decoration-white/50 decoration-[1.5px] font-normal">
+                                    ₹{item.originalPrice * item.quantity}
+                                </span>
+                            )}
                         </div>
 
                         {/* Actions (Desktop) */}

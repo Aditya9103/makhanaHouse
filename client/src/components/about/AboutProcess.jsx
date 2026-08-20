@@ -32,7 +32,7 @@ const steps = [
     },
 ];
 
-export default function AboutProcess() {
+export default function AboutProcess({ isQualityPage = false }) {
     return (
         <section className="py-8 lg:py-12 border-t border-white/10 bg-[linear-gradient(135deg,rgba(8,11,20,0.4),rgba(212,175,55,0.02))]">
             <div className="mx-auto max-w-[1400px] px-6 lg:px-10">
@@ -65,12 +65,21 @@ export default function AboutProcess() {
                             </p>
 
                             <div className="flex justify-center xl:justify-start">
-                                <Link to="/quality" className="inline-flex w-full sm:w-auto justify-center items-center gap-3 rounded-md bg-[#d4af37] px-6 py-3.5 sm:py-2.5 text-[14px] sm:text-[13px] font-medium text-[#080b14] transition hover:bg-[#c39b2e]">
-                                    Explore Our Quality
-                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                        <path d="M5 12H19M19 12L12 5M19 12L12 19" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-                                    </svg>
-                                </Link>
+                                {isQualityPage ? (
+                                    <Link to="/export" className="inline-flex w-full sm:w-auto justify-center items-center gap-3 rounded-md bg-[#d4af37] px-6 py-3.5 sm:py-2.5 text-[14px] sm:text-[13px] font-medium text-[#080b14] transition hover:bg-[#c39b2e]">
+                                        Export Inquiry
+                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M5 12H19M19 12L12 5M19 12L12 19" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                                        </svg>
+                                    </Link>
+                                ) : (
+                                    <Link to="/quality" className="inline-flex w-full sm:w-auto justify-center items-center gap-3 rounded-md bg-[#d4af37] px-6 py-3.5 sm:py-2.5 text-[14px] sm:text-[13px] font-medium text-[#080b14] transition hover:bg-[#c39b2e]">
+                                        Explore Our Quality
+                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M5 12H19M19 12L12 5M19 12L12 19" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                                        </svg>
+                                    </Link>
+                                )}
                             </div>
                         </div>
 

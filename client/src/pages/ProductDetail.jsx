@@ -47,7 +47,7 @@ export default function ProductDetail() {
                 <div className="flex flex-col lg:flex-row gap-8 lg:gap-12 items-start">
                     {/* Left: Gallery */}
                     <div className="w-full lg:w-1/2">
-                        <ProductGallery images={product.images} />
+                        <ProductGallery images={product.images} video={product.video} productId={product._id} />
                     </div>
 
                     {/* Right: Info */}

@@ -1,9 +1,11 @@
 import { useState, useRef } from "react";
-import { ChevronUp, ChevronDown, Search } from "lucide-react";
+import { ChevronUp, ChevronDown, Search, Play, X } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
-export default function ProductGallery({ images }) {
+export default function ProductGallery({ images, video, productId }) {
     const [activeIndex, setActiveIndex] = useState(0);
     const [isZooming, setIsZooming] = useState(false);
+    const navigate = useNavigate();
     const [zoomPos, setZoomPos] = useState({ x: 0, y: 0 });
     const imgRef = useRef(null);
 
@@ -91,6 +93,28 @@ export default function ProductGallery({ images }) {
                             }}
                         ></div>
                     </div>
+                )}
+
+                {/* Floating Video Reel Card */}
+                {video && (
+                    <button
+                        onClick={() => navigate(`/reels/${productId}`)}
+                        className="fixed bottom-8 left-30 w-24 sm:w-32 aspect-[9/16] rounded-xl overflow-hidden border-2 border-[#d4af37]/50 shadow-2xl group z-[90] hover:scale-105 transition-transform bg-black"
+                    >
+                        <video
+                            src={video}
+                            autoPlay
+                            loop
+                            muted
+                            playsInline
+                            className="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity pointer-events-none"
+                        />
+                        <div className="absolute inset-0 flex items-center justify-center bg-black/20 group-hover:bg-black/0 transition-colors">
+                            <div className="w-8 h-8 rounded-full bg-black/50 backdrop-blur-md flex items-center justify-center border border-white/20">
+                                <Play size={14} className="text-white fill-white ml-0.5" />
+                            </div>
+                        </div>
+                    </button>
                 )}
             </div>
         </div>

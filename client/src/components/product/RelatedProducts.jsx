@@ -50,6 +50,10 @@ export default function RelatedProducts({
                 {relatedProducts.map((product, index) => {
                     const defaultVariation = product.variations && product.variations.length > 0 ? product.variations[0] : null;
                     const defaultPrice = defaultVariation ? defaultVariation.price : 0;
+                    const discountedPrice = defaultVariation?.discountedPrice || null;
+                    const effectivePrice = discountedPrice || defaultPrice;
+                    const hasDiscount = !!discountedPrice && discountedPrice < defaultPrice;
+                    const discountPercent = hasDiscount ? Math.round(((defaultPrice - discountedPrice) / defaultPrice) * 100) : 0;
                     const defaultWeight = defaultVariation ? defaultVariation.weight : '';
                     
                     return (
@@ -91,19 +95,36 @@ export default function RelatedProducts({
                             </div>
 
                             <div className="mt-auto flex flex-col gap-3">
-                                <p className="text-base font-semibold text-[#f8f9fa]">
-                                    ₹{defaultPrice}
-                                    {defaultWeight && (
-                                        <span className="ml-1 text-[10px] font-normal text-[var(--color-text-secondary)]">
-                                            / {defaultWeight}
-                                        </span>
-                                    )}
-                                </p>
+                                <div className="flex flex-col">
+                                    <div className="flex items-baseline gap-1.5">
+                                        <p className="text-base font-semibold text-[#f8f9fa]">
+                                            ₹{effectivePrice}
+                                        </p>
+                                        {hasDiscount && (
+                                            <p className="text-[10px] text-[var(--color-text-secondary)] line-through decoration-white/50 decoration-[1.5px]">
+                                                ₹{defaultPrice}
+                                            </p>
+                                        )}
+                                    </div>
+                                    <div className="flex items-center gap-1.5 mt-1">
+                                        {defaultWeight && (
+                                            <span className="text-[9px] font-medium text-[var(--color-text-secondary)] bg-white/5 border border-white/10 px-1.5 py-0.5 rounded">
+                                                {defaultWeight}
+                                            </span>
+                                        )}
+                                        {hasDiscount && (
+                                            <span className="text-[9px] font-bold text-green-400 bg-green-500/10 border border-green-500/20 px-1 py-0.5 rounded flex items-center">
+                                                {discountPercent}% OFF
+                                            </span>
+                                        )}
+                                    </div>
+                                </div>
                                 <button
                                     onClick={() => addToCart({
                                         id: product._id,
                                         name: product.name,
-                                        price: defaultPrice,
+                                        price: effectivePrice,
+                                        originalPrice: defaultPrice,
                                         weight: defaultWeight,
                                         image: product.images && product.images.length > 0 ? product.images[0] : "/makhanabowl.png"
                                     }, 1, defaultWeight)}

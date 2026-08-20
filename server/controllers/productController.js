@@ -161,7 +161,8 @@ const createProduct = async (req, res) => {
             tag,
             badge,
             badges,
-            highlights
+            highlights,
+            video
         } = req.body;
 
         const product = new Product({
@@ -181,6 +182,7 @@ const createProduct = async (req, res) => {
             tag,
             badge,
             isFeatured: isFeatured || false,
+            video,
             numReviews: 0,
             rating: 0,
         });
@@ -212,7 +214,8 @@ const updateProduct = async (req, res) => {
             tag,
             badge,
             badges,
-            highlights
+            highlights,
+            video
         } = req.body;
 
         const product = await Product.findById(req.params.id);
@@ -233,6 +236,7 @@ const updateProduct = async (req, res) => {
             product.tag = tag !== undefined ? tag : product.tag;
             product.badge = badge !== undefined ? badge : product.badge;
             product.isFeatured = isFeatured !== undefined ? isFeatured : product.isFeatured;
+            product.video = video !== undefined ? video : product.video;
 
             const updatedProduct = await product.save();
             res.json(updatedProduct);
@@ -476,6 +480,24 @@ const deleteProductReview = async (req, res) => {
     }
 };
 
+// @desc    Increment product view count
+// @route   PUT /api/products/:id/view
+// @access  Public
+const incrementProductView = async (req, res) => {
+    try {
+        const product = await Product.findById(req.params.id);
+        if (product) {
+            product.views = (product.views || 0) + 1;
+            await product.save();
+            res.json({ views: product.views });
+        } else {
+            res.status(404).json({ message: 'Product not found' });
+        }
+    } catch (error) {
+        res.status(500).json({ message: 'Server Error' });
+    }
+};
+
 export {
     getProductFilters,
     getProducts,
@@ -488,4 +510,5 @@ export {
     deleteProductReview,
     approveProductReview,
     getAllReviews,
+    incrementProductView
 };

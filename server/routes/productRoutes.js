@@ -11,7 +11,8 @@ import {
     updateProductReview,
     deleteProductReview,
     approveProductReview,
-    getAllReviews
+    getAllReviews,
+    incrementProductView
 } from '../controllers/productController.js';
 import { protect, admin } from '../middlewares/authMiddleware.js';
 
@@ -27,6 +28,9 @@ router.route('/reviews/all')
 
 router.route('/:idOrSlug')
     .get(getProductById);
+
+router.route('/:id/view')
+    .put(incrementProductView);
 
 router.route('/:id')
     .put(protect, admin, updateProduct)

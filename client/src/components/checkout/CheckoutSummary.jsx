@@ -16,6 +16,12 @@ export default function CheckoutSummary({ selectedAddressId, paymentMethod, sele
     const [showConfirm, setShowConfirm] = useState(false);
     
     const subtotal = cartItems.reduce((total, item) => total + (item.price * item.quantity), 0);
+    const itemSavings = cartItems.reduce((total, item) => {
+        if (item.originalPrice && item.originalPrice > item.price) {
+            return total + ((item.originalPrice - item.price) * item.quantity);
+        }
+        return total;
+    }, 0);
     
     // Dynamic Shipping
     const threshold = config?.freeShippingThreshold || 999;
@@ -108,7 +114,12 @@ export default function CheckoutSummary({ selectedAddressId, paymentMethod, sele
                             <div className="flex-1 flex flex-col justify-center">
                                 <div className="flex justify-between items-start mb-1">
                                     <h4 className="text-[13px] font-medium text-[#f8f9fa] line-clamp-1 pr-2">{item.name}</h4>
-                                    <span className="text-[13px] font-medium text-white whitespace-nowrap">₹{item.price}</span>
+                                    <div className="flex flex-col items-end">
+                                        <span className="text-[13px] font-medium text-white whitespace-nowrap">₹{item.price}</span>
+                                        {item.originalPrice && item.originalPrice > item.price && (
+                                            <span className="text-[10px] text-[var(--color-text-secondary)] line-through">₹{item.originalPrice}</span>
+                                        )}
+                                    </div>
                                 </div>
                                 <div className="flex justify-between items-center mt-1">
                                     <span className="text-[11px] text-[var(--color-text-secondary)]">{item.size || "250g"}</span>
@@ -130,7 +141,14 @@ export default function CheckoutSummary({ selectedAddressId, paymentMethod, sele
                     <div className="flex flex-col gap-3 py-5 border-t border-white/5">
                         <div className="flex justify-between items-center text-[13px]">
                             <span className="text-[var(--color-text-secondary)]">Subtotal ({cartItems.length} items)</span>
-                            <span className="text-white">₹{subtotal}</span>
+                            <div className="flex flex-col items-end">
+                                <span className="text-white font-medium">₹{subtotal}</span>
+                                {itemSavings > 0 && (
+                                    <span className="text-[10px] text-[var(--color-text-secondary)] line-through decoration-white/50 decoration-[1.5px]">
+                                        ₹{subtotal + itemSavings}
+                                    </span>
+                                )}
+                            </div>
                         </div>
                         
                         {promoCode && (
@@ -140,6 +158,16 @@ export default function CheckoutSummary({ selectedAddressId, paymentMethod, sele
                                     Discount ({promoCode.code})
                                 </span>
                                 <span className="text-[#16a34a]">-₹{appliedDiscount}</span>
+                            </div>
+                        )}
+
+                        {itemSavings > 0 && (
+                            <div className="flex justify-between items-center text-[13px]">
+                                <span className="text-[#16a34a] flex items-center gap-1">
+                                    <Tag size={12} />
+                                    Item Savings
+                                </span>
+                                <span className="font-medium text-[#16a34a]">-₹{itemSavings}</span>
                             </div>
                         )}
 

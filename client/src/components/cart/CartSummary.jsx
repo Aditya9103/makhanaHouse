@@ -15,6 +15,12 @@ export default function CartSummary() {
     const [isAccordionOpen, setIsAccordionOpen] = useState(false);
     
     const subtotal = cartItems.reduce((total, item) => total + (item.price * item.quantity), 0);
+    const itemSavings = cartItems.reduce((total, item) => {
+        if (item.originalPrice && item.originalPrice > item.price) {
+            return total + ((item.originalPrice - item.price) * item.quantity);
+        }
+        return total;
+    }, 0);
     const isFreeShipping = subtotal > 999;
     const shippingCost = isFreeShipping ? 0 : 50; // Flat ₹50 if not free
     const tax = Math.round(subtotal * 0.05); // 5% GST
@@ -53,9 +59,16 @@ export default function CartSummary() {
                 <h3 className="font-serif text-xl text-[#f8f9fa] mb-6">Order Summary</h3>
 
                 <div className="space-y-4 text-sm mb-6 pb-6 border-b border-white/10">
-                    <div className="flex justify-between text-[#e4e4e7]">
+                    <div className="flex justify-between items-center text-[#e4e4e7]">
                         <span>Subtotal ({cartItems.length} items)</span>
-                        <span className="font-medium text-[#f8f9fa]">₹{subtotal}</span>
+                        <div className="flex flex-col items-end">
+                            <span className="font-medium text-[#f8f9fa]">₹{subtotal}</span>
+                            {itemSavings > 0 && (
+                                <span className="text-[11px] text-[var(--color-text-secondary)] line-through decoration-white/50 decoration-[1.5px] mt-0.5">
+                                    ₹{subtotal + itemSavings}
+                                </span>
+                            )}
+                        </div>
                     </div>
 
                     <div className="flex justify-between text-[#e4e4e7]">
@@ -89,8 +102,14 @@ export default function CartSummary() {
                     <span className="font-serif text-3xl text-[#d4af37] leading-none">₹{total}</span>
                 </div>
                 
-                {(appliedDiscount > 0 || isFreeShipping) && (
+                {(appliedDiscount > 0 || isFreeShipping || itemSavings > 0) && (
                     <div className="flex flex-col gap-1.5 mb-6">
+                        {itemSavings > 0 && (
+                            <div className="flex items-center gap-1.5 text-xs text-[#16a34a]">
+                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7.01" y2="7"></line></svg>
+                                <span>You saved ₹{itemSavings} on items!</span>
+                            </div>
+                        )}
                         {appliedDiscount > 0 && (
                             <div className="flex items-center gap-1.5 text-xs text-[#16a34a]">
                                 <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7.01" y2="7"></line></svg>

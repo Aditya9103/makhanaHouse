@@ -42,6 +42,7 @@ import Shipping from './pages/Shipping'
 import Returns from './pages/Returns'
 import PrivacyPolicy from './pages/PrivacyPolicy'
 import TermsConditions from './pages/TermsConditions'
+import ReelsPage from './pages/ReelsPage'
 
 import Profile from './pages/Profile'
 import Orders from './pages/Orders'
@@ -77,6 +78,7 @@ function App() {
               <Route path="product/:slug" element={<ProductDetail />} />
               <Route path="cart" element={<Cart />} />
               <Route path="checkout" element={<Checkout />} />
+              <Route path="reels/:id" element={<ReelsPage />} />
 
               <Route path="login" element={<Login />} />
               <Route path="register" element={<Register />} />

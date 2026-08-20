@@ -21,6 +21,7 @@ const reviewSchema = mongoose.Schema(
 const variationSchema = mongoose.Schema({
     weight: { type: String, required: true }, // e.g., '250g', '500g', '1kg'
     price: { type: Number, required: true },
+    discountedPrice: { type: Number, required: false },
     countInStock: { type: Number, required: true, default: 0 },
 });
 
@@ -61,6 +62,13 @@ const productSchema = mongoose.Schema(
                 required: true,
             },
         ],
+        video: {
+            type: String, // URL for the reel video
+        },
+        views: {
+            type: Number,
+            default: 0
+        },
         brand: {
             type: String,
             required: true,

@@ -72,17 +72,21 @@ export const useCart = () => {
         
         // Find price based on size if variations exist
         let price = 0;
+        let originalPrice = 0;
         if (prod.variations && prod.variations.length > 0) {
-            const v = prod.variations.find(v => v.weight === item.size);
-            price = v ? v.price : prod.variations[0].price;
+            const v = prod.variations.find(v => v.weight === item.size) || prod.variations[0];
+            originalPrice = v.price;
+            price = v.discountedPrice || v.price;
         } else if (prod.price) {
             price = prod.price; // fallback
+            originalPrice = prod.price;
         }
 
         return {
             id: prod._id,
             name: prod.name || 'Unknown Product',
             price: price,
+            originalPrice: originalPrice,
             image: (prod.images && prod.images.length > 0) ? prod.images[0] : "/makhanabowl.png",
             size: item.size,
             quantity: item.quantity

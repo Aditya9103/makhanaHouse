@@ -9,7 +9,14 @@ export const uploadApiSlice = apiSlice.injectEndpoints({
                 body: data,
             }),
         }),
+        uploadVideo: builder.mutation({
+            query: (data) => ({
+                url: '/upload/video',
+                method: 'POST',
+                body: data,
+            }),
+        }),
     }),
 });
 
-export const { useUploadFileMutation } = uploadApiSlice;
+export const { useUploadFileMutation, useUploadVideoMutation } = uploadApiSlice;

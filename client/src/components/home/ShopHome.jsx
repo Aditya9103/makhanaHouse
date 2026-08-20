@@ -16,6 +16,7 @@ import { useGetProductsQuery } from "../../store/api/productApiSlice";
 import { useCart } from "../../hooks/useCart";
 import { useWishlist } from "../../hooks/useWishlist";
 import { Loader2 } from "lucide-react";
+import ShopByReels from "./ShopByReels";
 
 const features = [
     {
@@ -64,6 +65,10 @@ function ProductCard({ product }) {
 
     const variation = product.variations?.[0] || { weight: '250g', price: 0 };
     const price = variation.price;
+    const discountedPrice = variation.discountedPrice || null;
+    const effectivePrice = discountedPrice || price;
+    const hasDiscount = !!discountedPrice && discountedPrice < price;
+    const discountPercent = hasDiscount ? Math.round(((price - discountedPrice) / price) * 100) : 0;
     const weight = variation.weight;
     const image = product.images?.[0] || "/homehero2.png";
 
@@ -110,17 +115,34 @@ function ProductCard({ product }) {
                 </div>
 
                 <div className="mt-auto flex items-center justify-between pt-2 sm:pt-3">
-                    <p className="text-sm sm:text-base lg:text-lg font-semibold text-[#f4f4f5]">
-                        ₹{price}
-                        <span className="ml-0.5 sm:ml-1 text-[9px] sm:text-[11px] font-normal text-[var(--color-text-secondary)]">
-                            /{weight}
-                        </span>
-                    </p>
+                    <div className="flex flex-col">
+                        <div className="flex items-baseline gap-2">
+                            <p className="text-sm sm:text-base lg:text-lg font-semibold text-[#f4f4f5]">
+                                ₹{effectivePrice}
+                            </p>
+                            {hasDiscount && (
+                                <p className="text-[10px] sm:text-xs text-[var(--color-text-secondary)] line-through decoration-white/50 decoration-[1.5px]">
+                                    ₹{price}
+                                </p>
+                            )}
+                        </div>
+                        <div className="flex items-center gap-1.5 mt-1">
+                            <span className="text-[9px] sm:text-[10px] font-medium text-[var(--color-text-secondary)] bg-white/5 border border-white/10 px-1.5 py-0.5 rounded">
+                                {weight}
+                            </span>
+                            {hasDiscount && (
+                                <span className="text-[9px] sm:text-[10px] font-bold text-green-400 bg-green-500/10 border border-green-500/20 px-1.5 py-0.5 rounded flex items-center">
+                                    {discountPercent}% OFF
+                                </span>
+                            )}
+                        </div>
+                    </div>
                     <button
                         onClick={() => addToCart({
                             id: product._id,
                             name: product.name,
-                            price: price,
+                            price: effectivePrice,
+                            originalPrice: price,
                             weight: weight,
                             image: image
                         }, 1, weight)}
@@ -147,6 +169,7 @@ export default function ShopHome() {
     };
 
     return (
+        <>
         <section className="py-8 lg:py-12">
             <div className="mx-auto max-w-[1400px] px-6 lg:px-10">
                 {/* Header row */}
@@ -217,5 +240,8 @@ export default function ShopHome() {
                 </div>
             </div>
         </section>
+        
+        <ShopByReels />
+        </>
     );
 }

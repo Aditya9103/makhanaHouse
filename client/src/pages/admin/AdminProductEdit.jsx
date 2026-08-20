@@ -1,13 +1,13 @@
 import { useState, useEffect, useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { Save, Image as ImageIcon, Plus, Trash2, Loader2, ArrowLeft } from "lucide-react";
+import { Save, Image as ImageIcon, Plus, Trash2, Loader2, ArrowLeft, X, Video } from "lucide-react";
 import { Link } from "react-router-dom";
 import { 
     useGetProductDetailsQuery, 
     useCreateProductMutation,
     useUpdateProductMutation 
 } from "../../store/api/productApiSlice";
-import { useUploadFileMutation } from "../../store/api/uploadApiSlice";
+import { useUploadFileMutation, useUploadVideoMutation } from "../../store/api/uploadApiSlice";
 
 export default function AdminProductEdit() {
     const { id } = useParams();
@@ -18,8 +18,10 @@ export default function AdminProductEdit() {
     const [createProduct, { isLoading: isCreating }] = useCreateProductMutation();
     const [updateProduct, { isLoading: isUpdating }] = useUpdateProductMutation();
     const [uploadFile] = useUploadFileMutation();
+    const [uploadVideo] = useUploadVideoMutation();
 
     const fileInputRef = useRef(null);
+    const videoInputRef = useRef(null);
     const [isUploading, setIsUploading] = useState(false);
     const [formError, setFormError] = useState(null);
 
@@ -37,6 +39,8 @@ export default function AdminProductEdit() {
     
     // Arrays & Objects
     const [images, setImages] = useState([]);
+    const [video, setVideo] = useState('');
+    const [views, setViews] = useState(0);
     const [variations, setVariations] = useState([{ weight: '250g', price: 0, countInStock: 0 }]);
     const [badges, setBadges] = useState([]);
     const [highlights, setHighlights] = useState([]);
@@ -60,6 +64,8 @@ export default function AdminProductEdit() {
             setShelfLife(product.shelfLife || '');
             setIsFeatured(product.isFeatured);
             setImages(product.images || []);
+            setVideo(product.video || '');
+            setViews(product.views || 0);
             setVariations(product.variations?.length ? product.variations : [{ weight: '250g', price: 0, countInStock: 0 }]);
             setBadges(product.badges || []);
             setHighlights(product.highlights || []);
@@ -103,18 +109,42 @@ export default function AdminProductEdit() {
         }
     };
 
+    const handleVideoUpload = async (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+
+        try {
+            setIsUploading(true);
+            const formData = new FormData();
+            formData.append('file', file);
+            formData.append('folder', 'reels');
+
+            const res = await uploadVideo(formData).unwrap();
+            setVideo(res.url);
+        } catch (err) {
+            alert(err?.data?.message || 'Video upload failed');
+        } finally {
+            setIsUploading(false);
+            if (videoInputRef.current) {
+                videoInputRef.current.value = '';
+            }
+        }
+    };
+
     const removeImage = (indexToRemove) => {
         setImages(images.filter((_, idx) => idx !== indexToRemove));
     };
 
     const addVariation = () => {
-        setVariations([...variations, { weight: '', price: 0, countInStock: 0 }]);
+        setVariations([...variations, { weight: '', price: 0, discountedPrice: '', countInStock: 0 }]);
     };
 
     const updateVariation = (index, field, value) => {
-        const newVariations = [...variations];
-        newVariations[index][field] = value;
-        setVariations(newVariations);
+        setVariations(prev => {
+            const next = [...prev];
+            next[index] = { ...next[index], [field]: value };
+            return next;
+        });
     };
 
     const removeVariation = (index) => {
@@ -138,7 +168,7 @@ export default function AdminProductEdit() {
         e.preventDefault();
         setFormError(null);
         const productData = {
-            name, slug, brand, category, tag, badge, description, ingredients, shelfLife, isFeatured, images, variations, badges, highlights, nutritionalInfo
+            name, slug, brand, category, tag, badge, description, ingredients, shelfLife, isFeatured, images, video, views, variations, badges, highlights, nutritionalInfo
         };
 
         try {
@@ -316,6 +346,67 @@ export default function AdminProductEdit() {
                         </div>
                     </div>
 
+                    {/* Video Upload Section */}
+                    <div className="bg-[#080b14]/80 border border-white/10 rounded-xl p-6 backdrop-blur-md">
+                        <h3 className="text-lg font-medium text-white mb-6">Product Reel (Video)</h3>
+
+                        {video ? (
+                            <div className="relative rounded-lg overflow-hidden border border-white/10 group bg-black w-full max-w-[200px] aspect-[9/16]">
+                                <video 
+                                    src={video} 
+                                    autoPlay 
+                                    loop 
+                                    muted 
+                                    playsInline 
+                                    className="w-full h-full object-cover"
+                                />
+                                <button
+                                    type="button"
+                                    onClick={() => setVideo('')}
+                                    className="absolute top-2 right-2 p-1.5 rounded-md bg-red-500/80 text-white opacity-0 group-hover:opacity-100 transition-opacity hover:bg-red-500"
+                                >
+                                    <X size={16} />
+                                </button>
+                            </div>
+                        ) : (
+                            <div 
+                                className="border-2 border-dashed border-white/20 rounded-xl p-6 text-center hover:border-cyan-400/50 hover:bg-white/5 transition-colors cursor-pointer w-full max-w-[200px] aspect-[9/16] flex flex-col items-center justify-center mx-auto sm:mx-0"
+                                onClick={() => videoInputRef.current?.click()}
+                            >
+                                <Video size={32} className="text-white/50 mx-auto mb-3" />
+                                <p className="text-sm text-white/70 mb-1 px-4">
+                                    Click to upload video
+                                </p>
+                                <p className="text-xs text-red-400 font-medium px-4 mt-2">
+                                    Please compress the video before uploading.
+                                </p>
+                                <p className="text-[10px] text-white/50 mt-1">
+                                    Max 10MB (MP4, WebM)
+                                </p>
+                            </div>
+                        )}
+                        
+                        <input
+                            type="file"
+                            ref={videoInputRef}
+                            onChange={handleVideoUpload}
+                            accept="video/mp4,video/webm,video/quicktime"
+                            className="hidden"
+                        />
+
+                        <div className="mt-6 border-t border-white/10 pt-6">
+                            <label className="text-[12px] font-medium text-[#f8f9fa] block mb-2">Base Views (Reels)</label>
+                            <input 
+                                type="number" 
+                                min="0"
+                                value={views} 
+                                onChange={(e) => setViews(Number(e.target.value))} 
+                                className="w-full sm:w-1/3 rounded border border-white/10 bg-[#11141b] px-4 py-2.5 text-sm text-white outline-none focus:border-[#d4af37]/50 focus:ring-1 focus:ring-[#d4af37]/50" 
+                            />
+                            <p className="text-[11px] text-white/50 mt-1">Starting point for the view count. It will increment automatically as users watch the reel.</p>
+                        </div>
+                    </div>
+
                     {/* Pricing & Variations */}
                     <div className="rounded-xl border border-white/10 bg-[#080b14]/80 backdrop-blur-md p-6 shadow-sm">
                         <div className="flex justify-between items-center mb-4">
@@ -351,6 +442,17 @@ export default function AdminProductEdit() {
                                             value={v.price} 
                                             onChange={(e) => updateVariation(index, 'price', e.target.value)} 
                                             className="w-full rounded border border-white/10 bg-transparent px-3 py-2 text-[13px] text-white outline-none focus:border-cyan-400/50" 
+                                        />
+                                    </div>
+                                    <div className="flex-1 space-y-1">
+                                        <label className="text-[11px] text-[#e4e4e7]/70">Discounted (₹)</label>
+                                        <input 
+                                            type="number" 
+                                            min="0"
+                                            value={v.discountedPrice || ''} 
+                                            onChange={(e) => updateVariation(index, 'discountedPrice', e.target.value)} 
+                                            placeholder="Optional"
+                                            className="w-full rounded border border-white/10 bg-transparent px-3 py-2 text-[13px] text-cyan-400 outline-none focus:border-cyan-400/50 placeholder:text-white/20" 
                                         />
                                     </div>
                                     <div className="flex-1 space-y-1">

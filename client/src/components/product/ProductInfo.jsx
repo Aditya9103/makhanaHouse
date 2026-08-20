@@ -29,6 +29,10 @@ export default function ProductInfo({ product }) {
 
     const currentVariation = product.variations?.find(v => v.weight === selectedSize) || product.variations?.[0];
     const price = currentVariation ? currentVariation.price : 0;
+    const discountedPrice = currentVariation?.discountedPrice || null;
+    const effectivePrice = discountedPrice || price;
+    const hasDiscount = !!discountedPrice && discountedPrice < price;
+    const discountPercent = hasDiscount ? Math.round(((price - discountedPrice) / price) * 100) : 0;
     const countInStock = currentVariation ? currentVariation.countInStock : 0;
     const stockStatus = countInStock > 0 ? "In Stock" : "Out of Stock";
 
@@ -36,7 +40,8 @@ export default function ProductInfo({ product }) {
         addToCart({
             id: product._id,
             name: product.name,
-            price: price,
+            price: effectivePrice,
+            originalPrice: price,
             weight: selectedSize,
             image: product.images?.[0]
         }, quantity, selectedSize);
@@ -73,14 +78,26 @@ export default function ProductInfo({ product }) {
             </div>
 
             {/* Price */}
-            <div className="mb-6 flex items-end gap-3">
-                <span className="font-serif text-[2.5rem] leading-none text-[#d4af37]">
-                    ₹{price}
-                </span>
-                <span className="mb-1 text-sm text-[var(--color-text-secondary)] font-medium">/{selectedSize}</span>
-                <span className={`mb-1 ml-2 text-[11px] uppercase tracking-wider font-semibold px-2 py-1 rounded ${countInStock > 0 ? 'text-[#16a34a] bg-[#16a34a]/10' : 'text-red-400 bg-red-400/10'}`}>
-                    {stockStatus}
-                </span>
+            <div className="mb-6 flex flex-col gap-1">
+                <div className="flex items-end gap-3">
+                    <span className="font-serif text-[2.5rem] leading-none text-[#d4af37]">
+                        ₹{effectivePrice}
+                    </span>
+                    <span className="mb-1 text-sm text-[var(--color-text-secondary)] font-medium">/{selectedSize}</span>
+                    <span className={`mb-1 ml-2 text-[11px] uppercase tracking-wider font-semibold px-2 py-1 rounded ${countInStock > 0 ? 'text-[#16a34a] bg-[#16a34a]/10 border border-[#16a34a]/20' : 'text-red-400 bg-red-400/10 border border-red-400/20'}`}>
+                        {stockStatus}
+                    </span>
+                </div>
+                {hasDiscount && (
+                    <div className="flex items-center gap-2 mt-1">
+                        <span className="text-lg text-[var(--color-text-secondary)] line-through decoration-2">
+                            ₹{price}
+                        </span>
+                        <span className="text-xs font-bold px-2 py-0.5 rounded bg-green-500/10 text-green-400 border border-green-500/20 flex items-center gap-1">
+                            Save {discountPercent}%
+                        </span>
+                    </div>
+                )}
             </div>
 
             {/* Description list */}
