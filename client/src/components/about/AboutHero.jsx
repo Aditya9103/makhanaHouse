@@ -4,12 +4,20 @@ import { Link } from "react-router-dom";
 export default function AboutHero() {
     return (
         <section
-            className="relative flex w-full items-center justify-center bg-[#080b14] bg-cover bg-right lg:bg-[length:100%_auto] lg:bg-center bg-no-repeat"
+            className="relative flex w-full items-center justify-center bg-[#080b14] overflow-hidden"
             style={{
-                backgroundImage: 'url(/homeherobg.png)',
                 minHeight: 'clamp(400px, 35vw, 600px)'
             }}
         >
+            {/* Background Image Optimized for LCP */}
+            <div className="absolute inset-0 z-0">
+                <img 
+                    src="/homeherobg.webp" 
+                    alt="About Background" 
+                    fetchPriority="high" 
+                    className="w-full h-full object-cover object-right lg:object-center" 
+                />
+            </div>
             {/* Dark gradient overlay for text readability, fading completely to transparent on the right */}
             <div className="absolute inset-0 bg-gradient-to-b from-[#080b14]/90 via-[#080b14]/80 to-[#080b14]/30 lg:bg-gradient-to-r lg:from-[#080b14] lg:via-[#080b14]/80 lg:via-40% lg:to-transparent"></div>
 

@@ -9,8 +9,9 @@ export default function QualityHero() {
                 <div className="absolute inset-0 bg-gradient-to-t from-[#080b14] via-[#080b14]/60 to-transparent z-10 lg:hidden"></div>
                 <div className="absolute inset-0 bg-gradient-to-b from-[#080b14] to-transparent z-10 lg:hidden h-24"></div>
                 <img
-                    src="/exportbg1.png"
+                    src="/exportbg1.webp"
                     alt="World Map and Premium Makhana"
+                    fetchPriority="high"
                     className="w-full h-full object-cover object-center lg:object-center opacity-70"
                 />
             </div>

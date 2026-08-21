@@ -11,12 +11,20 @@ const trustPoints = [
 export default function HeroHome() {
     return (
         <section
-            className="relative flex w-full items-center justify-center bg-[#080b14] bg-cover bg-right lg:bg-[length:100%_auto] lg:bg-center bg-no-repeat"
+            className="relative flex w-full items-center justify-center bg-[#080b14] overflow-hidden"
             style={{
-                backgroundImage: 'url(/homeherobg.png)',
                 minHeight: 'clamp(450px, 42vw, 750px)'
             }}
         >
+            {/* Background Image Optimized for LCP */}
+            <div className="absolute inset-0 z-0">
+                <img 
+                    src="/homeherobg.webp" 
+                    alt="Hero Background" 
+                    fetchPriority="high" 
+                    className="w-full h-full object-cover object-right lg:object-center" 
+                />
+            </div>
             {/* Dark overlay to ensure text remains readable against the background */}
             <div className="absolute inset-0 bg-gradient-to-r from-[#080b14]/90 via-[#080b14]/70 to-transparent"></div>
             <div className="absolute inset-0 bg-[#080b14]/40 lg:hidden"></div>

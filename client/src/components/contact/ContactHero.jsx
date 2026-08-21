@@ -7,8 +7,9 @@ export default function ContactHero() {
             {/* World Map Image - Right side */}
             <div className="absolute right-0 top-1/2 -translate-y-1/2 z-0 hidden lg:block w-[55%] opacity-50 pointer-events-none mix-blend-screen">
                 <img
-                    src="/worldmap.png"
+                    src="/worldmap.webp"
                     alt="World Map"
+                    fetchPriority="high"
                     className="w-full h-auto object-contain"
                 />
             </div>

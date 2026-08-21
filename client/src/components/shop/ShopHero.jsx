@@ -15,7 +15,7 @@ export default function ShopHero() {
                 
                 {/* Bowl image */}
                 <div className="relative z-0 mt-8 md:mt-0 md:absolute md:right-4 lg:right-10 md:top-1/2 md:-translate-y-1/2 w-[200px] sm:w-[250px] md:w-[300px] lg:w-[350px] opacity-90 transition-transform duration-500 hover:scale-105">
-                    <img src="/makhanabowl.png" alt="Premium Makhana" className="w-full h-auto object-contain drop-shadow-2xl" />
+                    <img src="/makhanabowl.webp" alt="Premium Makhana" fetchPriority="high" className="w-full h-auto object-contain drop-shadow-2xl" />
                 </div>
             </div>
         </section>
