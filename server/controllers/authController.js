@@ -185,6 +185,11 @@ export const updateUserProfile = async (req, res) => {
                 user.password = req.body.password;
             }
 
+            // Clean up any corrupted addresses to prevent validation errors on save
+            if (user.addresses && user.addresses.length > 0) {
+                user.addresses = user.addresses.filter(addr => addr.name && addr.line1 && addr.phone);
+            }
+
             const updatedUser = await user.save();
 
             res.json({
@@ -199,6 +204,24 @@ export const updateUserProfile = async (req, res) => {
                 createdAt: updatedUser.createdAt,
                 token: generateToken(updatedUser._id), // Optional: Refresh token on update
             });
+        } else {
+            res.status(404).json({ message: 'User not found' });
+        }
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
+
+// @desc    Delete user profile
+// @route   DELETE /api/auth/profile
+// @access  Private
+export const deleteUserProfile = async (req, res) => {
+    try {
+        const user = await User.findById(req.user._id);
+
+        if (user) {
+            await User.deleteOne({ _id: user._id });
+            res.json({ message: 'User account permanently deleted' });
         } else {
             res.status(404).json({ message: 'User not found' });
         }

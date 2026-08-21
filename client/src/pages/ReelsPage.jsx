@@ -5,16 +5,16 @@ import { useCart } from '../hooks/useCart';
 import { toast } from 'react-toastify';
 import { useGetProductsQuery, useIncrementProductViewMutation } from '../store/api/productApiSlice';
 
-function ReelPlayerSlide({ product, isMuted, toggleMute, onVisible }) {
+function ReelPlayerSlide({ product, isMuted, toggleMute, onVisible, onEnded }) {
     const videoRef = useRef(null);
     const { addToCart } = useCart();
-    
+
     const [isOptionsOpen, setIsOptionsOpen] = useState(false);
     const [selectedSize, setSelectedSize] = useState(product.variations?.[0]?.weight || '');
     const [quantity, setQuantity] = useState(1);
     const [isLiked, setIsLiked] = useState(false);
     const [progress, setProgress] = useState(0);
-    
+
     // Derived pricing logic based on selected size
     const selectedVariation = product.variations?.find(v => v.weight === selectedSize) || product.variations?.[0];
     const price = selectedVariation ? selectedVariation.price : 0;
@@ -53,7 +53,7 @@ function ReelPlayerSlide({ product, isMuted, toggleMute, onVisible }) {
 
     const handleAddToCart = (e) => {
         e.stopPropagation();
-        
+
         if (selectedVariation?.countInStock === 0) {
             toast.error("Item is out of stock");
             return;
@@ -92,7 +92,7 @@ function ReelPlayerSlide({ product, isMuted, toggleMute, onVisible }) {
 
     return (
         <div className="w-full h-[100dvh] flex-shrink-0 snap-start snap-always relative bg-black flex items-center justify-center overflow-hidden">
-            
+
             {/* Blurred Background Video */}
             <div className="absolute inset-0 z-0">
                 <video
@@ -110,8 +110,8 @@ function ReelPlayerSlide({ product, isMuted, toggleMute, onVisible }) {
                 <video
                     ref={videoRef}
                     src={product.video}
-                    loop
                     playsInline
+                    onEnded={onEnded}
                     className="w-full h-full object-cover"
                     onClick={() => {
                         if (videoRef.current.paused) {
@@ -146,14 +146,14 @@ function ReelPlayerSlide({ product, isMuted, toggleMute, onVisible }) {
                 <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-black/10 pointer-events-none" />
 
                 {/* Right Side Action Buttons */}
-                <div className={`absolute right-4 bottom-44 sm:bottom-36 flex flex-col items-center gap-6 z-20 transition-opacity duration-300 ${isOptionsOpen ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}>
+                <div className={`absolute right-4 bottom-64 sm:bottom-48 flex flex-col items-center gap-6 z-20 transition-opacity duration-300 ${isOptionsOpen ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}>
                     <button onClick={() => setIsLiked(!isLiked)} className="group flex flex-col items-center gap-1 transition-transform active:scale-90">
                         <div className={`w-10 h-10 rounded-full bg-black/40 backdrop-blur-md border border-white/10 flex items-center justify-center transition-colors group-hover:bg-white/20 ${isLiked ? 'text-red-500' : 'text-white'}`}>
                             <Heart size={20} className={isLiked ? 'fill-red-500 text-red-500' : ''} />
                         </div>
-                        <span className="text-white font-medium text-xs text-shadow-sm shadow-black drop-shadow-md">{product.likes || 747}</span>
+                        <span className="text-white font-medium text-xs text-shadow-sm shadow-black drop-shadow-md">{product.likes}</span>
                     </button>
-                    
+
                     <button onClick={toggleMute} className="group flex flex-col items-center gap-1 transition-transform active:scale-90">
                         <div className="w-10 h-10 rounded-full bg-black/40 backdrop-blur-md border border-white/10 flex items-center justify-center text-white group-hover:bg-white/20">
                             {isMuted ? <VolumeX size={20} /> : <Volume2 size={20} />}
@@ -171,7 +171,7 @@ function ReelPlayerSlide({ product, isMuted, toggleMute, onVisible }) {
 
                 {/* Product Card Overlay */}
                 <div className={`absolute bottom-20 sm:bottom-4 left-2 right-2 sm:left-4 sm:right-4 transition-all duration-300 ease-in-out z-30 rounded-3xl border border-white/10 bg-[#2d1b2e]/90 backdrop-blur-xl shadow-2xl ${isOptionsOpen ? 'h-[auto] translate-y-0 pb-6' : 'translate-y-0'}`}>
-                    
+
                     {/* Drag Handle when expanded */}
                     {isOptionsOpen && (
                         <div className="w-full flex justify-center pt-3 pb-1" onClick={() => setIsOptionsOpen(false)}>
@@ -206,7 +206,7 @@ function ReelPlayerSlide({ product, isMuted, toggleMute, onVisible }) {
 
                     {!isOptionsOpen ? (
                         <div className="px-4 pb-4">
-                            <button 
+                            <button
                                 onClick={() => setIsOptionsOpen(true)}
                                 className="w-full py-3.5 bg-white text-black font-semibold rounded-xl text-sm flex items-center justify-center gap-2"
                             >
@@ -216,7 +216,7 @@ function ReelPlayerSlide({ product, isMuted, toggleMute, onVisible }) {
                         </div>
                     ) : (
                         <div className="w-full px-5 pt-2 flex flex-col gap-6 max-h-[50vh] sm:max-h-[60vh] overflow-y-auto scrollbar-none">
-                            
+
                             {/* Size Selection */}
                             <div className="flex items-center justify-between">
                                 <span className="text-[15px] font-medium text-white/90">Size</span>
@@ -227,11 +227,10 @@ function ReelPlayerSlide({ product, isMuted, toggleMute, onVisible }) {
                                     <button
                                         key={v.weight}
                                         onClick={() => setSelectedSize(v.weight)}
-                                        className={`px-5 py-2.5 text-sm font-bold rounded-xl border transition-all ${
-                                            selectedSize === v.weight
-                                                ? 'bg-white text-black border-white shadow-[0_0_15px_rgba(255,255,255,0.3)]'
-                                                : 'bg-transparent border-white/20 text-white hover:border-white/50'
-                                        }`}
+                                        className={`px-5 py-2.5 text-sm font-bold rounded-xl border transition-all ${selectedSize === v.weight
+                                            ? 'bg-white text-black border-white shadow-[0_0_15px_rgba(255,255,255,0.3)]'
+                                            : 'bg-transparent border-white/20 text-white hover:border-white/50'
+                                            }`}
                                     >
                                         {v.weight}
                                     </button>
@@ -271,8 +270,8 @@ function ReelPlayerSlide({ product, isMuted, toggleMute, onVisible }) {
                             {/* View Full Product Details */}
                             <div className="w-full flex justify-center mt-1">
                                 <Link to={`/product/${product.slug}`} className="flex items-center gap-1.5 text-[13px] text-white/70 hover:text-white transition-colors">
-                                    View full product details 
-                                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M7 17l9.2-9.2M17 17V7H7"/></svg>
+                                    View full product details
+                                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M7 17l9.2-9.2M17 17V7H7" /></svg>
                                 </Link>
                             </div>
                         </div>
@@ -288,9 +287,8 @@ export default function ReelsPage() {
     const navigate = useNavigate();
     const containerRef = useRef(null);
     const [isMuted, setIsMuted] = useState(true);
-    const { data: products, isLoading } = useGetProductsQuery();
+    const { data: products, isLoading } = useGetProductsQuery({});
     const [incrementView] = useIncrementProductViewMutation();
-    const [viewedReels, setViewedReels] = useState(new Set());
 
     const reelProducts = products?.filter(p => p.video) || [];
 
@@ -306,13 +304,10 @@ export default function ReelsPage() {
     }, [isLoading, id, reelProducts]);
 
     const handleReelVisible = async (productId) => {
-        if (!viewedReels.has(productId)) {
-            setViewedReels(prev => new Set(prev).add(productId));
-            try {
-                await incrementView(productId).unwrap();
-            } catch (err) {
-                console.error("Failed to increment view", err);
-            }
+        try {
+            await incrementView(productId).unwrap();
+        } catch (err) {
+            console.error("Failed to increment view", err);
         }
     };
 
@@ -324,7 +319,15 @@ export default function ReelsPage() {
 
     const scrollRight = () => {
         if (containerRef.current) {
-            containerRef.current.scrollBy({ left: containerRef.current.offsetWidth, behavior: 'smooth' });
+            const container = containerRef.current;
+            const isAtEnd = container.scrollLeft + container.clientWidth >= container.scrollWidth - 10;
+
+            if (isAtEnd) {
+                // Loop back to start
+                container.scrollTo({ left: 0, behavior: 'smooth' });
+            } else {
+                container.scrollBy({ left: container.offsetWidth, behavior: 'smooth' });
+            }
         }
     };
 
@@ -347,9 +350,9 @@ export default function ReelsPage() {
 
     return (
         <div className="fixed inset-0 z-50 bg-black flex items-center justify-center overflow-hidden">
-            
+
             {/* Close Button */}
-            <button 
+            <button
                 onClick={() => navigate('/')}
                 className="absolute top-4 sm:top-6 right-4 sm:right-6 z-[110] w-10 h-10 rounded-full bg-black/40 hover:bg-black/60 backdrop-blur-md border border-white/20 flex items-center justify-center text-white transition-colors"
             >
@@ -360,24 +363,25 @@ export default function ReelsPage() {
             <button onClick={scrollLeft} className="absolute left-4 sm:left-10 z-[110] w-12 h-12 rounded-full bg-black/40 hover:bg-black/80 backdrop-blur-md border border-white/20 hidden sm:flex items-center justify-center text-white transition-all">
                 <ChevronLeft size={24} />
             </button>
-            
+
             <button onClick={scrollRight} className="absolute right-4 sm:right-10 z-[110] w-12 h-12 rounded-full bg-black/40 hover:bg-black/80 backdrop-blur-md border border-white/20 hidden sm:flex items-center justify-center text-white transition-all">
                 <ChevronRight size={24} />
             </button>
 
             {/* Horizontal Scroll Container */}
-            <div 
+            <div
                 ref={containerRef}
                 className="w-full h-[100dvh] flex overflow-x-auto snap-x snap-mandatory scrollbar-none"
                 style={{ scrollBehavior: 'smooth' }}
             >
                 {reelProducts.map((product) => (
-                    <ReelPlayerSlide 
-                        key={product._id} 
-                        product={product} 
+                    <ReelPlayerSlide
+                        key={product._id}
+                        product={product}
                         isMuted={isMuted}
                         toggleMute={() => setIsMuted(!isMuted)}
                         onVisible={handleReelVisible}
+                        onEnded={scrollRight}
                     />
                 ))}
             </div>

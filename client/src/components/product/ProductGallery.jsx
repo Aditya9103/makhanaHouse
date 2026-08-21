@@ -99,7 +99,7 @@ export default function ProductGallery({ images, video, productId }) {
                 {video && (
                     <button
                         onClick={() => navigate(`/reels/${productId}`)}
-                        className="fixed bottom-8 left-30 w-24 sm:w-32 aspect-[9/16] rounded-xl overflow-hidden border-2 border-[#d4af37]/50 shadow-2xl group z-[90] hover:scale-105 transition-transform bg-black"
+                        className="fixed bottom-30 sm:bottom-20 md:bottom-10 right-15  md:right-10 w-24 sm:w-32 aspect-[9/16] rounded-xl overflow-hidden border-2 border-[#d4af37]/50 shadow-2xl group z-[90] hover:scale-105 transition-transform bg-black"
                     >
                         <video
                             src={video}

@@ -1,20 +1,26 @@
-import { Save, User, Lock, Bell, Mail, Smartphone, Loader2 } from "lucide-react";
+import { Save, User, Lock, Bell, Mail, Smartphone, Loader2, Shield, LogOut, AlertTriangle, Trash2, X } from "lucide-react";
 import { useState, useEffect, useRef } from "react";
+import { createPortal } from "react-dom";
+import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import { useUpdateUserMutation } from "../../store/api/authApiSlice";
+import { useUpdateUserMutation, useDeleteUserMutation } from "../../store/api/authApiSlice";
 import { useUploadFileMutation } from "../../store/api/uploadApiSlice";
-import { setCredentials } from "../../store/slices/authSlice";
+import { setCredentials, logout } from "../../store/slices/authSlice";
 
 export default function SettingsMain() {
     const [activeTab, setActiveTab] = useState("profile");
     const { userInfo } = useSelector((state) => state.auth);
     const dispatch = useDispatch();
+    const navigate = useNavigate();
     const fileInputRef = useRef(null);
 
     const [updateUser, { isLoading: isUpdating }] = useUpdateUserMutation();
     const [uploadFile] = useUploadFileMutation();
+    const [deleteUser, { isLoading: isDeleting }] = useDeleteUserMutation();
     
     const [isUploading, setIsUploading] = useState(false);
+    const [showDeletePopup, setShowDeletePopup] = useState(false);
+    const [deleteConfirmationText, setDeleteConfirmationText] = useState("");
     const [formData, setFormData] = useState({
         name: "",
         email: "",
@@ -91,7 +97,25 @@ export default function SettingsMain() {
         }
     };
 
+    const handleSignOut = () => {
+        dispatch(logout());
+        navigate("/login");
+    };
+
+    const handleDeleteAccount = async () => {
+        if (deleteConfirmationText !== "deleteme") return;
+        try {
+            await deleteUser().unwrap();
+            dispatch(logout());
+            alert("Account deleted successfully.");
+            navigate("/");
+        } catch (error) {
+            alert(error?.data?.message || "Failed to delete account");
+        }
+    };
+
     return (
+        <>
         <div className="rounded-2xl border border-white/10 bg-[#080b14]/80 backdrop-blur-md overflow-hidden shadow-sm flex flex-col">
             
             {/* Header Section */}
@@ -196,16 +220,74 @@ export default function SettingsMain() {
                 )}
 
                 {activeTab === "security" && (
-                    <form className="max-w-2xl flex flex-col gap-6" onSubmit={(e) => e.preventDefault()}>
-                        <div className="space-y-2">
-                            <label className="text-[12px] font-medium text-[#f8f9fa]">New Password</label>
-                            <input type="password" name="password" value={formData.password} onChange={handleChange} placeholder="Enter new password" className="w-full rounded-md border border-white/10 bg-white/5 px-4 py-2.5 text-[13px] text-[#f8f9fa] focus:border-[#d4af37]/50 focus:bg-white/10 outline-none transition-all" />
+                    <div className="max-w-2xl flex flex-col gap-10">
+                        <form className="flex flex-col gap-6" onSubmit={(e) => e.preventDefault()}>
+                            <div className="space-y-2">
+                                <label className="text-[12px] font-medium text-[#f8f9fa]">New Password</label>
+                                <input type="password" name="password" value={formData.password} onChange={handleChange} placeholder="Enter new password" className="w-full rounded-md border border-white/10 bg-white/5 px-4 py-2.5 text-[13px] text-[#f8f9fa] focus:border-[#d4af37]/50 focus:bg-white/10 outline-none transition-all" />
+                            </div>
+                            <div className="space-y-2">
+                                <label className="text-[12px] font-medium text-[#f8f9fa]">Confirm New Password</label>
+                                <input type="password" name="confirmPassword" value={formData.confirmPassword} onChange={handleChange} placeholder="Confirm new password" className="w-full rounded-md border border-white/10 bg-white/5 px-4 py-2.5 text-[13px] text-[#f8f9fa] focus:border-[#d4af37]/50 focus:bg-white/10 outline-none transition-all" />
+                            </div>
+                        </form>
+                        
+                        {/* Security Tips */}
+                        <div className="flex flex-col gap-4">
+                            <h3 className="text-[14px] font-medium text-[#f8f9fa] flex items-center gap-2">
+                                <Shield size={16} className="text-[#d4af37]" />
+                                Security Tips
+                            </h3>
+                            <ul className="list-disc list-inside text-[13px] text-[var(--color-text-secondary)] space-y-2 ml-2">
+                                <li>Use a strong password combining letters, numbers, and symbols.</li>
+                                <li>Never share your password or OTP with anyone, including our support team.</li>
+                                <li>Regularly update your password every 3-6 months.</li>
+                            </ul>
                         </div>
-                        <div className="space-y-2">
-                            <label className="text-[12px] font-medium text-[#f8f9fa]">Confirm New Password</label>
-                            <input type="password" name="confirmPassword" value={formData.confirmPassword} onChange={handleChange} placeholder="Confirm new password" className="w-full rounded-md border border-white/10 bg-white/5 px-4 py-2.5 text-[13px] text-[#f8f9fa] focus:border-[#d4af37]/50 focus:bg-white/10 outline-none transition-all" />
+
+                        {/* Sign Out */}
+                        <div className="flex flex-col gap-4 border-t border-white/10 pt-8">
+                            <h3 className="text-[14px] font-medium text-[#f8f9fa] flex items-center gap-2">
+                                <LogOut size={16} className="text-[#d4af37]" />
+                                Sign Out
+                            </h3>
+                            <p className="text-[13px] text-[var(--color-text-secondary)]">Log out of your account securely.</p>
+                            <button 
+                                onClick={(e) => {
+                                    e.preventDefault();
+                                    e.stopPropagation();
+                                    console.log("Sign out clicked!");
+                                    handleSignOut();
+                                }}
+                                className="w-fit px-6 py-2.5 rounded-md border border-white/20 text-[#f8f9fa] text-[13px] font-medium hover:bg-white/10 transition-colors relative z-50 cursor-pointer"
+                            >
+                                Sign Out
+                            </button>
                         </div>
-                    </form>
+
+                        {/* Danger Zone */}
+                        <div className="flex flex-col gap-4 border-t border-red-500/20 pt-8">
+                            <h3 className="text-[14px] font-medium text-red-500 flex items-center gap-2">
+                                <AlertTriangle size={16} />
+                                Danger Zone
+                            </h3>
+                            <p className="text-[13px] text-[var(--color-text-secondary)]">
+                                Once you delete your account, there is no going back. All your order history, saved addresses, and reward points will be permanently erased.
+                            </p>
+                            <button 
+                                type="button"
+                                onClick={(e) => {
+                                    e.preventDefault();
+                                    e.stopPropagation();
+                                    console.log("Delete button clicked!");
+                                    setShowDeletePopup(true);
+                                }}
+                                className="w-fit px-6 py-2.5 rounded-md bg-red-500/10 text-red-500 border border-red-500/20 text-[13px] font-medium hover:bg-red-500 hover:text-white transition-all relative z-50 cursor-pointer"
+                            >
+                                Delete Account
+                            </button>
+                        </div>
+                    </div>
                 )}
 
                 {activeTab === "notifications" && (
@@ -256,5 +338,68 @@ export default function SettingsMain() {
                 
             </div>
         </div>
+
+            {/* Delete Account Popup */}
+            {showDeletePopup && createPortal(
+                <div 
+                    className="fixed inset-0 flex items-center justify-center p-4"
+                    style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, zIndex: 99999, backgroundColor: 'rgba(0,0,0,0.7)', backdropFilter: 'blur(4px)' }}
+                >
+                    <div className="bg-[#11141b] border border-red-500/30 rounded-2xl p-6 max-w-md w-full shadow-2xl relative animate-in fade-in zoom-in duration-200">
+                        <button 
+                            onClick={() => {
+                                setShowDeletePopup(false);
+                                setDeleteConfirmationText("");
+                            }}
+                            className="absolute top-4 right-4 text-white/50 hover:text-white"
+                        >
+                            <X size={20} />
+                        </button>
+                        
+                        <div className="flex flex-col items-center text-center gap-4 mt-2">
+                            <div className="w-12 h-12 rounded-full bg-red-500/10 flex items-center justify-center text-red-500">
+                                <AlertTriangle size={24} />
+                            </div>
+                            
+                            <div>
+                                <h3 className="text-lg font-semibold text-white mb-2">Delete Account?</h3>
+                                <p className="text-sm text-white/70">
+                                    This action is permanent and irreversible. To confirm, please type <strong className="text-white">deleteme</strong> below.
+                                </p>
+                            </div>
+                            
+                            <input 
+                                type="text"
+                                value={deleteConfirmationText}
+                                onChange={(e) => setDeleteConfirmationText(e.target.value)}
+                                placeholder="Type deleteme"
+                                className="w-full mt-2 rounded-md border border-white/10 bg-white/5 px-4 py-2.5 text-[13px] text-white outline-none focus:border-red-500/50 focus:ring-1 focus:ring-red-500/50 text-center font-medium"
+                            />
+                            
+                            <div className="flex gap-3 w-full mt-4">
+                                <button 
+                                    onClick={() => {
+                                        setShowDeletePopup(false);
+                                        setDeleteConfirmationText("");
+                                    }}
+                                    className="flex-1 py-2.5 rounded-md border border-white/20 text-white text-sm font-medium hover:bg-white/10 transition-colors"
+                                >
+                                    Cancel
+                                </button>
+                                <button 
+                                    onClick={handleDeleteAccount}
+                                    disabled={deleteConfirmationText !== "deleteme" || isDeleting}
+                                    className="flex-1 py-2.5 rounded-md bg-red-500 text-white text-sm font-medium hover:bg-red-600 transition-colors disabled:opacity-50 flex items-center justify-center gap-2"
+                                >
+                                    {isDeleting ? <Loader2 size={16} className="animate-spin" /> : <Trash2 size={16} />}
+                                    Delete
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>,
+                document.body
+            )}
+        </>
     );
 }

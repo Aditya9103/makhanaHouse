@@ -215,7 +215,8 @@ const updateProduct = async (req, res) => {
             badge,
             badges,
             highlights,
-            video
+            video,
+            views
         } = req.body;
 
         const product = await Product.findById(req.params.id);
@@ -237,6 +238,7 @@ const updateProduct = async (req, res) => {
             product.badge = badge !== undefined ? badge : product.badge;
             product.isFeatured = isFeatured !== undefined ? isFeatured : product.isFeatured;
             product.video = video !== undefined ? video : product.video;
+            product.views = views !== undefined ? Number(views) : product.views;
 
             const updatedProduct = await product.save();
             res.json(updatedProduct);

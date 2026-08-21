@@ -20,7 +20,11 @@ export default function Login() {
 
     useEffect(() => {
         if (userInfo) {
-            navigate(redirect);
+            if (userInfo.role === 'admin') {
+                navigate('/admin/dashboard');
+            } else {
+                navigate(redirect);
+            }
         }
     }, [navigate, redirect, userInfo]);
 
@@ -29,7 +33,11 @@ export default function Login() {
         try {
             const res = await login({ email, password }).unwrap();
             dispatch(setCredentials({ ...res }));
-            navigate(redirect);
+            if (res.role === 'admin') {
+                navigate('/admin/dashboard');
+            } else {
+                navigate(redirect);
+            }
         } catch (err) {
             console.error(err?.data?.message || err.error);
         }
