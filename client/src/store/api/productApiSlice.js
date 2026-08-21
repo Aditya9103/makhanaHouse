@@ -8,7 +8,6 @@ export const productApiSlice = apiSlice.injectEndpoints({
             query: () => ({
                 url: `${PRODUCTS_URL}/filters`,
             }),
-            keepUnusedDataFor: 5,
         }),
         getProducts: builder.query({
             query: (params) => ({
@@ -16,13 +15,11 @@ export const productApiSlice = apiSlice.injectEndpoints({
                 params: params,
             }),
             providesTags: ['Product'],
-            keepUnusedDataFor: 5,
         }),
         getProductDetails: builder.query({
             query: (idOrSlug) => ({
                 url: `${PRODUCTS_URL}/${idOrSlug}`,
             }),
-            keepUnusedDataFor: 5,
             providesTags: ['Product'],
         }),
         incrementProductView: builder.mutation({
@@ -30,7 +27,6 @@ export const productApiSlice = apiSlice.injectEndpoints({
                 url: `${PRODUCTS_URL}/${productId}/view`,
                 method: 'PUT',
             }),
-            invalidatesTags: ['Product'],
         }),
         createProduct: builder.mutation({
             query: (data) => ({
@@ -90,7 +86,6 @@ export const productApiSlice = apiSlice.injectEndpoints({
                 url: `${PRODUCTS_URL}/reviews/all`,
             }),
             providesTags: ['Product'],
-            keepUnusedDataFor: 5,
         }),
     }),
 });

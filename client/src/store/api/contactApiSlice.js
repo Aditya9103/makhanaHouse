@@ -17,7 +17,6 @@ export const contactApiSlice = apiSlice.injectEndpoints({
                 url: CONTACT_URL,
             }),
             providesTags: ['Contact'],
-            keepUnusedDataFor: 5,
         }),
         updateContactMessageStatus: builder.mutation({
             query: ({ id, status }) => ({

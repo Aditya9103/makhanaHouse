@@ -9,14 +9,12 @@ export const usersApiSlice = apiSlice.injectEndpoints({
                 url: `${USERS_URL}`,
             }),
             providesTags: ['Users'],
-            keepUnusedDataFor: 5,
         }),
         getCart: builder.query({
             query: () => ({
                 url: `${USERS_URL}/profile/cart`,
             }),
             providesTags: ['Cart'],
-            keepUnusedDataFor: 5,
         }),
         updateCart: builder.mutation({
             query: (cart) => ({
@@ -31,7 +29,6 @@ export const usersApiSlice = apiSlice.injectEndpoints({
                 url: `${USERS_URL}/profile/wishlist`,
             }),
             providesTags: ['Wishlist'],
-            keepUnusedDataFor: 5,
         }),
         toggleWishlist: builder.mutation({
             query: (productId) => ({
@@ -46,7 +43,6 @@ export const usersApiSlice = apiSlice.injectEndpoints({
                 url: `${USERS_URL}/profile/addresses`,
             }),
             providesTags: ['Addresses'],
-            keepUnusedDataFor: 5,
         }),
         updateAddresses: builder.mutation({
             query: (addresses) => ({

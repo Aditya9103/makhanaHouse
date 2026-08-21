@@ -14,5 +14,6 @@ const baseQuery = fetchBaseQuery({
 export const apiSlice = createApi({
     baseQuery,
     tagTypes: ['User', 'Order', 'Product'],
+    keepUnusedDataFor: 300, // Global cache setting (5 minutes)
     endpoints: (builder) => ({}),
 });
